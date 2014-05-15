@@ -38,6 +38,11 @@ var config = {
 	IP_MNEMONIC: true,
 
 	VOICE_PATH: 'voice',
+
+	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
+	CURFEW_BOARDS: ['moe'],
+
+	CUSTOM_BANNER: 'Extra banner information',
 };
 
 module.exports = config;
