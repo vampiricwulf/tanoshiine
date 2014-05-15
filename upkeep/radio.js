@@ -84,8 +84,10 @@ function format_icecast(mounts) {
 	var count = parseInt(radio.listeners, 10);
 	count = count + ' listener' + (count == 1 ? '' : 's');
 	var msg = [{text: count, href: M3U_URL}];
-	if (radio.title)
-		msg.push(': ' + radio.title);
+	if (radio.title) {
+		radio.artist = radio.artist ? radio.artist : 'Unknown Artist';
+		msg.push(': ' + radio.artist + ' - ' + radio.title);
+	}
 	info.msg = msg;
 	return info;
 }

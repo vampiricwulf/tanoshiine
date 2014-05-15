@@ -178,7 +178,7 @@ function ip_key(ip) {
 }
 exports.ip_key = ip_key;
 
-if (typeof IDENT != 'undefined') {
+if (typeof IDENT != 'undefined' && IDENT.auth == 'Admin') {
 	/* client */
 	window.ip_mnemonic = ip_mnemonic;
 	oneeSama.hook('headerName', append_mnemonic);

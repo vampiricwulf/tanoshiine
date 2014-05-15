@@ -188,33 +188,42 @@ var AddressView = Backbone.View.extend({
 
 	initialize: function () {
 		var $el = this.$el;
-		$('<span/>', {"class": 'ip'}).appendTo($el);
-		$el.append(' &nbsp; ', $('<input/>', {
-			"class": 'sel-all',
-			type: 'button',
-			val: 'Sel All'
-		}));
-		if (IDENT.auth == 'Admin')
+		if (IDENT.auth == 'Admin') {
+			$('<span/>', {"class": 'ip'}).appendTo($el);
+			$el.append(' &nbsp; ', $('<input/>', {
+				"class": 'sel-all',
+				type: 'button',
+				val: 'Sel All'
+			}));
 			$el.append($('<input/>', {
 				"class": 'ban',
 				type: 'button',
 				val: 'Ban'
 			}));
 
-		$el.append(
-			'<br>',
+			$el.append(
+				'<br>',
+				$('<input>', {"class": 'name', placeholder: 'Name'})
+			);
+		}
+		else
+		{
+			$el.append(
 			$('<input>', {"class": 'name', placeholder: 'Name'})
 		);
+		}
 		this.listenTo(this.model, 'change', this.render);
 	},
 
 	render: function () {
 		var attrs = this.model.attributes;
-		if (attrs.shallow) {
-			this.$('.ip').text('Loading...');
-			return this;
+		if (IDENT.auth == 'Admin') {
+			if (attrs.shallow) {
+				this.$('.ip').text('Loading...');
+				return this;
+			}
+			this.$('.ip').text(attrs.ip);
 		}
-		this.$('.ip').text(attrs.ip);
 		var $name = this.$('.name');
 		if (!this.focusedName) {
 			_.defer(function () {
@@ -286,8 +295,10 @@ var AddrView = Backbone.View.extend({
 	},
 
 	initialize: function () {
-		this.$el.attr('href', '#');
-		this.listenTo(this.model, 'change:name', this.render);
+		if (IDENT.auth == 'Admin') {
+			this.$el.attr('href', '#');
+			this.listenTo(this.model, 'change:name', this.render);
+		}
 	},
 
 	render: function () {
