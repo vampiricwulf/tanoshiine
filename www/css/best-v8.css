@@ -1,0 +1,101 @@
+del, del em {
+        background-color: #CAFA46;
+        color: #CAFA46;
+        text-decoration: none;
+}
+del:hover, del:hover em, del.reveal, del.reveal em {
+        color: black;
+}
+a, blockquote a {
+	color: #954360;
+}
+a:hover, .email b:hover {
+	color: #d17c43;
+}
+article, aside, .pagination {
+	background-color: #6A779A ;
+	opacity: 0.9;
+	border-top: 1px solid #CAFA46 ;
+	border-left: 1px solid #CAFA46 ;
+	border-right: 1px solid #CAFA46 ;
+	border-bottom: 1px solid #CAFA46 ;
+}
+article.highlight {
+	background-color: #8C3CD5;
+	border-color: #CAFA46;
+}
+article.editing {
+	background-color: #C967DA;
+	border-color: #CAFA46;
+}
+b {
+	color: #8B3956;
+}
+b.admin {
+	color: #8B3956;
+}
+b.moderator {
+	color: #8B3956;
+}
+body {
+  color: #111;
+	text-shadow: #CAFA46 1px 0px 1px;
+	background-color: #7E2D48;
+	background-image: url('http://tanoshiine.info/css/akira.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 10pt;
+}
+pre, .themed {
+  color: #59543f;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 10pt;
+}
+em {
+	color: #8B3956;
+	text-shadow: #CAFA46 0px 0px 3px;
+}
+h1 {
+	color: #8C3CD5;
+	font-family: "MS P????", "MS PGothic", "Mona", "Hiragino Kaku Gothic Pro", Helvetica, sans-serif;
+	font-size: 30px;
+	text-shadow: #CAFA46 2px 2px 1px;
+	letter-spacing: 0px;
+}
+h2 {
+	color: #8C3CD5;
+	font-family: "MS P????", "MS PGothic", "Mona", "Hiragino Kaku Gothic Pro", Helvetica, sans-serif;
+	text-shadow: #8e3523 1px 1px 0px;
+}
+h3 {
+	color: #8C3CD5 ;
+	text-shadow: #CAFA46 1px 1px 1px;
+}
+header nav a {
+	color: #0a0a0a;
+}
+hr {
+	border-top: 1px solid #CAFA46;
+}
+.popup-menu li:hover {
+	background-color: #f9fcf7;
+}
+.act:before {
+	content: "[";
+}
+.act:after {
+	content: "]";
+}
+.email, .email b {
+	color: #54578c;
+}
+.modal, .preview, .popup-menu {
+	background-color: #f6faf3;
+	border-right: 1px solid #e5e8e2;
+	border-bottom: 1px solid #e5e8e2;
+}
+.omit {
+	color: #73806c;
+}

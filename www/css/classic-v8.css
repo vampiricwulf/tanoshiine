@@ -1,0 +1,117 @@
+a, blockquote a:hover, b.moderator {
+	color: #81a2be;
+}
+a:hover, blockquote a, .email b:hover, article.editing a:hover {
+	color: #5f89ac;
+}
+article, aside, .modal, .pagination {
+	background-color: rgba(255,240,225,0.75);
+	border: 5px ridge #282a2e;
+	-moz-box-shadow:    inset 0 0 7px #000000;
+    -webkit-box-shadow: inset 0 0 7px #000000;
+    box-shadow:         inset 0 0 7px #000000;
+}
+article.highlight, .preview, .popup-menu {
+	background-color: rgba(211,211,211,0.90);
+	border-color: purple;
+	border: 5px ridge #282a2e;
+	-moz-box-shadow:    inset 0 0 7px #000000;
+    -webkit-box-shadow: inset 0 0 7px #000000;
+    box-shadow:         inset 0 0 7px #000000;
+}
+article.editing {
+	background-color: rgba(210,180,140,0.90);
+	border-color: purple;
+	color: black;
+}
+article.editing a, article.editing header {
+	color: #222;
+}
+article.editing em {
+	color: #656d28;
+}
+article.editing li {
+	color: #ddd;
+}
+article.editing .themed {
+	color: #333;
+}
+b.admin {
+	color: #f00000;
+}
+body {
+	background-color: #1d1f21;
+	color: #c5c8c6;
+	background-image: url(http://i.imgur.com/A6LP5MS.gif)
+}
+body, pre, .themed {
+	font-family: Comic Sans MS, Cursive, sans-serif;
+	font-size: 10pt;
+	color: black;
+}
+code{
+    color: brown;
+}
+del, del em{
+    color: rgba(0,0,0,0);
+    /* For Safari */
+	background: -webkit-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+	/* For Opera 11.1 to 12.0 */
+	background: -o-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+	/* For Fx 3.6 to 15 */
+	background: -moz-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+	/* Standard syntax */
+	background: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet); 
+}
+del:hover, del:hover em, del.reveal, del.reveal em {
+	color: black;
+	text-shadow: 1px 1px 1px white;
+}
+.embed {
+	background-color: lightgrey;
+}
+em {
+	color: green;
+}
+h1 {
+	font: bolder 34px Comic Sans MS;
+	text-shadow: 2px 2px 5px pink;
+	letter-spacing: -2px;
+	background-color:rgba(0,0,0,0.3);
+}
+h2 {
+	font-family: Tahoma;
+}
+h3 {
+	color: #ce52c9;
+}
+hr {
+	border-top: 1px ridge #282a2e;
+}
+.popup-menu li:hover {
+	background-color: #136;
+}
+.act:before {
+	content: "[";
+}
+.act:after {
+	content: "]";
+}
+.omit {
+	color: #707070;
+}
+#lock, .scroll-lock header {
+	background-image: url('ui/invlock.png');
+}
+.themed {
+	color: #999;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.5),
+	screen and (-o-device-pixel-ratio: 3/2),
+	screen and (min--moz-device-pixel-ratio: 1.5),
+	screen and (min-device-pixel-ratio: 1.5) {
+	#lock, .scroll-lock header {
+		background-image: url('ui/invlock2x.png');
+	}
+}

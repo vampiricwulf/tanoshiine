@@ -1,0 +1,89 @@
+a {
+	color: #433b8a;
+}
+blockquote a, a:hover, .email b:hover {
+	color: #ab3842;
+}
+a.directfl {
+  text-decoration: none;
+  color: #a49aa6;
+}
+article, aside, .pagination {
+  background-color: #d9cedb;
+	border-right: 1px solid #cec9cf;
+	border-bottom: 1px solid #cec9cf;
+}
+article.highlight {
+	background-color: #bda1bf;
+	border-color: #a499a8;
+}
+article.editing {
+	background-color: #a391cc;
+	border-color: #9686bd;
+}
+b {
+	color: #5d4488;
+}
+b.admin {
+	color: #c00000;
+}
+b.moderator {
+	color: #800080;
+}
+body {
+  color: #121314;
+  background-image: url('homu2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-attachment: fixed;
+  background-position: right top;
+	background-color: #fefaff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+pre, .themed {
+  color: #242126;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+em {
+	color: #688811;
+}
+h1 {
+  color: #693c58;
+	font: bolder 28px Tahoma;
+	letter-spacing: -2px;
+}
+h2 {
+  color: #693c58;
+	font: bolder 28px Tahoma;
+}
+h3 {
+	color: #3c2340;
+}
+header nav a {
+  color: #121314;
+}
+hr {
+	border-top: 1px solid #c2b7d9;
+}
+.popup-menu li:hover {
+	background-color: #faf7fc;
+}
+.act:before {
+	content: "[";
+}
+.act:after {
+	content: "]";
+}
+.email, .email b {
+	color: #433b8a;
+}
+.modal, .preview, .popup-menu {
+  background-color: #d9cedb;
+	border-right: 1px solid #cec9cf;
+	border-bottom: 1px solid #cec9cf;
+}
+.omit {
+	color: #707070;
+}

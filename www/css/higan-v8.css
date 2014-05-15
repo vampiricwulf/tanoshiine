@@ -4,6 +4,10 @@ a, blockquote a {
 a:hover, .email b:hover {
 	color: #af005f;
 }
+a.directfl {
+  	text-decoration: none;
+	color: #af005f;
+}
 article, aside, .pagination, .preview {
 	background-color: rgba(46,46,46,.95);
 	border-right: 1px solid #262626;
@@ -29,7 +33,7 @@ b.moderator {
 body {
 	color: #999999;
 	background-color: #1e1e1e;
-	background-image: url('higan.jpg');
+	background-image: url('higan.png');
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-attachment: fixed;
@@ -38,7 +42,7 @@ body {
 	font-size: 10pt;
 }
 pre, .themed {
-	color: #8a8a8a;
+	color: #7e8b94;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 10pt;
 }

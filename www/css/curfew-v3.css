@@ -1,12 +1,15 @@
 body {
-	background: black url('../gazou/autumn.jpg') no-repeat;
-	background-size: 100%;
+	background: black url('http://puu.sh/8N0Vb.png') no-repeat;
 	font-family: "MS Pゴシック", "MS PGothic", "Mona", "Hiragino Kaku Gothic Pro";
 	font-size: 12pt;
 }
 div {
 	color: #f0f0f0;
-	margin-top: 100px;
 	text-align: center;
 	text-shadow: #800 0px 2px 0px;
+	position: absolute;
+  	top: 50%;
+  	left: 50%;
+  	transform:translate(-50%,-50%);
+  	-webkit-transform:translate(-50%,-50%);
 }
