@@ -32,7 +32,7 @@ function get_thumb_specs(dims, pinky, scale) {
 	var quality = config[pinky ? 'PINKY_QUALITY' : 'THUMB_QUALITY'];
 	var bound = config[pinky ? 'PINKY_DIMENSIONS' : 'THUMB_DIMENSIONS'];
 	var r = Math.max(w / bound[0], h / bound[1], 1);
-	var bg = pinky ? '#d6daf0' : '#eef2ff';
+	var bg = pinky ? '#282a2e' : '#1d1f21';
 	var dims = [Math.round(w/r) * scale, Math.round(h/r) * scale];
 	return {dims: dims, quality: quality, bg: bg, bound: bound};
 }

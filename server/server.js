@@ -648,6 +648,18 @@ web.resource(/^\/outbound\/foolz\/(\d{0,10})$/, function (req, params, cb) {
 	cb(null, 303.1, thread ? dest+'thread/'+thread+'/' : dest);
 });
 
+/*web.resource(/^\/outbound\/moe\/(\d{0,10})$/, function (req, params, cb) {
+	var dest = 'http://doushio.com/moe/';
+	var thread = parseInt(params[1], 10);
+	cb(null, 303.1, thread ? dest+thread : dest);
+});
+//This is related to the one in common.js
+web.resource(/^\/outbound\/secret\/(\d{0,10})$/, function (req, params, cb) {
+	var dest = 'http://secret.org/supersecret/';
+	var thread = parseInt(params[1], 10);
+	cb(null, 303.1, thread ? dest+thread : dest);
+});*/
+
 web.route_get_auth(/^\/dead\/(src|thumb|mid)\/(\w+\.\w{3})$/,
 			function (req, resp, params) {
 	if (!caps.can_administrate(req.ident))

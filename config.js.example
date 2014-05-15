@@ -1,7 +1,7 @@
 var config = {
 	LISTEN_PORT: 8000,
-	LISTEN_HOST: null,
-	DEBUG: true,
+	LISTEN_HOST: null, //internal IP
+	DEBUG: true, //to find errors in console and print more in terminal, set to false to login with persona
 	SECURE_SALT: "LALALALALALALALA", /* [A-Za-z0-9./]{16} */
 	SOCKET_PATH: '/hana',
 	TRUST_X_FORWARDED_FOR: false,
@@ -21,7 +21,7 @@ var config = {
 	THREAD_LAST_N: 100,
 
 	THREAD_THROTTLE: 60,
-	THREAD_EXPIRY: 3600 * 24 * 7,
+	THREAD_EXPIRY: 3600 * 24 * 7, //Reloads only when archive/daemon.js is reloaded
 	SHORT_TERM_LIMIT: 2000,
 	LONG_TERM_LIMIT: 2000*20*12,
 	NEW_POST_WORTH: 50,
@@ -42,7 +42,7 @@ var config = {
 	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
 	CURFEW_BOARDS: ['moe'],
 
-	CUSTOM_BANNER: 'Extra banner information',
+	CUSTOM_BANNER: 'Extra banner information', //Written in html, it's already within a <b></b> tag
 };
 
 module.exports = config;

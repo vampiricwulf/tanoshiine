@@ -3,7 +3,7 @@ module.exports = {
 	IMAGE_WIDTH_MAX: 6000,
 	IMAGE_HEIGHT_MAX: 6000,
 	IMAGE_PIXELS_MAX: 4500*4500,
-	MEDIA_DIRS: {
+	MEDIA_DIRS: { //local location on your computer
 		src: 'www/src',
 		thumb: 'www/thumb',
 		mid: 'www/mid',
@@ -11,7 +11,7 @@ module.exports = {
 		dead: 'graveyard',
 		tmp: 'imager/tmp',
 	},
-	MEDIA_URL: '../',
+	MEDIA_URL: '../', //location on your server of your media (default is www, so: http://localhost/www)
 	UPLOAD_URL: null,
 
 	// this should be the same as location.origin
@@ -25,9 +25,9 @@ module.exports = {
 	EXTRA_MID_THUMBNAILS: true,
 	WEBM: false,
 
-	SPOILER_DIR: '../assets/kana',
-	SPOILER_IMAGES: {normal: [], trans: [4, 5, 6, 7, 8, 9, 10, 11]},
-	IMAGE_HATS: false,
+	SPOILER_DIR: '../assets/kana', //local location on your computer
+	SPOILER_IMAGES: {normal: [], trans: [2, 3, 4, 5, 6, 7, 8, 9, 10]}, //need a spoil (the button), spoiler (new thread spoiler), and spoilers (reply spoiler) version
+	IMAGE_HATS: false, //to change the hat icon, it's default located www/css/ui/hat.png (make sure to keep name as hat.png)
 
 	// uncomment DAEMON if you will run `node imager/daemon.js` separately.
 	// if so, either

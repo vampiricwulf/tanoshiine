@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = { //no idea how to use this
 	MAIL_FROM: "Reports <reports@doushio.com>",
 	MAIL_TO: ['lalc@doushio.com'],
 	MAIL_THREAD_URL_BASE: 'http://your.board.index/',

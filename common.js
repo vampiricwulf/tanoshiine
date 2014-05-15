@@ -193,7 +193,7 @@ var OS = OneeSama.prototype;
 
 var break_re = new RegExp("(\\S{" + DEFINES.WORD_LENGTH_LIMIT + "})");
 /* internal refs, embeds */
-var ref_re = />>(\d+|>\/watch\?v=[\w-]{11}(?:#t=[\dhms]{1,9})?|>\/soundcloud\/[\w-]{1,40}\/[\w-]{1,80}|>\/(?:a|foolz)\/\d{0,10})/;
+var ref_re = />>(\d+|>\/watch\?v=[\w-]{11}(?:#t=[\dhms]{1,9})?|>\/soundcloud\/[\w-]{1,40}\/[\w-]{1,80}|>\/(?:a|foolz)\/\d{0,10})/; //add the secret one after foolz like: (?:a|foolz|secret) related to server/server.js
 
 OS.hook = function (name, func) {
 	var hs = this.hooks[name];
@@ -237,7 +237,11 @@ OS.red_string = function (ref) {
 	else if (prefix == '>/f') {
 		var num = parseInt(ref.slice(8), 10);
 		dest = '../outbound/foolz/' + (num ? ''+num : '');
-	}
+	}/*
+	else if (prefix == '>/s'){
+		var num = parseInt(ref.slice(8), 10);
+		dest = '../outbound/secret/' + (num ? ''+num : ''); //related to server/server.js
+	}*/
 	else {
 		this.tamashii(parseInt(ref, 10));
 		return;
@@ -474,7 +478,8 @@ OS.gazou = function (info, toppu) {
 		var iqdb = encodeURI('../outbound/iqdb/' + info.vint);
 		caption = ['Search ', new_tab_link(google, '[Google]'), ' ',
 			new_tab_link(iqdb, '[iqdb]'), ' ',
-			new_tab_link(src, '[foolz]')];
+			new_tab_link(src, '[foolz]')/*,
+			new_tab_link(src, '[secret]')*/]; //related to server/server.js
 	}
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
