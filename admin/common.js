@@ -178,10 +178,11 @@ function ip_key(ip) {
 }
 exports.ip_key = ip_key;
 
-if (typeof IDENT != 'undefined' && IDENT.auth == 'Admin') {
+if (typeof IDENT != 'undefined') {
 	/* client */
 	window.ip_mnemonic = ip_mnemonic;
-	oneeSama.hook('headerName', append_mnemonic);
+	if (IDENT.auth == 'Admin')
+		oneeSama.hook('headerName', append_mnemonic);
 	oneeSama.hook('headerName', denote_hidden);
 }
 else {
