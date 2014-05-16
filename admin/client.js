@@ -209,7 +209,7 @@ var AddressView = Backbone.View.extend({
 		else
 		{
 			$el.append(
-			$('<input>', {"class": 'name', placeholder: 'Name'})
+				$('<input>', {"class": 'name', placeholder: 'Name'})
 		);
 		}
 		this.listenTo(this.model, 'change', this.render);
@@ -217,13 +217,11 @@ var AddressView = Backbone.View.extend({
 
 	render: function () {
 		var attrs = this.model.attributes;
-		if (IDENT.auth == 'Admin') {
-			if (attrs.shallow) {
-				this.$('.ip').text('Loading...');
-				return this;
-			}
-			this.$('.ip').text(attrs.ip);
+		if (attrs.shallow) {
+			this.$('.ip').text('Loading...');
+			return this;
 		}
+		this.$('.ip').text(attrs.ip);
 		var $name = this.$('.name');
 		if (!this.focusedName) {
 			_.defer(function () {
