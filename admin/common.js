@@ -120,13 +120,6 @@ function append_mnemonic_no_ip(info) {
 		return;
 	var mnemonic = config.IP_MNEMONIC && ip_mnemonic(ip);
 
-	// Terrible hack.
-	if (mnemonic && modCache.addresses) {
-		var addr = modCache.addresses[ip];
-		if (addr && addr.name)
-			mnemonic += ' "' + addr.name + '"';
-	}
-
 	var s = common.safe;
 	header.push(s(' <a class="mod addr">'),
 			mnemonic, s('</a>'));
