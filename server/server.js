@@ -559,7 +559,10 @@ function (req, resp) {
 	var board = this.board, op = this.op;
 
 	resp = write_gzip_head(req, resp, this.headers);
-	render.write_thread_head(resp, board, op, this.subject, this.abbrev);
+	render.write_thread_head(resp, board, op, {
+		subject: this.subject,
+		abbrev: this.abbrev,
+	});
 
 	var opts = {fullPosts: true, board: board, loadAllPostsLink: true};
 	render.write_thread_html(this.reader, req, resp, opts);
@@ -629,7 +632,7 @@ web.resource(/^\/outbound\/(g|iqdb)\/([\w+\/]{22}\.jpg)$/,
 });
 
 web.resource(/^\/outbound\/hash\/([\w+\/]{22})$/, function (req, params, cb) {
-	var dest = 'http://archive.foolz.us/search/image/' + escape(params[1]);
+	var dest = 'http://archive.foolz.us/_/search/image/' + escape(params[1]);
 	cb(null, 303.1, dest);
 });
 
