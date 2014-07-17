@@ -343,12 +343,7 @@ OS.karada = function (body) {
 var dice_re = /(#flip|#8ball|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 exports.dice_re = dice_re;
 
-var EIGHT_BALL = [
-	'Yes',
-	'No',
-	'Maybe',
-	'Ara ara',
-];
+var eight_ball = config.EIGHT_BALL;
 
 function parse_dice(frag) {
 	if (frag == '#flip')
