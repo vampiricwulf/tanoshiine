@@ -184,11 +184,17 @@ function video_still(src, cb) {
 		var lines = stderr ? stderr.split('\n') : [];
 		var first = lines[0];
 		if (err) {
-			var msg = "Unknown video reading error.";
+			var msg;
 			if (/no such file or directory/i.test(first))
 				msg = "Video went missing.";
 			else if (/invalid data found when/i.test(first))
 				msg = "Invalid video file.";
+			else if (/^ffmpeg version/i.test(first))
+				msg = "Server's ffmpeg is too old.";
+			else {
+				msg = "Unknown video reading error.";
+				winston.warn("Unknown ffmpeg output: "+first);
+			}
 			fs.unlink(dest, function (err) {
 				cb(Muggle(msg, stderr));
 			});
@@ -219,15 +225,15 @@ IU.verify_webm = function (err, info) {
 	this.db.track_temporary(info.still_path, function (err) {
 		if (err)
 			winston.warn("Tracking error: " + err);
-		/*
-		if (info.has_audio)
+		if (info.has_audio && !config.WEBM_AUDIO)
 			return self.failure(Muggle('Audio is not allowed.'));
-		*/
 		// pretend it's a PNG for the next steps
 		var image = self.image;
 		image.video = image.path;
 		image.path = info.still_path;
 		image.ext = '.png';
+		if (info.has_audio)
+			image.audio = true;
 
 		self.verify_image();
 	});

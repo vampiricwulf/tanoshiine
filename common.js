@@ -340,12 +340,21 @@ OS.karada = function (body) {
 	return output;
 }
 
-var dice_re = /(#flip|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
+var dice_re = /(#flip|#8ball|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 exports.dice_re = dice_re;
+
+var EIGHT_BALL = [
+	'Yes',
+	'No',
+	'Maybe',
+	'Ara ara',
+];
 
 function parse_dice(frag) {
 	if (frag == '#flip')
 		return {n: 1, faces: 2};
+	if (frag == '#8ball')
+		return {n: 1, faces: EIGHT_BALL.length};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
 	if (!m)
 		return false;
@@ -362,6 +371,8 @@ exports.parse_dice = parse_dice;
 function readable_dice(bit, d) {
 	if (bit == '#flip')
 		return '#flip (' + (d[1] == 2) + ')';
+	if (bit == '#8ball')
+		return '#8ball (' + EIGHT_BALL[d[1] - 1] + ')';
 	var f = d[0], n = d.length, b = 0;
 	if (d[n-1] && typeof d[n-1] == 'object') {
 		b = d[n-1].bias;
@@ -494,6 +505,7 @@ OS.gazou = function (info, toppu) {
 	return [safe('<figure data-MD5="'), info.MD5, safe('"><figcaption>'),
 		caption, safe(' <i>('), (spoilertoggle && (info.spoiler || info.realthumb) ? 'Spoiler, ' : ''), size,
 		dims, (info.apng ? ', APNG' : ''),
+		info.audio ? ", \u266B" : '',
 		this.full ? [', ', chibi(info.imgnm, img.src)] : '',
 		safe(')</i></figcaption>'),
 		this.thumbStyle == 'hide' ? '' : img.html,
