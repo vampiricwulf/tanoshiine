@@ -1057,7 +1057,7 @@ Y.check_throttle = function (ip, callback) {
 
 function note_hash(m, hash, num) {
 	var key = 'hash:' + hash;
-	m.setex(key, config.DEBUG ? 30 : 3600, num);
+	m.setex(key, 30, num);
 }
 
 Y.add_image = function (post, alloc, ip, callback) {
