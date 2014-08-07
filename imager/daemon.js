@@ -27,14 +27,28 @@ function new_upload(req, resp) {
 }
 exports.new_upload = new_upload;
 
-function get_thumb_specs(dims, pinky, scale) {
-	var w = dims[0], h = dims[1];
-	var quality = config[pinky ? 'PINKY_QUALITY' : 'THUMB_QUALITY'];
+function get_thumb_specs(image, pinky, scale) {
+	var w = image.dims[0], h = image.dims[1];
 	var bound = config[pinky ? 'PINKY_DIMENSIONS' : 'THUMB_DIMENSIONS'];
 	var r = Math.max(w / bound[0], h / bound[1], 1);
-	var bg = pinky ? '#282a2e' : '#1d1f21';
 	var dims = [Math.round(w/r) * scale, Math.round(h/r) * scale];
-	return {dims: dims, quality: quality, bg: bg, bound: bound};
+	var specs = {bound: bound, dims: dims, format: 'jpg:'};
+	// Note: WebMs pretend to be PNGs at this step,
+	//       but those don't need transparent backgrounds.
+	//       (well... WebMs *can* have alpha channels...)
+	if (config.PNG_THUMBS && image.ext == '.png' && !image.video) {
+		specs.format = 'png:';
+		specs.quality = config.PNG_THUMB_QUALITY;
+	}
+	else if (pinky) {
+		specs.bg = '#282a2e';
+		specs.quality = config.PINKY_QUALITY;
+	}
+	else {
+		specs.bg = '#1d1f21';
+		specs.quality = config.THUMB_QUALITY;
+	}
+	return specs;
 }
 
 var ImageUpload = function (client_id) {
@@ -319,7 +333,7 @@ IU.deduped = function (err) {
 	if (this.failed)
 		return;
 	var image = this.image;
-	var specs = get_thumb_specs(image.dims, this.pinky, 1);
+	var specs = get_thumb_specs(image, this.pinky, 1);
 	var w = image.dims[0], h = image.dims[1];
 
 	/* Determine whether we really need a thumbnail */
@@ -379,7 +393,7 @@ IU.middle_nail = function () {
 	if (this.failed)
 		return;
 
-	var specs = get_thumb_specs(this.image.dims, this.pinky, 2);
+	var specs = get_thumb_specs(this.image, this.pinky, 2);
 	this.fill_in_specs(specs, 'mid');
 
 	var self = this;
@@ -564,10 +578,9 @@ function setup_image_params(o) {
 
 	o.src += '[0]'; // just the first frame of the animation
 
-	var thumbFormat = 'jpg:';
-	o.dest = thumbFormat + o.dest;
+	o.dest = o.format + o.dest;
 	if (o.compDest)
-		o.compDest = thumbFormat + o.compDest;
+		o.compDest = o.format + o.compDest;
 	o.flatDims = o.dims[0] + 'x' + o.dims[1];
 	if (o.compDims)
 		o.compDims = o.compDims[0] + 'x' + o.compDims[1];
@@ -600,10 +613,12 @@ function resize_image(o, comp, callback) {
 	// in the composite case, zoom to fit. otherwise, force new size
 	args.push('-resize', dims + (comp ? '^' : '!'));
 	// add background
-	args.push('-gamma', '2.2', '-background', o.bg);
+	args.push('-gamma', '2.2');
+	if (o.bg)
+		args.push('-background', o.bg);
 	if (comp)
 		args.push(o.composite, '-layers', 'flatten', '-extent', dims);
-	else
+	else if (o.bg)
 		args.push('-layers', 'mosaic', '+matte');
 	// disregard metadata, acquire artifacts
 	args.push('-strip', '-quality', o.quality);
