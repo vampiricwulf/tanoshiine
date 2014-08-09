@@ -668,7 +668,7 @@ OS.atama = function (data) {
 	if (data.trip)
 		header.push(safe('<code>' + data.trip + '</code>'));
 	if (auth)
-		header.push(' ## ' + auth);
+		header.push(' ## ' + (auth == 'Admin' ? (config.ADMIN_ALIAS ? config.ADMIN_ALIAS : auth) : (config.MOD_ALIAS ? config.MOD_ALIAS : auth)));
 	this.trigger('headerName', {header: header, data: data});
 	header.push(safe('</b>'));
 	if (data.email) {
