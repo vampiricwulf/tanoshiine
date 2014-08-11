@@ -32,12 +32,12 @@ function get_thumb_specs(image, pinky, scale) {
 	var bound = config[pinky ? 'PINKY_DIMENSIONS' : 'THUMB_DIMENSIONS'];
 	var r = Math.max(w / bound[0], h / bound[1], 1);
 	var dims = [Math.round(w/r) * scale, Math.round(h/r) * scale];
-	var specs = {bound: bound, dims: dims, format: 'jpg:'};
+	var specs = {bound: bound, dims: dims, format: 'jpg'};
 	// Note: WebMs pretend to be PNGs at this step,
 	//       but those don't need transparent backgrounds.
 	//       (well... WebMs *can* have alpha channels...)
 	if (config.PNG_THUMBS && image.ext == '.png' && !image.video) {
-		specs.format = 'png:';
+		specs.format = 'png';
 		specs.quality = config.PNG_THUMB_QUALITY;
 	}
 	else if (pinky) {
@@ -344,7 +344,6 @@ IU.deduped = function (err) {
 			&& w <= specs.dims[0] && h <= specs.dims[1]) {
 		return this.got_nails();
 	}
-	this.haveNail = true;
 	this.fill_in_specs(specs, 'thumb');
 
 	// was a composited spoiler selected or forced?
@@ -368,7 +367,6 @@ IU.deduped = function (err) {
 		], function (err) {
 			if (err)
 				return self.failure(err);
-			self.haveComp = true;
 			self.got_nails();
 		});
 	}
@@ -400,7 +398,6 @@ IU.middle_nail = function () {
 	this.resize_and_track(specs, false, function (err) {
 		if (err)
 			self.failure(err);
-		self.haveMiddle = true;
 		self.got_nails();
 	});
 };
@@ -422,15 +419,15 @@ IU.got_nails = function () {
 	var base = path.basename;
 	var tmps = {src: base(image.path)};
 
-	if (this.haveNail) {
+	if (image.thumb_path) {
 		image.thumb = time + '.jpg';
 		tmps.thumb = base(image.thumb_path);
 	}
-	if (this.haveMiddle) {
+	if (image.mid_path) {
 		image.mid = time + '.jpg';
 		tmps.mid = base(image.mid_path);
 	}
-	if (this.haveComp) {
+	if (image.comp_path) {
 		image.composite = time + 's' + image.spoiler + '.jpg';
 		tmps.comp = base(image.comp_path);
 		delete image.spoiler;
@@ -578,9 +575,9 @@ function setup_image_params(o) {
 
 	o.src += '[0]'; // just the first frame of the animation
 
-	o.dest = o.format + o.dest;
+	o.dest = o.format + ':' + o.dest;
 	if (o.compDest)
-		o.compDest = o.format + o.compDest;
+		o.compDest = o.format + ':' + o.compDest;
 	o.flatDims = o.dims[0] + 'x' + o.dims[1];
 	if (o.compDims)
 		o.compDims = o.compDims[0] + 'x' + o.compDims[1];

@@ -26,4 +26,7 @@
 	color: black;
 	padding: 1em;
 	position: fixed;
+	right: 0;
+	overflow-y: auto;
+	max-height: 80%;
 }
