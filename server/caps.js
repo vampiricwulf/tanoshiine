@@ -75,7 +75,7 @@ exports.augment_oneesama = function (oneeSama, opts) {
 		oneeSama.hook('headerName', denote_priv);
 		oneeSama.hook('headerName', authcommon.denote_hidden);
 	}
-	if (can_moderate(ident)) {
+	if (can_moderate(ident) && !can_administrate(ident)) {
 		oneeSama.hook('headerName', authcommon.append_mnemonic_no_ip);
 	}
 	if (can_administrate(ident) && opts.board == 'graveyard')
