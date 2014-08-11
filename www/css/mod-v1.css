@@ -5,9 +5,7 @@
 }
 .mod.address {
 	background-color: white;
-	top: 0;
-	right: 50%;
-	transform: translate(50%,-105%);
+	bottom: 1.2em;
 	color: #444;
 	position: absolute;
 	padding: 1em;
@@ -21,8 +19,7 @@
 }
 .mod#panel {
 	background-color: white;
-	bottom: 50px;
-	right: 50px;
+	bottom: 30px;
 	color: black;
 	padding: 1em;
 	position: fixed;
