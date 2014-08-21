@@ -69,7 +69,7 @@ var config = {
         'Ara ara',
         "That is my fetish",
     ],
-    
+
 	// Client-side custom site-wide banner.
 	CUSTOM_BANNER_BOTTOM: false,
 	CUSTOM_BANNER_TOP: false,
