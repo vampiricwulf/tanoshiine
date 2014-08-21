@@ -157,14 +157,26 @@ span.control .popup-menu {
 	top: 2px;
 	width: 12px;
 }
-#banner {
+#bannerTop {
+	display: block;
+	overflow: hidden;
+	text-align: center;
+	white-space: nowrap;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: -1;
+	margin-left: -8px;
+	margin-right: -8px;
+}
+#bannerBot {
 	color: gray;
 	display: block;
 	overflow: hidden;
 	text-align: center;
 	white-space: nowrap;
 }
-section #banner {
+section #bannerBot, section #bannerTop {
 	margin-top: 1em;
 	text-align: left;
 }
@@ -375,7 +387,7 @@ pre, .themed {
 }
 
 @media screen and (max-device-width: 480px) and (orientation: portrait) {
-	section > blockquote, section > header, section > #banner, section > .omit {
+	section > blockquote, section > header, section > #bannerBot, section > #bannerTop, section > .omit {
 		margin-left: 0.5em;
 		margin-right: 0.5em;
 	}

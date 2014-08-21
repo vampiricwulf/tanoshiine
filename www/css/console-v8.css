@@ -48,6 +48,9 @@ blockquote strong {
 header a {
 	color: #00a5b2;
 }
+#bannerTop {
+	background: rgba(31, 31, 31, 0.7);
+}
 body {
 	background-color: #050505;
 	margin: 0;

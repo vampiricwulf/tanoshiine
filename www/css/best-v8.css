@@ -37,6 +37,9 @@ b.admin {
 b.moderator {
 	color: #8B3956;
 }
+#bannerTop {
+	background: rgba(152, 71, 98, 0.7);
+}
 body {
   color: #111;
 	text-shadow: #CAFA46 1px 0px 1px;

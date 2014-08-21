@@ -36,13 +36,13 @@ oneeSama.hook('insertOwnPost', function (extra) {
 	}
 });
 
-var bannerExtra = config.CUSTOM_BANNER ? $.parseHTML('<b>'+config.CUSTOM_BANNER+'</b>') : null;
+var bannerExtra = config.CUSTOM_BANNER_BOTTOM ? $.parseHTML('<b>'+config.CUSTOM_BANNER_BOTTOM+'</b>') : null;
 
 if (!$banner && bannerExtra) {
 	var dest;
 	if (THREAD){
 		dest = $('#lock');
-		$banner = $('<span id="banner"/>').insertAfter(dest);
+		$banner = $('<span id="bannerBot"/>').insertAfter(dest);
 		$banner.empty().append(bannerExtra);
 	}
 }
@@ -59,18 +59,18 @@ dispatcher[UPDATE_BANNER] = function (msg, op) {
 				dest = $s.children('header');
 		}
 		if (dest)
-			$banner = $('<span id="banner"/>').insertAfter(dest);
+			$banner = $('<span id="bannerBot"/>').insertAfter(dest);
 	}
 	if ($banner) {
 		if (Array.isArray(msg)) {
 			construct_banner(msg);
-			if (bannerExtra)
-				$banner.append(' / ', bannerExtra);
+			// if (bannerExtra)
+			// 	$banner.append(' / ', bannerExtra);
 		}
 		else if (msg) {
 			$banner.text(msg);
-			if (bannerExtra)
-				$banner.append(' / ', bannerExtra);
+			// if (bannerExtra)
+			// 	$banner.append(' / ', bannerExtra);
 		}
 		else if (bannerExtra && THREAD) {
 			$banner.empty().append(bannerExtra);

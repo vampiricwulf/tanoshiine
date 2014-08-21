@@ -39,6 +39,9 @@ article.editing .themed {
 b.admin {
 	color: #f00000;
 }
+#bannerTop {
+	background: rgba(55, 57, 59, 0.7);
+}
 body {
 	background-color: #1d1f21;
 	color: #c5c8c6;

@@ -30,6 +30,9 @@ b.admin {
 b.moderator {
 	color: #800080;
 }
+#bannerTop {
+	background: rgba(229, 225, 230, 0.7);
+}
 body {
   color: #121314;
   background-image: url('homu2.png');
