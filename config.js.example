@@ -46,9 +46,6 @@ var config = {
 	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
 	CURFEW_BOARDS: ['moe'],
 
-	ANON_HOURS: false,
-	ANON_HOURS_PER_DAY: 2, /* Accepted values are [1, 2, 3, 4, 6, 12, 24] */
-
     EIGHT_BALL: [
         "Yes",
         "No",
