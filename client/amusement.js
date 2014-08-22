@@ -36,10 +36,6 @@ oneeSama.hook('insertOwnPost', function (extra) {
 	}
 });
 
-if (config.CUSTOM_BANNER_TOP) {
-    document.getElementById('bannerTop').innerHTML = '<b>' + config.CUSTOM_BANNER_TOP + '</b>';
-}
-
 var bannerExtra = config.CUSTOM_BANNER_BOTTOM ? $.parseHTML('<b>'+config.CUSTOM_BANNER_BOTTOM+'</b>') : null;
 
 if (!$banner && bannerExtra) {

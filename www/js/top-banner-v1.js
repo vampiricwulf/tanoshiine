@@ -1,0 +1,13 @@
+var write_bannerTop;
+(write_bannerTop = function(){
+	var xhr;
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://tanoshiine.info/banner.txt", true);
+	xhr.onload = function() {
+		var text = xhr.responseText;
+		document.getElementById('bannerTop').innerHTML = '<b>' + text + '</b>';
+		return setTimeout(write_bannerTop, 10000);
+	}
+	xhr.send(null);
+})();
+
