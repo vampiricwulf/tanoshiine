@@ -349,7 +349,7 @@ function parse_dice(frag) {
 	if (frag == '#flip')
 		return {n: 1, faces: 2};
 	if (frag == '#8ball')
-		return {n: 1, faces: EIGHT_BALL.length};
+		return {n: 1, faces: eight_ball.length};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
 	if (!m)
 		return false;
@@ -367,7 +367,7 @@ function readable_dice(bit, d) {
 	if (bit == '#flip')
 		return '#flip (' + (d[1] == 2) + ')';
 	if (bit == '#8ball')
-		return '#8ball (' + EIGHT_BALL[d[1] - 1] + ')';
+		return '#8ball (' + eight_ball[d[1] - 1] + ')';
 	var f = d[0], n = d.length, b = 0;
 	if (d[n-1] && typeof d[n-1] == 'object') {
 		b = d[n-1].bias;

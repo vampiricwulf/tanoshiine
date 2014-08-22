@@ -179,12 +179,6 @@ body > nav {
 	overflow: hidden;
 	text-align: center;
 	white-space: nowrap;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	z-index: 100;
-	margin-left: -8px;
-	margin-right: -8px;
 }
 section #bannerBot, section #bannerTop {
 	margin-top: 1em;
