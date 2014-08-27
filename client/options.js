@@ -38,6 +38,7 @@ if (window.devicePixelRatio > 1)
 optSpecs.push(option_thumbs);
 optSpecs.push(option_backlinks);
 optSpecs.push(option_spoiler);
+optSpecs.push(option_topbanner);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_theme);
 optSpecs.push(option_last_n);
@@ -274,6 +275,21 @@ function option_spoiler(spoilertoggle) {
 option_spoiler.id = 'nospoilertoggle';
 option_spoiler.label = 'Spoilered Images';
 option_spoiler.type = 'revcheckbox';
+
+/* TOP BANNER TOGGLE */
+
+
+function option_topbanner(bannertoggle) {
+	if(!bannertoggle) {
+		$("body").append('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
+	} else {
+		$("#bannerscript").remove();
+		$("#bannerTop > b").remove();
+	}
+}
+option_topbanner.id = 'notopbannertoggle';
+option_topbanner.label = 'Top Banner';
+option_topbanner.type = 'revcheckbox';
 
 /* INLINE EXPANSION */
 
