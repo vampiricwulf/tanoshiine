@@ -11,10 +11,15 @@ article, aside {
 	margin: 2px;
 	padding: 4px 10px;
 }
-aside a, #options {
+aside a {
 	cursor: pointer;
 	position: relative;
 	z-index: 15;
+}
+#options {
+	cursor: pointer;
+	position: relative;
+	z-index: 101;
 }
 article figure img {
 	margin-bottom: 0;
@@ -311,6 +316,7 @@ article .hat {
 	position: absolute;
 	right: 70px;
 	top: 70px;
+	z-index: 101;
 }
 #report-panel {
 	position: fixed;

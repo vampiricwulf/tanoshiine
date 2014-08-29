@@ -281,10 +281,11 @@ option_spoiler.type = 'revcheckbox';
 
 function option_topbanner(bannertoggle) {
 	if(!bannertoggle) {
-		$("body").append('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
+		$("#bannerTop").show();
+		if(!$("#bannerscript").length)
+			$("body").append('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
 	} else {
-		$("#bannerscript").remove();
-		$("#bannerTop > b").remove();
+		$("#bannerTop").hide();
 	}
 }
 option_topbanner.id = 'notopbannertoggle';
