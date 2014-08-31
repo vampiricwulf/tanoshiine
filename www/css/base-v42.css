@@ -163,8 +163,9 @@ span.control .popup-menu {
 	width: 12px;
 }
 body > nav {
-  position: relative;
-  z-index: 101;
+	display: inline;
+	position: relative;
+  	z-index: 101;
 }
 #bannerTop {
 	display: block;
