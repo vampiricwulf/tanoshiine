@@ -41,6 +41,8 @@ optSpecs.push(option_spoiler);
 optSpecs.push(option_topbanner);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_theme);
+optSpecs.push(option_user_bg);
+optSpecs.push(option_user_bg_set);
 optSpecs.push(option_last_n);
 
 
@@ -291,6 +293,55 @@ function option_topbanner(bannertoggle) {
 option_topbanner.id = 'notopbannertoggle';
 option_topbanner.label = 'Top Banner';
 option_topbanner.type = 'revcheckbox';
+
+/* CUSTOM USER-SET BACKGROUND */
+
+function option_user_bg(toggle){
+	if ($.cookie('user_bg') && toggle){
+		var image = $.cookie('user_bg');
+		$('body').append($('<div />', {
+			'id': 'user_bg'
+		}));
+		$('#user_bg').append($('<img />', {
+			'id': 'user_bg_image',
+			'src': image
+		}));
+		
+		// Workaround image unloading on focus loss Chrome bug
+		if (typeof document.webkitHidden !== "undefined"){
+			var hidden = "webkitHidden";
+			var visibilityChange = "webkitvisibilitychange";
+			
+			function handleVisibilityChange(){
+				if (document[hidden]) {
+					$('#user_bg_image').attr('src', '');
+				} else {
+					$('#user_bg_image').attr('src', image);
+				}
+			}
+			
+			document.addEventListener(visibilityChange, handleVisibilityChange, false);
+		}	
+	} else {
+		$('#user_bg').remove();
+		
+		// Remove workaround listener
+		if (typeof document.webkitHidden !== "undefined")
+			document.removeEventListener(visibilityChange, handleVisibilityChange);
+	}
+}
+
+option_user_bg.id = 'board.$BOARD.userBG';
+option_user_bg.label = 'Custom Background';
+option_user_bg.type = 'checkbox';
+
+function option_user_bg_set(image){
+	$.cookie('user_bg', image);
+}
+
+option_user_bg_set.id = 'userBGimage';
+option_user_bg_set.label = ' ';
+option_user_bg_set.type = 'image';
 
 /* INLINE EXPANSION */
 
@@ -600,6 +651,11 @@ function make_options_panel() {
 			val = !$o.prop('checked');
 		else if (spec.type == 'positive')
 			val = Math.max(parseInt($o.val(), 10), 1);
+		else if (spec.type == 'image'){
+			var trimmed = $o.val().trim();
+			if (/^$|\.(jpe?g|png|gif)$/.test(trimmed))
+				val = trimmed;
+		}
 		else
 			val = $o.val();
 		options.set(id, val);
@@ -622,6 +678,11 @@ function make_options_panel() {
 				width: '4em',
 				maxlength: 4,
 				val: val,
+			});
+		} else if (type == 'image'){
+			$input = $('<input />', {
+				placeholder: 'Image URL',
+				val: val
 			});
 		}
 		else if (type instanceof Array) {
