@@ -32,20 +32,21 @@ function parent_model($el) {
 (function () {
 
 /* OPTIONS LIST */
+optSpecs.push(option_topbanner);
+optSpecs.push(option_linkify);
+optSpecs.push(option_notification);
+optSpecs.push(option_backlinks);
 optSpecs.push(option_inline_expansion);
 if (window.devicePixelRatio > 1)
 	optSpecs.push(option_high_res);
 optSpecs.push(option_thumbs);
-optSpecs.push(option_backlinks);
-optSpecs.push(option_image_hover);
-optSpecs.push(option_webm_hover);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
-optSpecs.push(option_topbanner);
-optSpecs.push(option_linkify);
-optSpecs.push(option_notification);
-optSpecs.push(option_relative_time);
+optSpecs.push(option_image_hover);
+optSpecs.push(option_webm_hover);
 optSpecs.push(option_reply_at_right);
+optSpecs.push(option_relative_time);
+optSpecs.push(option_horizontal);
 optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
@@ -558,6 +559,20 @@ option_webm_hover.id = 'webmHover';
 option_webm_hover.label = 'WebM Hover Expansion';
 option_webm_hover.type = 'checkbox';
 option_webm_hover.tooltip = 'Display WebM previews on hover. Requires Image Hover Expansion enabled.';
+
+/* HORIZONTAL POSTING */
+
+function option_horizontal(toggle){
+	var style = '<style id="horizontal">article,aside{display:inline-block;}</style>';
+	if (toggle)
+		$('body').append(style);
+	else 
+		$('#horizontal').remove();
+}
+
+option_horizontal.id = 'horizontalPosting';
+option_horizontal.label = 'Horizontal Posting';
+option_horizontal.type = 'checkbox';
 
 /* INLINE EXPANSION */
 
