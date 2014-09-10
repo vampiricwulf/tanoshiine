@@ -134,6 +134,9 @@ var themes = [
 	'best',
 	'classic',
 	'homu',
+    'rave',
+    'tavern',
+    'glass'
 ];
 var globalVersion = 8;
 
@@ -340,19 +343,6 @@ option_topbanner.type = 'revcheckbox';
 /* CUSTOM USER-SET BACKGROUND */
 
 function option_user_bg(toggle){
-<<<<<<< HEAD
-	if ($.cookie('user_bg') && toggle){
-		var image = $.cookie('user_bg');
-		$('body').append($('<div />', {
-			'id': 'user_bg'
-		}));
-		$('#user_bg').append($('<img />', {
-			'id': 'user_bg_image',
-			'src': image
-		}));
-		
-		// Workaround image unloading on focus loss Chrome bug
-=======
 	if (options.get(option_user_bg_image.id) && toggle){
 		var image = options.get(option_user_bg_image.id);		
 		$('body').append($('<img />', {
@@ -366,7 +356,6 @@ function option_user_bg(toggle){
 		
 		// Workaround for image unloading on tab focus loss Chrome bug
 		// Basically, reloads the element to prevent the aggresive buggy caching or something
->>>>>>> 32822fb... Use localstorage for user backgrounds
 		if (typeof document.webkitHidden !== "undefined"){
 			var hidden = "webkitHidden";
 			var visibilityChange = "webkitvisibilitychange";
@@ -394,22 +383,12 @@ option_user_bg.id = 'board.$BOARD.userBG';
 option_user_bg.label = 'Custom Background';
 option_user_bg.type = 'checkbox';
 
-<<<<<<< HEAD
-function option_user_bg_set(image){
-	$.cookie('user_bg', image);
-}
-
-option_user_bg_set.id = 'userBGimage';
-option_user_bg_set.label = ' ';
-option_user_bg_set.type = 'image';
-=======
 // This looks silly
 function option_user_bg_image(){}
 
 option_user_bg_image.id = 'board.$BOARD.userBGimage';
 option_user_bg_image.label = ' ';
 option_user_bg_image.type = 'image';
->>>>>>> 32822fb... Use localstorage for user backgrounds
 
 /* INLINE EXPANSION */
 
@@ -721,11 +700,7 @@ function make_options_panel() {
 			val = Math.max(parseInt($o.val(), 10), 1);
 		else if (spec.type == 'image'){
 			var trimmed = $o.val().trim();
-<<<<<<< HEAD
-			if (/^$|\.(jpe?g|png|gif)$/.test(trimmed))
-=======
 			if (/\.(jpe?g|png|gif)$/i.test(trimmed))
->>>>>>> 32822fb... Use localstorage for user backgrounds
 				val = trimmed;
 			else if (/^$/.test(trimmed))
 				val = false;
