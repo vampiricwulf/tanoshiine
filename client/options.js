@@ -43,7 +43,7 @@ optSpecs.push(option_topbanner);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
-optSpecs.push(option_user_bg_set);
+optSpecs.push(option_user_bg_image);
 optSpecs.push(option_last_n);
 
 
@@ -143,6 +143,37 @@ function option_theme(theme) {
 		$('#theme').attr('href', mediaURL + 'css/' + css);
 	}
 }
+
+function gen_glass(){
+	// Check if theme is glass and user-bg is set
+	if (options.get(option_theme.id) == 'glass' &&
+		options.get(option_user_bg_image.id) &&
+		options.get(option_user_bg.id)){
+			var img = new Image();
+			img.src = options.get(option_user_bg_image.id);
+			img.onload = function(){
+				$(this).remove(); // prevent memory leaks
+				// Blur image with Pixastic and apply new backgrounds
+				Pixastic.process(img, 'blurfast', {amount: 1.5}, function(blurred){
+					var bg = 'url(' + blurred.toDataURL() + ') center fixed no-repeat; background-size: cover;}' ;
+					var gradient_dark = 'linear-gradient(rgba(40, 42, 46, 0.5), rgba(40, 42, 46, 0.5)),';
+					var gradient_light = 'linear-gradient(rgba(145, 145, 145, 0.5), rgba(145, 145, 145, 0.5)),';
+					$('body').append($('<style />', {
+						id: 'blurred'
+					}));
+					$('#blurred').append(
+						'article, aside, .pagination, .popup-menu, .modal, #FAQ, .preview, #banner {' +
+							'background:' + gradient_dark + bg
+					);
+					$('#blurred').append('article.editing{' +
+						'background:' + gradient_light + bg
+					);
+				});
+			};
+	} else
+		$('#blurred').remove();
+}
+
 option_theme.id = 'board.$BOARD.theme';
 option_theme.label = 'Theme';
 option_theme.type = themes;
@@ -309,6 +340,7 @@ option_topbanner.type = 'revcheckbox';
 /* CUSTOM USER-SET BACKGROUND */
 
 function option_user_bg(toggle){
+<<<<<<< HEAD
 	if ($.cookie('user_bg') && toggle){
 		var image = $.cookie('user_bg');
 		$('body').append($('<div />', {
@@ -320,6 +352,21 @@ function option_user_bg(toggle){
 		}));
 		
 		// Workaround image unloading on focus loss Chrome bug
+=======
+	if (options.get(option_user_bg_image.id) && toggle){
+		var image = options.get(option_user_bg_image.id);		
+		$('body').append($('<img />', {
+			id: 'user_bg',
+			src: image
+		}));
+		
+		// Generate transparent BG, if theme is glass
+		if (options.get(option_theme.id) == 'glass')
+			gen_glass();
+		
+		// Workaround for image unloading on tab focus loss Chrome bug
+		// Basically, reloads the element to prevent the aggresive buggy caching or something
+>>>>>>> 32822fb... Use localstorage for user backgrounds
 		if (typeof document.webkitHidden !== "undefined"){
 			var hidden = "webkitHidden";
 			var visibilityChange = "webkitvisibilitychange";
@@ -347,6 +394,7 @@ option_user_bg.id = 'board.$BOARD.userBG';
 option_user_bg.label = 'Custom Background';
 option_user_bg.type = 'checkbox';
 
+<<<<<<< HEAD
 function option_user_bg_set(image){
 	$.cookie('user_bg', image);
 }
@@ -354,6 +402,14 @@ function option_user_bg_set(image){
 option_user_bg_set.id = 'userBGimage';
 option_user_bg_set.label = ' ';
 option_user_bg_set.type = 'image';
+=======
+// This looks silly
+function option_user_bg_image(){}
+
+option_user_bg_image.id = 'board.$BOARD.userBGimage';
+option_user_bg_image.label = ' ';
+option_user_bg_image.type = 'image';
+>>>>>>> 32822fb... Use localstorage for user backgrounds
 
 /* INLINE EXPANSION */
 
@@ -665,8 +721,14 @@ function make_options_panel() {
 			val = Math.max(parseInt($o.val(), 10), 1);
 		else if (spec.type == 'image'){
 			var trimmed = $o.val().trim();
+<<<<<<< HEAD
 			if (/^$|\.(jpe?g|png|gif)$/.test(trimmed))
+=======
+			if (/\.(jpe?g|png|gif)$/i.test(trimmed))
+>>>>>>> 32822fb... Use localstorage for user backgrounds
 				val = trimmed;
+			else if (/^$/.test(trimmed))
+				val = false;
 		}
 		else
 			val = $o.val();
