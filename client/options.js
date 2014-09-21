@@ -40,6 +40,7 @@ optSpecs.push(option_backlinks);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
 optSpecs.push(option_topbanner);
+optSpecs.push(option_image_hover);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
@@ -399,6 +400,62 @@ function option_user_bg_image(){}
 option_user_bg_image.id = 'board.$BOARD.userBGimage';
 option_user_bg_image.label = ' ';
 option_user_bg_image.type = 'image';
+
+/* IMAGE HOVER EXPANSION */
+
+function option_image_hover(toggle){
+	function mousein(){
+		// Check if image is expanded
+		if ($(this).closest('figure').hasClass('expanded'))
+			return;
+		var src = $(this).closest('a').attr('href');
+		var tag =  /\.webm/i.test(src) ? '<video />' : '<img />';
+		var html  = $(tag, {
+			id: 'hover_overlay_image',
+			'src': src,
+			autoplay: '',
+			loop: ''
+		});
+		// Gracefully fade out previous image
+		if ($('#hover_overlay_image').length){
+				fadeout(function(){
+					fadein(html);
+				});
+		} else
+			fadein(html);
+	}
+	
+	function fadein(html){
+		$('#hover_overlay_image').remove();
+		$('#hover_overlay').append(html);
+		$('#hover_overlay_image').fadeIn({duration: 200});
+	}
+	
+	function mouseout(){
+		if ($(this).closest('figure').hasClass('expanded'))
+			return;
+		$('#hover_overlay_image').fadeOut({duration: 200});
+	}
+	
+	function fadeout(cb){
+		$('#hover_overlay_image').fadeOut({duration: 200, complete: cb});
+	}
+	
+	if (toggle){
+		$DOC
+			.on('mouseenter', 'img, video', mousein)
+			.on('mouseleave', 'img, video', mouseout)
+			.on('click', 'img, video', fadeout);
+	} else {
+		$DOC
+			.off('mouseenter', 'img, video')
+			.off('mouseleave', 'img, video');
+	}
+}
+
+option_image_hover.id = 'imageHover';
+option_image_hover.label = 'Image Hover Expansion';
+option_image_hover.type = 'checkbox';
 
 /* INLINE EXPANSION */
 
