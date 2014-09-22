@@ -5,7 +5,7 @@ var write_bannerTop;
 	xhr.open("GET", "http://tanoshiine.info/banner.txt", true);
 	xhr.onload = function() {
 		var text = xhr.responseText;
-		document.getElementById('bannerTop').innerHTML = '<b>' + text + '</b>';
+		document.getElementById('bannerCenter').innerHTML = '<b>' + text + '</b>';
 		return setTimeout(write_bannerTop, 10000);
 	}
 	xhr.send(null);

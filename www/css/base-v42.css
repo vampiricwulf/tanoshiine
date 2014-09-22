@@ -162,7 +162,7 @@ span.control .popup-menu {
 	top: 2px;
 	width: 12px;
 }
-body > nav {
+body > #navTop {
 	display: inline;
 	position: relative;
   	z-index: 101;
@@ -170,14 +170,46 @@ body > nav {
 #bannerTop {
 	display: block;
 	overflow: hidden;
-	text-align: center;
-	white-space: nowrap;
 	position: fixed;
 	top: 0;
+	height: 17px;
 	width: 100%;
 	z-index: 100;
 	margin-left: -8px;
 	margin-right: -8px;
+}
+#bannerLeft{
+	display: inherit;
+	width:33%;
+	position: fixed;
+	left:0;
+	white-space: nowrap;
+}
+#bannerCenter{
+	display: inherit;
+	width:34%;
+	position: fixed;
+	left:50%;
+	transform: translateX(-50%);
+	text-align: center;
+	white-space: nowrap;
+}
+#bannerRight{
+	display: inherit;
+	width:33%;
+	position: fixed;
+	right:0;
+	text-align: right;
+	white-space: nowrap;
+}
+#bannerRight > a {
+	margin: 0 2.5px;
+}
+#bannerRight > #options-panel {
+	position: fixed !important;
+	right: 3px !important;
+	top: 20px !important;
+	text-align: left !important;
 }
 #bannerBot {
 	color: gray;
@@ -208,7 +240,7 @@ section #bannerBot, section #bannerTop {
 .email {
 	text-decoration: underline;
 }
-#sync.error {
+body > #sync.error {
 	position: fixed;
 	top: 12px;
 	right: 8px;
@@ -314,21 +346,21 @@ article .hat {
 	margin-bottom: 7px;
 	min-width: 100px;
 }
-#feedback {
+body > #feedback {
 	color: gray;
 	position: absolute;
 	right: 0.2em;
 	top: 0.2em;
 	z-index: 101;
 }
-#options, #sync {
+body > #options, body > #sync {
 	clear: right;
 	color: gray;
 	display: block;
 	float: right;
 	margin-bottom: 2px;
 }
-#options-panel {
+body > #options-panel {
 	position: absolute;
 	right: 70px;
 	top: 70px;

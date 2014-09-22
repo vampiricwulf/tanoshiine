@@ -165,7 +165,7 @@ function gen_glass(){
 						id: 'blurred'
 					}));
 					$('#blurred').append(
-						'article, aside, .pagination, .popup-menu, .modal, #FAQ, .preview, #banner {' +
+						'article, aside, .pagination, .popup-menu, .modal, #FAQ, .preview {' +
 							'background:' + gradient_dark + bg
 					);
 					$('#blurred').append('article.editing{' +
@@ -331,9 +331,21 @@ function option_topbanner(bannertoggle) {
 	if(!bannertoggle) {
 		$("#bannerTop").show();
 		if(!$("#bannerscript").length)
-			$("body").append('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
+			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
+ 		$("#navTop").appendTo("#bannerLeft");
+ 		$("#sync").appendTo("#bannerRight");
+		$("#feedback").appendTo("#bannerRight");
+		$("#options").appendTo("#bannerRight");
+		$("#options-panel").appendTo("#bannerRight");
 	} else {
 		$("#bannerTop").hide();
+		if($("#bannerscript").length) {
+			$("#sync").insertAfter("body > h1");
+			$("#options").insertAfter("#sync");
+			$("#options-panel").appendTo("body");
+			$("#navTop").prependTo("body");
+			$("#feedback").prependTo("body");
+		}
 	}
 }
 option_topbanner.id = 'notopbannertoggle';
@@ -667,7 +679,11 @@ _.defer(function () {
 	$('<a id="options">Options</a>').click(function () {
 		var $opts = $('#options-panel');
 		if (!$opts.length)
-			$opts = make_options_panel().appendTo('body');
+			if($("#bannerscript").length) {
+				$opts = make_options_panel().appendTo('#bannerRight');
+			} else {
+				$opts = make_options_panel().appendTo('body');
+			}
 		if ($opts.is(':hidden'))
 			oneeSama.trigger('renderOptions', $opts);
 		$opts.toggle('fast');

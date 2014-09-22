@@ -183,8 +183,6 @@ var returnHTML = common.action_link_html('.', 'Return').replace(
 exports.write_page_end = function (out, ident, returnLink) {
 	if (returnLink)
 		out.write(returnHTML);
-	else if (RES.navigationHtml)
-		out.write('<br><br>' + RES.navigationHtml);
 	var last = RES.indexTmpl.length - 1;
 	out.write(RES.indexTmpl[last]);
 	if (ident) {

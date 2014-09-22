@@ -157,7 +157,7 @@ exports.reload_hot_resources = function (cb) {
 function make_navigation_html() {
 	if (!HOT.INTER_BOARD_NAVIGATION)
 		return '';
-	var bits = ['<nav>['];
+	var bits = ['<b id="navTop">['];
 	config.BOARDS.forEach(function (board, i) {
 		if (board == config.STAFF_BOARD)
 			return;
@@ -165,7 +165,7 @@ function make_navigation_html() {
 			bits.push(' / ');
 		bits.push('<a href="../'+board+'/">'+board+'</a>');
 	});
-	bits.push(']</nav>');
+	bits.push(']</b>');
 	return bits.join('');
 }
 
