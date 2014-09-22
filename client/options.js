@@ -134,8 +134,6 @@ var themes = [
 	'best',
 	'classic',
 	'homu',
-    'rave',
-    'tavern',
     'glass'
 ];
 var globalVersion = 8;
