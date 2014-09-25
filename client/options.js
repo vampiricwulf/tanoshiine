@@ -791,7 +791,7 @@ function make_options_panel() {
 			});
 		} else if (type == 'image'){
 			$input = $('<input />', {
-				placeholder: 'Image URL',
+				placeholder: 'Local Image URL',
 				val: val
 			});
 		}
