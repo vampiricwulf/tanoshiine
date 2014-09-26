@@ -38,10 +38,11 @@ var config = {
 
 	// Thread creation cooldown for the same IP in seconds
 	THREAD_THROTTLE: 60,
-	// Expired threads will be either archived or deleted
-	// by archive/daemon.js. Set in seconds.
-	THREAD_EXPIRY: 3600 * 24 * 7,
-	// Posting speed throttling settings
+	THREAD_EXPIRY: {
+		moe: 3600 * 24 * 7,
+		gar: 3600 * 24 * 7,
+		meta: 3600 * 24 * 7,
+	},
 	SHORT_TERM_LIMIT: 2000,
 	LONG_TERM_LIMIT: 2000*20*12,
 	NEW_POST_WORTH: 50,
