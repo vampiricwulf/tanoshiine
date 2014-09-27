@@ -663,6 +663,13 @@ web.resource(/^\/outbound\/foolz\/(\d{0,10})$/, function (req, params, cb) {
 	cb(null, 303.1, thread ? dest+'thread/'+thread+'/' : dest);
 });
 
+web.resource(/^\/outbound\/meguca\/(a\/|do\/|l\/|w\/|)(\d{0,10})$/, function (req, params, cb) {
+	var board = req.url.match(/\/(a|do|l|w)\//);
+	var dest = 'http://meguca.org/'+(board[1] ? board[1] : 'a')+'/';
+	var thread = parseInt(req.url.match(/\d+/), 10);
+	cb(null, 303.1, thread ? dest+thread : dest);
+});
+
 /*web.resource(/^\/outbound\/moe\/(\d{0,10})$/, function (req, params, cb) {
 	var dest = 'http://doushio.com/moe/';
 	var thread = parseInt(params[1], 10);
