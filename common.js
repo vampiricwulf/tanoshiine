@@ -240,7 +240,7 @@ OS.red_string = function (ref) {
 	}
 	else if (prefix == '>/m'){
 		var mArray = ref.split('/');
-		var mBoard = (mArray[2].match(/(a|do|l|w)/) ? mArray[2] : 'a');
+		var mBoard = (mArray[2].match(/(^a$|^do$|^l$|^w$)/) ? mArray[2] : 'a');
 		var num = (mArray[2].match(/\d+/) ? parseInt(mArray[2], 10) : (mArray[3] ? parseInt(mArray[3], 10) : null));
 		var mExtra = '';
 		mExtra += mBoard+'/';
