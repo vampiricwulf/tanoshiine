@@ -185,7 +185,6 @@ body > #navTop {
 }
 #bannerTop {
 	display: block;
-	overflow: hidden;
 	position: fixed;
 	top: 0;
 	height: 17px;
