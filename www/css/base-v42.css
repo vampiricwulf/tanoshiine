@@ -220,11 +220,12 @@ body > #navTop {
 #bannerRight > a {
 	margin: 0 2.5px;
 }
-#bannerRight > #options-panel {
+#bannerRight > #options-panel, #bannerRight > #identity {
 	position: fixed !important;
 	right: 3px !important;
 	top: 20px !important;
 	text-align: left !important;
+	display: none;
 }
 #bannerBot {
 	color: gray;

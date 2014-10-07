@@ -300,21 +300,29 @@ option_autogif.type = 'checkbox';
 function option_topbanner(bannertoggle) {
 	if(!bannertoggle) {
 		$("#bannerTop").show();
+		$("#indentityContainer").show();
 		if(!$("#bannerscript").length)
 			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
  		$("#navTop").appendTo("#bannerLeft");
- 		$("#sync").appendTo("#bannerRight");
-		$("#feedback").appendTo("#bannerRight");
+		$("#feedback").prependTo("#bannerRight");
+ 		$("#sync").prependTo("#bannerRight");
+		$("#identity").appendTo("#bannerRight");
+		$("#identity").addClass("modal");
+		$("#identity").hide();
 		$("#options").appendTo("#bannerRight");
 		$("#options-panel").appendTo("#bannerRight");
 	} else {
 		$("#bannerTop").hide();
+		$("#indentityContainer").hide();
 		if($("#bannerscript").length) {
 			$("#sync").insertAfter("body > h1");
+			$("#identity").insertAfter("#sync");
 			$("#options").insertAfter("#sync");
 			$("#options-panel").appendTo("body");
 			$("#navTop").prependTo("body");
 			$("#feedback").prependTo("body");
+			$("#identity").removeClass("modal");
+			$("#identity").show();
 		}
 	}
 }
@@ -719,6 +727,11 @@ _.defer(function () {
 
 	optSpecs.forEach(function (spec) {
 		spec.id = spec.id.replace(/\$BOARD/g, BOARD);
+	});
+
+	$('#indentityContainer').click(function () {
+		var $iden = $('#identity');
+		$iden.toggle('fast');
 	});
 
 	$('<a id="options">Options</a>').click(function () {
