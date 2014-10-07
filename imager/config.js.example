@@ -29,7 +29,6 @@ module.exports = {
 	// Additional inbetween thumbnail quality setting. Served as "sharp"
 	EXTRA_MID_THUMBNAILS: true,
 	// PNG thumbnails for PNG images. This enables thumbnail transparency.
-	// Warning: significantly increases page size for large threads.
 	PNG_THUMBS: false,
 	// pngquant quality setting
 	PNG_THUMB_QUALITY: 10,
@@ -42,7 +41,7 @@ module.exports = {
 	/*
 	WEBM_AUDIO_SPOILER: 20,
 	*/
-// Enable SVG upload
+	// Enable SVG upload
 	SVG: false,
 
 	// Location of the spoiler directory. By default the assets directory has to be placed into doushio root
