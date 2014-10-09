@@ -411,11 +411,15 @@ option_user_bg_image.type = 'image';
 /* IMAGE HOVER EXPANSION */
 
 function option_image_hover(toggle){
-	function mousein(){
-		// Check if image is expanded
-		if ($(this).closest('figure').hasClass('expanded'))
+	function preview(){
+		// Check if hovering over image or image is expanded by clicking
+		if (!$(target).is('img, video') || $(target).closest('figure').hasClass('expanded'))
+			return fadeout();
+		var src = $(target).closest('a').attr('href');
+		var oldSrc = $('#hover_overlay_image').attr('src');
+		// Do nothing, if still hovering the same image
+		if (src == oldSrc)
 			return;
-		var src = $(this).closest('a').attr('href');
 		var tag =  /\.webm/i.test(src) ? '<video />' : '<img />';
 		var html  = $(tag, {
 			id: 'hover_overlay_image',
@@ -425,37 +429,39 @@ function option_image_hover(toggle){
 		});
 		// Gracefully fade out previous image
 		if ($('#hover_overlay_image').length){
-				fadeout(function(){
+				$('#hover_overlay_image').fadeOut({duration: 200, complete: function(){
 					fadein(html);
-				});
+			}});
 		} else
 			fadein(html);
 	}
 	
 	function fadein(html){
-		$('#hover_overlay').append(html);
+		$('#hover_overlay').html(html);
 		$('#hover_overlay_image').fadeIn({duration: 200});
 	}
 	
-	function mouseout(){
-		if ($(this).closest('figure').hasClass('expanded'))
-			return;
-		$('#hover_overlay_image').fadeOut({duration: 200, complete: function(){$('#hover_overlay_image').remove();}});
+	function fadeout(){
+		// Do nothing, if image is already removed
+		if ($('#hover_overlay_image').length){
+			$('#hover_overlay_image').fadeOut({duration: 200, complete: function(){
+				$('#hover_overlay_image').remove();
+				// More responsive transition with fast pouinter movements
+				preview();
+			}});
+		}
 	}
 	
-	function fadeout(cb){
-		$('#hover_overlay_image').fadeOut({duration: 200, complete: function(){$('#hover_overlay_image').remove();}});
-	}
+	// Currently hovered over element
+	var target;
 	
 	if (toggle){
 		$DOC
-			.on('mouseenter', 'img, video', mousein)
-			.on('mouseleave', 'img, video', mouseout)
+			.on('mouseover', function(e){
+				target = e.target;
+			})
+			.on('mousemove', preview)
 			.on('click', 'img, video', fadeout);
-	} else {
-		$DOC
-			.off('mouseenter', 'img, video')
-			.off('mouseleave', 'img, video');
 	}
 }
 
