@@ -220,6 +220,9 @@ body > #navTop {
 #bannerRight > a {
 	margin: 0 2.5px;
 }
+#indentityContainer {
+	cursor: pointer;
+}
 #bannerRight > #options-panel, #bannerRight > #identity {
 	position: fixed !important;
 	right: 3px !important;
