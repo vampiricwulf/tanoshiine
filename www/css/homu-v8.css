@@ -4,6 +4,9 @@ a {
 blockquote a, a:hover, .email b:hover {
 	color: #ab3842;
 }
+#bannerRight svg {
+	fill: #ab3842;
+}
 a.directfl {
   text-decoration: none;
   color: #a49aa6;

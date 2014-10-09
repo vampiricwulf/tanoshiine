@@ -305,11 +305,15 @@ function option_topbanner(bannertoggle) {
 			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
  		$("#navTop").appendTo("#bannerLeft");
 		$("#feedback").prependTo("#bannerRight");
+		$("#feedback").html('<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 8 8"><path d="M0 0v1l4 2 4-2v-1h-8zm0 2v4h8v-4l-4 2-4-2z" transform="translate(0 1)" /></svg>');
+ 		$("#feedback").attr('title', 'Feedback');
  		$("#sync").prependTo("#bannerRight");
 		$("#identity").appendTo("#bannerRight");
 		$("#identity").addClass("modal");
 		$("#identity").hide();
 		$("#options").appendTo("#bannerRight");
+		$("#options").html('<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 8 8"><path d="M5.5 0c-1.38 0-2.5 1.12-2.5 2.5 0 .32.08.62.19.91l-2.91 2.88c-.39.39-.39 1.05 0 1.44.2.2.46.28.72.28.26 0 .52-.09.72-.28l2.88-2.91c.28.11.58.19.91.19 1.38 0 2.5-1.12 2.5-2.5 0-.16 0-.32-.03-.47l-.97.97h-2v-2l.97-.97c-.15-.03-.31-.03-.47-.03zm-4.5 6.5c.28 0 .5.22.5.5s-.22.5-.5.5-.5-.22-.5-.5.22-.5.5-.5z"/></svg>');
+		$("#options").attr('title', 'Options');
 		$("#options-panel").appendTo("#bannerRight");
 	} else {
 		$("#bannerTop").hide();
@@ -318,9 +322,13 @@ function option_topbanner(bannertoggle) {
 			$("#sync").insertAfter("body > h1");
 			$("#identity").insertAfter("#sync");
 			$("#options").insertAfter("#sync");
+			$("#options").text('Options');
+			$("#options").removeAttr('title');
 			$("#options-panel").appendTo("body");
 			$("#navTop").prependTo("body");
 			$("#feedback").prependTo("body");
+			$("#feedback").removeAttr('title');
+			$("#feedback").text('Feedback');
 			$("#identity").removeClass("modal");
 			$("#identity").show();
 		}

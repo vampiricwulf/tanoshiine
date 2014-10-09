@@ -1,6 +1,9 @@
 a:hover {
 	color: #d00;
 }
+#bannerRight svg {
+	fill: #d00;
+}
 article.highlight {
 	background-color: #f5f5f5;
 }

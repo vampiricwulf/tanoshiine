@@ -9,6 +9,9 @@ del:hover, del:hover em, del.reveal, del.reveal em {
 a, blockquote a {
 	color: #954360;
 }
+#bannerRight svg {
+	fill: #954360;
+}
 a:hover, .email b:hover {
 	color: #d17c43;
 }
