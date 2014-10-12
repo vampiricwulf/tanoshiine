@@ -223,6 +223,10 @@ body > #navTop {
 #indentityContainer {
 	cursor: pointer;
 }
+#bannerRight > #sync {
+	position: relative;
+	top: -4px;
+}
 #bannerRight > #options-panel, #bannerRight > #identity {
 	position: fixed !important;
 	right: 3px !important;
