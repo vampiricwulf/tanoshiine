@@ -5,7 +5,9 @@
 }
 .mod.address {
 	background-color: white;
-	bottom: 1.2em;
+	top: 0;
+	right: 0;
+	transform: translateY(-100%);
 	color: #444;
 	position: absolute;
 	padding: 1em;
@@ -22,7 +24,7 @@
 	padding: 1em;
 	position: fixed;
 	right: 0;
-	overflow-y: auto;
+	overflow: visible !important;
 	max-height: 80%;
 	margin-right: 0.2em;
 }
