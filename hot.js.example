@@ -1,4 +1,5 @@
 this.hot = {
+	// User feedback email
 	EMAIL: "lalc@doushio.com",
 	TITLES: {
 		moe: "/moe/ - Sweets",
@@ -9,6 +10,7 @@ this.hot = {
 		staff: "/staff/",
 	},
 	BASE_CSS: 'base-v42.css',
+	// Default CSS theme setting per board
 	BOARD_CSS: {
 		moe: 'moe-v8.css',
 		gar: 'gar-v8.css',
@@ -18,7 +20,6 @@ this.hot = {
 		staff: 'moe-v8.css',
 	},
 	INTER_BOARD_NAVIGATION: true,
-
 	SPECIAL_TRIPCODES: {
 		kyubey: "／人◕ ‿‿ ◕人＼",
 	},

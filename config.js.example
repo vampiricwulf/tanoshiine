@@ -1,13 +1,21 @@
 var config = {
 	LISTEN_PORT: 8000,
-	LISTEN_HOST: null, //internal IP
-	DEBUG: true, //to find errors in console and print more in terminal, set to false to login with persona
+	// Host address to listen on. Use null for localhost
+	LISTEN_HOST: null,
+	// Debuging mode. Do not use in production
+	DEBUG: true,
+	// Secure tripcode encryption salt
 	SECURE_SALT: "LALALALALALALALA", /* [A-Za-z0-9./]{16} */
 	SOCKET_PATH: '/hana',
+	// Honour X-Forwarded-For HTTP headers for client IP determination
 	TRUST_X_FORWARDED_FOR: false,
+	// Use internal HTTP server to serve these resources.
+	// It is recommended to serve the www directory with a dedicated webserver, like nginx, 
+	// and set MEDIAURL in imager/config.js to the served directory's address.
 	SERVE_STATIC_FILES: false,
 	SERVE_IMAGES: false,
 	GZIP: false, /* not preferred; use nginx (or other)'s gzipping */
+	// Force usage of websocket protocol
 	USE_WEBSOCKETS: true,
 
 	REDIS_PORT: 6379,
@@ -18,11 +26,17 @@ var config = {
 	GAME_BOARDS: ['moe', 'archive'],
 	STAFF_BOARD: 'staff',
 	THREADS_PER_PAGE: 10,
+	// Replies to display under each thread on the board's root page
 	ABBREVIATED_REPLIES: 5,
+	// Default number of posts to display, when thread is expanded with the "Last N" link
 	THREAD_LAST_N: 100,
 
+	// Thread creation cooldown for the same IP in seconds
 	THREAD_THROTTLE: 60,
-	THREAD_EXPIRY: 3600 * 24 * 7, //Reloads only when archive/daemon.js is reloaded
+	// Expired threads will be either archived or deleted
+	// by archive/daemon.js. Set in seconds.
+	THREAD_EXPIRY: 3600 * 24 * 7,
+	// Posting speed throttling settings
 	SHORT_TERM_LIMIT: 2000,
 	LONG_TERM_LIMIT: 2000*20*12,
 	NEW_POST_WORTH: 50,
@@ -35,14 +49,18 @@ var config = {
 	EXCLUDE_REGEXP: /[\u2000-\u200f\u202a-\u202f\u205f-\u206f]+/g,
 	SAGE_ENABLED: true,
 
+	// Doushio uses Mozilla's Persona system for moderator authentication. Set login emails here.
+	// Loging in can be done by either going to the /login/ board or typing "misaki" into the email field.
 	ADMIN_PERSONAS: ['lalc@doushio.com'],
 	MODERATOR_PERSONAS: ['mod@doushio.com'],
+	// URL to pass to Mozilla's servers. 
 	PERSONA_AUDIENCE: 'http://example.com:80',
 	LOGIN_COOKIE_DOMAIN: 'example.com',
 	LOGIN_SESSION_TIME: 60*60*24*14,
+	// Translate IP's into more human-readable mnemonics
 	IP_MNEMONIC: true,
 	
-	// Staff title aliases
+	// Titles for staff that will be displayed in their posts' header
 	ADMIN_ALIAS: 'Admin',
 	MOD_ALIAS: 'Moderator',
 
@@ -51,6 +69,7 @@ var config = {
 	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
 	CURFEW_BOARDS: ['moe'],
 
+	// Array of answers for the 8ball random wisdom dispenser. To use, type "#8ball" in post, followed by enter. 
     EIGHT_BALL: [
         "Yes",
         "No",
