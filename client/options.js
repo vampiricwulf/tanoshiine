@@ -41,6 +41,7 @@ optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
 optSpecs.push(option_topbanner);
 optSpecs.push(option_image_hover);
+optSpecs.push(option_relative_time);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
@@ -271,6 +272,16 @@ var load_thread_backlinks = function ($section) {
 		add_post_links(src, update, op);
 	});
 };
+
+/* RELATIVE POST TIMESTAMPS */
+
+function option_relative_time(toggle){
+	$.cookie('rTime', toggle);
+}
+
+option_relative_time.id = 'relativeTime';
+option_relative_time.label = 'Relative Timestamps';
+option_relative_time.type = 'checkbox';
 
 /* SPOILER TOGGLE */
 
