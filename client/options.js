@@ -116,6 +116,7 @@ function option_last_n(n) {
 option_last_n.id = 'lastn';
 option_last_n.label = '[Last #]';
 option_last_n.type = 'positive';
+option_last_n.tooltip = 'Number of posts to display with the "Last n" thread expansion link';
 
 oneeSama.lastN = options.get('lastn');
 options.on('change:lastn', function (model, lastN) {
@@ -151,6 +152,7 @@ function option_theme(theme) {
 option_theme.id = 'board.$BOARD.theme';
 option_theme.label = 'Theme';
 option_theme.type = themes;
+option_theme.tooltip = 'Select CSS theme';
 
 /* THUMBNAIL OPTIONS */
 
@@ -176,6 +178,12 @@ function option_thumbs(type) {
 option_thumbs.id = 'board.$BOARD.thumbs';
 option_thumbs.label = 'Thumbnails';
 option_thumbs.type = thumbStyles;
+option_thumbs.tooltip = 'Set thumbnail type: ' +
+	'Small: 125x125, small file size; ' +
+	'Sharp: 125x125, more detailed; ' +
+	'Large: 250x250; ' +
+	'Hide: hide all images; ' +
+	'Requires page refresh';
 
 /* Alt-click a post to reveal its thumbnail if hidden */
 function reveal_thumbnail(event) {
@@ -221,6 +229,7 @@ function option_reply_at_right(r) {
 option_reply_at_right.id = 'replyright';
 option_reply_at_right.label = '[Reply] at right';
 option_reply_at_right.type = 'checkbox';
+option_reply_at_right.tooltip = 'Move Reply button to the right side of the page';
 
 /* BACKLINKS */
 
@@ -233,6 +242,7 @@ function option_backlinks(b) {
 option_backlinks.id = 'nobacklinks';
 option_backlinks.label = 'Backlinks';
 option_backlinks.type = 'revcheckbox';
+option_backlinks.tooltip = 'Links to replies of current post';
 
 function show_backlinks() {
 	if (load_thread_backlinks) {
@@ -282,6 +292,8 @@ function option_relative_time(toggle){
 option_relative_time.id = 'relativeTime';
 option_relative_time.label = 'Relative Timestamps';
 option_relative_time.type = 'checkbox';
+option_relative_time.tooltip = 'Relative post timestamps. Ex.: "1 hour ago. Requires page refresh"';
+
 
 /* SPOILER TOGGLE */
 
@@ -293,6 +305,7 @@ function option_spoiler(spoilertoggle) {
 option_spoiler.id = 'nospoilertoggle';
 option_spoiler.label = 'Spoilered Images';
 option_spoiler.type = 'revcheckbox';
+option_spoiler.tooltip = "Don't spoiler images. Requires page refresh";
 
 /* Autogif TOGGLE */
 
@@ -304,6 +317,7 @@ function option_autogif(autogif) {
 option_autogif.id = 'autogiftoggle';
 option_autogif.label = 'Animate GIFs';
 option_autogif.type = 'checkbox';
+option_autogif.tooltip = 'Animate GIF thumbnails. Requires page refresh';
 
 /* TOP BANNER TOGGLE */
 
@@ -348,6 +362,7 @@ function option_topbanner(bannertoggle) {
 option_topbanner.id = 'notopbannertoggle';
 option_topbanner.label = 'Top Banner';
 option_topbanner.type = 'revcheckbox';
+option_topbanner.tooltip = 'Toggle the banner at the top'
 
 /* CUSTOM USER-SET BACKGROUND */
 
@@ -370,6 +385,7 @@ function option_user_bg(toggle){
 option_user_bg.id = 'board.$BOARD.userBG';
 option_user_bg.label = 'Custom Background';
 option_user_bg.type = 'checkbox';
+option_user_bg.tooltip = 'Toggle custom page background';
 
 // Generate a new blurred BG on BG change
 function option_user_bg_image(image){
@@ -418,6 +434,8 @@ function append_glass(){
 option_user_bg_image.id = 'board.$BOARD.userBGimage';
 option_user_bg_image.label = ' ';
 option_user_bg_image.type = 'image';
+option_user_bg_image.tooltip = "Image URL to use as the board background. " + 
+	"URL must be from this website's domain for glass theme blurring to work.";
 
 /* IMAGE HOVER EXPANSION */
 
@@ -479,6 +497,7 @@ function option_image_hover(toggle){
 option_image_hover.id = 'imageHover';
 option_image_hover.label = 'Image Hover Expansion';
 option_image_hover.type = 'checkbox';
+option_image_hover.tooltip = 'Display image previews on hover. Requires page refresh';
 
 /* INLINE EXPANSION */
 
@@ -490,12 +509,14 @@ option_inline_expansion.label = 'Expansion';
 option_inline_expansion.type = ['none', 'full', 'width', 'height', 'both'];
 option_inline_expansion.labels = ['no', 'full-size', 'fit to width',
 		'fit to height', 'fit to both'];
+option_inline_expansion.tooltip = "Expand images inside the parent post and resize according to setting";
 
 function option_high_res() {
 }
 option_high_res.id = 'nohighres';
 option_high_res.label = 'High-res expansions';
 option_high_res.type = 'revcheckbox';
+option_high_res.tooltip = 'High resolution image expansion for high DPI screens';
 
 $DOC.on('mouseup', 'img, video', function (event) {
 	/* Bypass expansion for non-left mouse clicks */
@@ -829,7 +850,7 @@ function make_options_panel() {
 			});
 		} else if (type == 'image'){
 			$input = $('<input />', {
-				placeholder: 'Local Image URL',
+				placeholder: 'Image URL',
 				val: val
 			});
 		}
@@ -845,12 +866,12 @@ function make_options_panel() {
 			if (type.indexOf(val) >= 0)
 				$input.val(val);
 		}
-		var $label = $('<label/>').attr('for', id).text(spec.label);
-		$opts.append($input.attr('id', id), ' ', $label, '<br>');
+		var $label = $('<label/>').attr('for', id).attr('title', spec.tooltip).text(spec.label);
+		$opts.append($input.attr('id', id).attr('title', spec.tooltip), ' ', $label, '<br>');
 	});
 	if (!nashi.shortcuts) {
 		$opts.append($('<a/>', {
-			href: '#', text: 'Shortcuts',
+			href: '#', text: 'Keyboard Shortcuts',
 			click: toggle_shortcuts,
 		}));
 	}
