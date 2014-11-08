@@ -417,7 +417,7 @@ function append_glass(){
 			var bg = 'url(' + blurred + ') center fixed no-repeat; background-size: cover;}' ;
 			$('#blurred').remove();
 			$('<style />', {id: 'blurred'})
-				.appendTo('body')
+				.appendTo('head')
 				.html(
 					'article, aside, .pagination, .popup-menu, .modal, #FAQ, .preview, #banner {\
 						background:\
