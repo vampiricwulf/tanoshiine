@@ -67,6 +67,9 @@ figcaption i a {
 	color: inherit;
 	text-decoration: none;
 }
+syncwatch {
+	color: Yellow;
+}
 figure {
 	display: inline;
 	margin: 0;
