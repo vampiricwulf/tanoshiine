@@ -44,6 +44,7 @@ optSpecs.push(option_spoiler);
 optSpecs.push(option_topbanner);
 optSpecs.push(option_relative_time);
 optSpecs.push(option_reply_at_right);
+optSpecs.push(option_notification);
 optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
@@ -298,7 +299,6 @@ option_relative_time.tooltip = 'Relative post timestamps. Ex.: "1 hour ago." Req
 
 /* SPOILER TOGGLE */
 
-
 function option_spoiler(spoilertoggle) {
 	$.cookie('spoil',spoilertoggle);
 	oneeSama.spoilToggle = spoilertoggle;
@@ -308,8 +308,7 @@ option_spoiler.label = 'Spoilered Images';
 option_spoiler.type = 'revcheckbox';
 option_spoiler.tooltip = "Don't spoiler images. Requires page refresh";
 
-/* Autogif TOGGLE */
-
+/* AUTOGIF TOGGLE */
 
 function option_autogif(autogif) {
 	$.cookie('agif',autogif);
@@ -321,7 +320,6 @@ option_autogif.type = 'checkbox';
 option_autogif.tooltip = 'Animate GIF thumbnails. Requires page refresh';
 
 /* TOP BANNER TOGGLE */
-
 
 function option_topbanner(bannertoggle) {
 	if(!bannertoggle) {
@@ -364,6 +362,17 @@ option_topbanner.id = 'notopbannertoggle';
 option_topbanner.label = 'Top Banner';
 option_topbanner.type = 'revcheckbox';
 option_topbanner.tooltip = 'Toggle the banner at the top'
+
+/* NOTIFICATIONS */
+
+function option_notification(notifToggle) {
+	if(notifToggle && (Notification.permission !== "granted"))
+		Notification.requestPermission();
+}
+option_notification.id = 'notification';
+option_notification.label = 'Desktop Notifications';
+option_notification.type = 'checkbox';
+option_notification.tooltip = 'Get desktop notifications when quoted or a syncwatch is about to start';
 
 /* CUSTOM USER-SET BACKGROUND */
 
