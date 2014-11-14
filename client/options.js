@@ -42,9 +42,9 @@ optSpecs.push(option_webm_hover);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
 optSpecs.push(option_topbanner);
+optSpecs.push(option_notification);
 optSpecs.push(option_relative_time);
 optSpecs.push(option_reply_at_right);
-optSpecs.push(option_notification);
 optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
@@ -369,6 +369,7 @@ function option_notification(notifToggle) {
 	if(notifToggle && (Notification.permission !== "granted"))
 		Notification.requestPermission();
 }
+
 option_notification.id = 'notification';
 option_notification.label = 'Desktop Notifications';
 option_notification.type = 'checkbox';
