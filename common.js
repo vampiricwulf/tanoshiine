@@ -352,7 +352,7 @@ OS.karada = function (body) {
 	return output;
 }
 
-var dice_re = /(#flip|#8ball|#pyu|#pcount|#syncwatch(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
+var dice_re = /(#flip|#8ball|#bully|#bullcount|#syncwatch(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 exports.dice_re = dice_re;
 
 var eight_ball = config.EIGHT_BALL;
@@ -363,11 +363,11 @@ function parse_dice(frag) {
     if (frag == '#8ball')
         return {n: 1, faces: eight_ball.length};
 	// Increment counter
-	if (frag == '#pyu')
-		return {pyu: 'increment'};
+	if (frag == '#bully')
+		return {bully: 'increment'};
 	// Print current count
-	if (frag == '#pcount')
-		return {pyu: 'print'};
+	if (frag == '#bullcount')
+		return {bully: 'print'};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
 	// Regular dice
 	if (m){
@@ -399,10 +399,10 @@ function readable_dice(bit, d) {
 		return '#flip (' + (d[1] == 2) + ')';
     if (bit == '#8ball')
         return '#8ball (' + eight_ball[d[1]- 1] + ')';
-	if (bit == '#pyu')
-		return '#pyu(' + d + ')';
-	if (bit == '#pcount')
-		return '#pcount(' + d + ')';
+	if (bit == '#bully')
+		return '#bully(' + d + ')';
+	if (bit == '#bullcount')
+		return '#bullcount(' + d + ')';
 	if(/^#syncwatch/.test(bit)){
 		return safe('<syncwatch class="embed" datetime='+d[0].start+
 				" hour="+d[0].hour+

@@ -2,8 +2,8 @@ var common = require('../common'),
 	db = require('../db'),
     hooks = require('../hooks');
 
-var rollLimit = 5;
-var pyu_counter;
+var rollLimit = 10;
+var bully_counter;
 var r = global.redis;
 
 exports.roll_dice = function (frag, post, extra) {
@@ -15,14 +15,13 @@ exports.roll_dice = function (frag, post, extra) {
 			continue;
 		var f = info.faces;
 		var rolls = [];
-		console.log(pyu_counter);
-		// Pyu counter
-		if (info.pyu){
-			if (info.pyu == 'increment'){
-				pyu_counter++;
-				r.incr('pCounter');
+		// Bully counter
+		if (info.bully){
+			if (info.bully == 'increment'){
+				bully_counter++;
+				r.incr('bullCounter');
 			}
-			rolls.push(pyu_counter);
+			rolls.push(bully_counter);
 		}
 		else if(info.start)	//syncwatch
 			rolls.push({start:info.start, hour:info.hour, min:info.min, sec:info.sec});
@@ -61,13 +60,13 @@ function inline_dice(post, dice) {
 
 // Load counter from redis on server boot
 (function(){
-	r.get('pCounter', function(err, res){
+	r.get('bullCounter', function(err, res){
 		if (err)
-			return pyu_counter = false;
+			return bully_counter = false;
 		// Initial query
 		if (!res)
-			return pyu_counter = parseInt(0, 10);
-		pyu_counter = parseInt(res, 10);
+			return bully_counter = parseInt(0, 10);
+		bully_counter = parseInt(res, 10);
 	});
 })();
 
