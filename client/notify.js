@@ -28,7 +28,7 @@ Backbone.on('repliedToMe', function (post) {
 		var body = post.get('body');
 		var image = post.get('image');
 		if((body || image) && document.hidden)
-			new Notification('You have been quoted',{
+			new Notification('見て見て!',{
 				// if the post doesn't have a image we us a bigger favicon
 				icon: encodeURI(mediaURL+ (image ? 'thumb/'+image.thumb : '/css/ui/favbig.png')),
 				body: body,
