@@ -80,9 +80,7 @@ connSM.act('conn, reconn + open -> syncing', function () {
 });
 
 connSM.act('syncing + sync -> synced', function () {
-	sync_status('Synced', false);
-	// Drop focus, when all new posts are loaded
-	set_lock_target(null);
+	sync_status('Synced');
 	attemptTimer = setTimeout(function () {
 		attemptTimer = 0;
 		reset_attempts();
@@ -108,11 +106,7 @@ connSM.act('* + close -> dropped', function (e) {
 		clearTimeout(attemptTimer);
 		attemptTimer = 0;
 	}
-	sync_status('Dropped', true);
-	// Focus last post on connection drop. Prevents jumping to thread bottom on reconnect
-	var $articles = $('article');
-	if ($articles.length)
-		set_lock_target(parseInt($articles.last().attr('id')), 10);
+	sync_status('Dropped');
 	attempts++;
 	var n = Math.min(Math.floor(attempts/2), 12);
 	var wait = 500 * Math.pow(1.5, n);

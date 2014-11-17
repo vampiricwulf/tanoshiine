@@ -41,9 +41,8 @@ function with_dom(func) {
 	return ret;
 }
 
-function set_lock_target(num, manually) {
-	lockedManually = manually;
-
+function set_lock_target(model) {
+	var num = model && model.id;
 	if (!num && at_bottom())
 		num = PAGE_BOTTOM;
 	if (num == lockTarget)
