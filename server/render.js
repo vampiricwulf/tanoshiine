@@ -195,7 +195,7 @@ exports.make_pagination_html = function (info) {
 };
 
 var returnHTML = common.action_link_html('.', 'Return').replace(
-		'span', 'span id="bottom"').replace('</span>', '] [<a href="#">Top</a></span>');
+		'span', 'span id="bottom"');
 
 exports.write_page_end = function (out, ident, returnLink) {
 	if (returnLink)
