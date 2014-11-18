@@ -352,7 +352,7 @@ OS.karada = function (body) {
 	return output;
 }
 
-var dice_re = /(#flip|#8ball|#bully|#bullcount|#syncwatch(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
+var dice_re = /(#flip|#8ball|#bully|#bullcount|#bulltotal|#syncwatch(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 exports.dice_re = dice_re;
 
 var eight_ball = config.EIGHT_BALL;
@@ -365,9 +365,12 @@ function parse_dice(frag) {
 	// Increment counter
 	if (frag == '#bully')
 		return {bully: 'increment'};
-	// Print current count
+	// Print current thread count
 	if (frag == '#bullcount')
 		return {bully: 'print'};
+	// Print total count
+	if (frag == '#bulltotal')
+		return {bully: 'total'};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
 	// Regular dice
 	if (m){
@@ -403,6 +406,8 @@ function readable_dice(bit, d) {
 		return '#bully(' + d + ')';
 	if (bit == '#bullcount')
 		return '#bullcount(' + d + ')';
+	if (bit == '#bulltotal')
+		return '#bulltotal(' + d + ')';
 	if(/^#syncwatch/.test(bit)){
 		return safe('<syncwatch class="embed" datetime='+d[0].start+
 				" hour="+d[0].hour+

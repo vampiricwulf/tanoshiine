@@ -3,6 +3,7 @@ var common = require('../common'),
     hooks = require('../hooks');
 
 var rollLimit = 10;
+var bully_counter;
 var r = global.redis;
 var threadContainer = {};
 
@@ -20,10 +21,15 @@ exports.roll_dice = function (frag, post, extra) {
 			if (info.bully == 'increment'){
 				if (!threadContainer[post.op])
 					threadContainer[post.op] = 0;
+				bully_counter++;
 				threadContainer[post.op]++;
+				r.incr('bullCounter');
 				r.hincrby('thread:' + post.op, 'bullyctr', 1);
 			}
-			rolls.push(threadContainer[post.op]);
+			if (info.bully == 'increment' || info.bully == 'print')
+				rolls.push(threadContainer[post.op]);
+			if (info.bully == 'total')
+				rolls.push(bully_counter);
 		}
 		else if(info.start)	//syncwatch
 			rolls.push({start:info.start, hour:info.hour, min:info.min, sec:info.sec});
@@ -59,8 +65,15 @@ function inline_dice(post, dice) {
 		post.dice = dice.substring(1, dice.length - 1);
 	}
 }
-//second step incomplete
+
 (function(){
+	r.get('bullCounter', function(err, res){
+		if (err)
+			return bully_counter = false;
+		if (!res)
+			return bully_counter = parseInt(0, 10);
+		bully_counter = parseInt(res, 10);
+	});
 	r.keys('thread:*', function (err, keys) {
 		if (err)
 			return;
