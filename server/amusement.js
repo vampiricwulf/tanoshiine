@@ -3,8 +3,8 @@ var common = require('../common'),
     hooks = require('../hooks');
 
 var rollLimit = 10;
-var bully_counter;
 var r = global.redis;
+var threadContainer = {};
 
 exports.roll_dice = function (frag, post, extra) {
 	var ms = frag.split(common.dice_re);
@@ -18,10 +18,12 @@ exports.roll_dice = function (frag, post, extra) {
 		// Bully counter
 		if (info.bully){
 			if (info.bully == 'increment'){
-				bully_counter++;
-				r.incr('bullCounter');
+				if (!threadContainer[post.op])
+					threadContainer[post.op] = 0;
+				threadContainer[post.op]++;
+				r.hincrby('thread:' + post.op, 'bullyctr', 1);
 			}
-			rolls.push(bully_counter);
+			rolls.push(threadContainer[post.op]);
 		}
 		else if(info.start)	//syncwatch
 			rolls.push({start:info.start, hour:info.hour, min:info.min, sec:info.sec});
@@ -57,16 +59,21 @@ function inline_dice(post, dice) {
 		post.dice = dice.substring(1, dice.length - 1);
 	}
 }
-
-// Load counter from redis on server boot
+//second step incomplete
 (function(){
-	r.get('bullCounter', function(err, res){
+	r.keys('thread:*', function (err, keys) {
 		if (err)
-			return bully_counter = false;
-		// Initial query
-		if (!res)
-			return bully_counter = parseInt(0, 10);
-		bully_counter = parseInt(res, 10);
+			return;
+		keys.forEach(function (key, i) {
+			if (key.match(/[0-9]+$/)) {
+			 	var threadOP = key.replace("thread:", "");
+			 	if (!r.hget(key, "bullyctr"))
+			 		r.hset(key, "bullyctr", 0);
+			 	r.hget(key, "bullyctr", function (err, value) {
+			 		threadContainer[threadOP] = value;
+			 	});
+			}
+		});
 	});
 })();
 
