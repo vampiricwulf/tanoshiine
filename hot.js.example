@@ -9,7 +9,6 @@ this.hot = {
 		graveyard: "/graveyard/",
 		staff: "/staff/",
 	},
-	BASE_CSS: 'base-v42.css',
 	// Default CSS theme setting per board
 	BOARD_CSS: {
 		moe: 'moe',
