@@ -436,7 +436,7 @@ function readable_dice(bit, d) {
 
 // Convert text URLs to clickable links
 // *Not* recommended. Use at your own risk.
-var LINKIFY = false;
+var LINKIFY = true;
 
 OS.geimu = function (text) {
 	if (!this.dice) {
