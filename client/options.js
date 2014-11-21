@@ -141,11 +141,10 @@ var themes = [
 	'homu',
     'glass'
 ];
-var globalVersion = 8;
 
 function option_theme(theme) {
 	if (theme) {
-		var css = theme + '.css?v=' + globalVersion;
+		var css = theme + '.css?v=' + themeVersion;
 		$('#theme').attr('href', mediaURL + 'css/' + css);
 	}
 	append_glass();
