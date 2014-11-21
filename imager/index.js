@@ -11,8 +11,8 @@ var async = require('async'),
 exports.Onegai = db.Onegai;
 exports.config = config;
 
-var image_attrs = ('src thumb dims size MD5 hash imgnm spoiler realthumb vint'
-		+ ' apng mid audio').split(' ');
+var image_attrs = ('src thumb dims size MD5 SHA1 hash imgnm spoiler realthumb vint'
+		+ ' apng mid audio length').split(' ');
 exports.image_attrs = image_attrs;
 
 exports.send_dead_image = function (kind, filename, resp) {
