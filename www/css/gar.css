@@ -4,8 +4,14 @@ a {
 #bannerRight svg {
 	fill: #a00;
 }
+a.referenced {
+	border-bottom: 1px dashed #a00;
+}
 a:hover, blockquote a, .email b:hover {
 	color: #513fd3;
+}
+blockquote a.referenced {
+	border-bottom: 1px dashed #513fd3;
 }
 article, aside, .pagination {
 	background-color: #e9e0c9;
@@ -16,7 +22,7 @@ article.highlight {
 	background-color: #ffb8d5;
 	border-color: #ef93c5;
 }
-article.editing {
+.editing {
 	background: #b7bbb6 url('chevrons.png');
 	border-color: gray;
 	background-attachment: fixed;

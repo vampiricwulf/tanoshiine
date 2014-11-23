@@ -4,6 +4,9 @@ a, blockquote a {
 #bannerRight svg {
 	fill: #54578c;
 }
+a.referenced {
+	border-bottom: 1px dashed #54578c;
+}
 a:hover, .email b:hover {
 	color: #d17c43;
 }
@@ -16,7 +19,7 @@ article.highlight {
 	background-color: #b9ccb4;
 	border-color: #9fbf9d;
 }
-article.editing {
+.editing {
 	background-color: #f0e5ba;
 	border-color: #dbd1aa;
 }

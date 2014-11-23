@@ -4,8 +4,14 @@ a, blockquote a:hover, b.moderator {
 #bannerRight svg {
 	fill: #ef9d6a;
 }
-a:hover, blockquote a, .email b:hover, article.editing a:hover {
+a.referenced {
+	border-bottom: 1px dashed #ef9d6a;
+}
+a:hover, blockquote a, .email b:hover, .editing a:hover {
 	color: #ef9d6a;
+}
+blockquote a.referenced {
+	border-bottom: 1px dashed #ef9d6a;
 }
 article, aside, .modal, .pagination {
 	background: url(wood.jpg);
@@ -15,7 +21,7 @@ article.highlight, .preview, .popup-menu {
 	background: url(wood.jpg);
     color: white;
 }
-article.editing {
+.editing {
 	background:
         linear-gradient(
            rgba(239, 157, 106, 0.25),
@@ -24,16 +30,16 @@ article.editing {
         url(wood.jpg);
 	color: white;
 }
-article.editing a, article.editing header {
+.editing a, .editing header {
 	color: white;
 }
-article.editing em {
+.editing em {
 	color: #B7BA3E;
 }
-article.editing li {
+.editing li {
 	color: white;
 }
-article.editing .themed {
+.editing .themed {
 	color: white;
 }
 b.admin {

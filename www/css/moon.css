@@ -4,10 +4,13 @@ a:hover {
 #bannerRight svg {
 	fill: #d00;
 }
+a.referenced {
+	border-bottom: 1px dashed blue;
+}
 article.highlight {
 	background-color: #f5f5f5;
 }
-article.editing {
+.editing {
 	background-color: #fa6;
 }
 b.admin {
@@ -34,6 +37,9 @@ nav a {
 }
 small a {
 	color: gray;
+}
+small a.referenced {
+	border-bottom: 1px dashed grey;
 }
 .act a {
 	color: blue;

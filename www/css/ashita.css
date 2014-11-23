@@ -4,7 +4,13 @@ a, blockquote a:hover, b.moderator {
 #bannerRight svg {
 	fill: #81a2be;
 }
-a:hover, blockquote a, .email b:hover, article.editing a:hover {
+a.referenced {
+	border-bottom: 1px dashed #81a2be;
+}
+blockquote a.referenced {
+	border-bottom: 1px dashed #5f89ac;
+}
+a:hover, blockquote a, .email b:hover, .editing a:hover {
 	color: #5f89ac;
 }
 article, aside, .modal, .pagination {

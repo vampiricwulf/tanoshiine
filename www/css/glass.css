@@ -3,15 +3,18 @@ a, blockquote a:hover, b.moderator {
 	color: Lavender;
 }
 #bannerRight svg {
-	fill: Lavender;
+	fill: #C8C8D9;
 }
-article, aside, .pagination, .popup-menu, .modal, #FAQ, .preview, #bannerTop {
+a.referenced {
+	border-bottom: 1px dashed #C8C8D9;
+}
+article, aside, .pagination, .popup-menu, .modal, .preview, #bannerTop {
 	background-color: rgba(40, 42, 46, 0.5);
 }
-article.editing {
+.editing {
 	background-color: rgba(145, 145, 145, 0.5);
 }
-blockquote, time, #FAQ {
+blockquote, time {
 	color: white;
 }
 b.admin {

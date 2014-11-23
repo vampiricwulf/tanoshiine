@@ -4,8 +4,14 @@ a {
 #bannerRight svg {
 	fill: #c22;
 }
+a.referenced {
+	border-bottom: 1px dashed #c22;
+}
 a:hover, blockquote a, .email b:hover {
 	color: #513fd3;
+}
+blockquote a.referenced {
+	border-bottom: 1px dashed #513fd3;
 }
 article, aside, .modal, .pagination {
 	background-color: #222;
@@ -16,7 +22,7 @@ article.highlight {
 	background-color: #333;
 	border-color: #222;
 }
-article.editing {
+.editing {
 	background-color: #311;
 	border-color: #200;
 }
