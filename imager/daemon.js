@@ -244,10 +244,19 @@ StillJob.prototype.perform_job = function () {
 		var l = stderr.match(/Duration: (\d{2}:\d{2}:\d{2})/);
 		if (l){
 			var h = l[1].slice(0, 3);
-			var ms = l[1].slice(3);
-			if (h == '00:')
-				 h = '';
-			length = h + ms;
+			var m = l[1].slice(3,6);
+			var s = l[1].slice(6) + 's';
+			if (h == '00:'){
+				h = '';
+			} else {
+				h = h.replace(':', 'h');
+			}
+			if (m == '00:'){
+				m = '';
+			} else {
+				m = m.replace(':', 'm')
+			}
+			length = h + m + s;
 		}
 
 		self.finish_job(null, {
