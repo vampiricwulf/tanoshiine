@@ -187,33 +187,29 @@ body > #navTop {
 	display: block;
 	position: fixed;
 	top: 0;
-	height: 17px;
 	width: 100%;
 	z-index: 100;
 	margin-left: -8px;
 	margin-right: -8px;
 }
 #bannerLeft{
-	display: inherit;
+	vertical-align: text-top;
+	display: inline-block;
 	width:33%;
-	position: fixed;
-	left:0;
 	white-space: nowrap;
 }
 #bannerCenter{
-	display: inherit;
+	vertical-align: text-top;
+	display: inline-block;
 	width:34%;
-	position: fixed;
-	left:50%;
-	transform: translateX(-50%);
 	text-align: center;
 	white-space: nowrap;
+	z-index: 101;
 }
 #bannerRight{
-	display: inherit;
+	vertical-align: text-top;
+	display: inline-block;
 	width:33%;
-	position: fixed;
-	right:0;
 	text-align: right;
 	white-space: nowrap;
 }
