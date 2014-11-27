@@ -11,6 +11,12 @@ a.directfl {
   text-decoration: none;
   color: #a49aa6;
 }
+blockquote a.referenced {
+	border-bottom: 1px dashed #ab3842;
+}
+a.referenced {
+	border-bottom: 1px dashed #433b8a;
+}
 article, aside, .pagination {
   background-color: #d9cedb;
 	border-right: 1px solid #cec9cf;
@@ -20,7 +26,7 @@ article.highlight {
 	background-color: #bda1bf;
 	border-color: #a499a8;
 }
-article.editing {
+.editing {
 	background-color: #a391cc;
 	border-color: #9686bd;
 }

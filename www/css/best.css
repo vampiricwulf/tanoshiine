@@ -6,6 +6,9 @@ del, del em {
 del:hover, del:hover em, del.reveal, del.reveal em {
         color: black;
 }
+a.referenced {
+	border-bottom: 1px dashed #954360;
+}
 a, blockquote a {
 	color: #954360;
 }
@@ -27,7 +30,7 @@ article.highlight {
 	background-color: #8C3CD5;
 	border-color: #CAFA46;
 }
-article.editing {
+.editing {
 	background-color: #C967DA;
 	border-color: #CAFA46;
 }
