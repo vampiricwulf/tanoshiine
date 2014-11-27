@@ -524,6 +524,8 @@ web.resource(/^\/(\w+)\/(\d+)$/, function (req, params, cb) {
 				etag += '-' + thumb;
 			if (chunks.spoil == 'true' || chunks.spoil == 'false')
 				etag += '-sp_' + chunks.spoil;
+			if (chunks.noimg == 'true' || chunks.noimg == 'false')
+				etag += '-ni_' + chunks.noimg;
 			if (chunks.agif == 'true' || chunks.agif == 'false')
 				etag += '-ag_' + chunks.agif;
 			if (lastN)

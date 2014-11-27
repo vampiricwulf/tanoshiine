@@ -549,6 +549,8 @@ OS.image_paths = function () {
 var audioIndicator = "\u266B"; // musical note
 
 OS.gazou = function (info, toppu) {
+	if (this.noimg == true)
+		return safe('<figure>Image Removed</figure>');
 	var src, name, caption;
 	var spoilertoggle = (this.spoilToggle == true);
 	if (info.vint) {
@@ -590,7 +592,7 @@ OS.gazou = function (info, toppu) {
 		safe('</figure>\n\t')];
 };
 
-exports.thumbStyles = ['small', 'sharp', 'large', 'hide'];
+exports.thumbStyles = ['small', 'sharp', 'large', 'hide', 'noimg'];
 
 OS.gazou_img = function (info, toppu) {
 	var src, thumb;

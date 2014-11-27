@@ -165,16 +165,32 @@ function option_thumbs(type) {
 	// need pinky/mid distinction in the model to do properly
 	oneeSama.thumbStyle = type;
 	var hide = type == 'hide';
+	var noimg = type == 'noimg';
 	if (hide)
 		$('img').hide();
 	else
 		$('img').show();
+	if (noimg) {
+		$('img').hide();
+		$('article figcaption').hide();
+		if ($('article figcaption').length)
+			$('article figure').prepend('<span>Image Removed</span>');
+	}
+	else {
+		$('img').show();
+		$('article figcaption').show();
+		if ($('article figcaption').length)
+			$('article figure span').remove();
+	}
 
 	if (hide && !revealSetup)
 		$DOC.on('click', 'article', reveal_thumbnail);
 	else if (!hide && revealSetup)
 		$DOC.off('click', 'article', reveal_thumbnail);
 	revealSetup = hide;
+
+	$.cookie('noimg',noimg);
+	oneeSama.noimg = noimg;
 }
 option_thumbs.id = 'board.$BOARD.thumbs';
 option_thumbs.label = 'Thumbnails';
@@ -184,6 +200,7 @@ option_thumbs.tooltip = 'Set thumbnail type: ' +
 	'Sharp: 125x125, more detailed; ' +
 	'Large: 250x250; ' +
 	'Hide: hide all images; ' +
+	'NoImg: keep site from loading any images on load; ' +
 	'Requires page refresh';
 
 /* Alt-click a post to reveal its thumbnail if hidden */
