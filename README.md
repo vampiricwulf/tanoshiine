@@ -29,6 +29,7 @@ Dependencies:
 * redis
 * ffmpeg 2.2+ if supporting WebM
 * pngquant 2.2.0+ if PNG thumbnails enabled
+* exiftool if you want to strip images of their exif (must be enabled in config)
 
 Optional npm deps for various features:
 
