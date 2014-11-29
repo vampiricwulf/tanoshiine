@@ -309,7 +309,7 @@ function option_linkify(toggle){
 }
 
 option_linkify.id = 'linkify';
-option_linkify.label = 'Linkify text URLs';
+option_linkify.label = 'Linkify URLs';
 option_linkify.type = 'checkbox';
 option_linkify.tooltip = 'Convert in-post text URLs to clickable links. WARNING: Potential security hazard (XSS). Requires page refresh.';
 
