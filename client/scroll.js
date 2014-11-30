@@ -143,7 +143,7 @@ if (window.scrollMaxY !== undefined)
 // Account for banner height, when scrolling to an anchor
 function scroll_above_banner(){
 	if (!!location.hash)
-		$(window).scrollTop($(window).scrollTop()-$('#banner').height());
+		$(window).scrollTop($(window).scrollTop()-$('#bannerTop').height());
 }
 
 window.onpopstate = scroll_above_banner;
