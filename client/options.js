@@ -50,6 +50,7 @@ optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
 optSpecs.push(option_last_n);
+optSpecs.push(option_clean_ls);
 
 
 _.defaults(options, {
@@ -577,6 +578,15 @@ option_high_res.label = 'High-res expansions';
 option_high_res.type = 'revcheckbox';
 option_high_res.tooltip = 'High resolution image expansion for high DPI screens';
 
+function option_clean_ls() {
+}
+option_clean_ls.id = 'cleanls';
+option_clean_ls.label = 'Restore Default Options';
+option_clean_ls.type = 'button';
+option_clean_ls.tooltip = 'Last resort to fix options.';
+option_clean_ls.click = "localStorage.removeItem('options');";
+
+
 $DOC.on('mouseup', 'img, video', function (event) {
 	/* Bypass expansion for non-left mouse clicks */
 	if (options.get('inlinefit') != 'none' && event.which > 1) {
@@ -907,6 +917,11 @@ function make_options_panel() {
 				type: 'file',
 				title: spec.tooltip,
 			});
+		} else if (type == 'button'){
+			$input = $('<button onclick="'+spec.click+'">'+spec.label+'</button>', {
+				type: 'button',
+				title: spec.tooltop,
+			});
 		}
 		else if (type instanceof Array) {
 			$input = $('<select/>');
@@ -921,7 +936,7 @@ function make_options_panel() {
 				$input.val(val);
 		}
 		var $label = $('<label/>').attr('for', id).attr('title', spec.tooltip).text(spec.label);
-		$opts.append($input.attr('id', id).attr('title', spec.tooltip), ' ', $label, '<br>');
+		$opts.append($input.attr('id', id).attr('title', spec.tooltip), ' ', (spec.type == 'button' ? '' : $label), '<br>');
 	});
 	if (!nashi.shortcuts) {
 		$opts.append($('<a/>', {
