@@ -352,7 +352,7 @@ OS.karada = function (body) {
 	return output;
 }
 
-var dice_re = /(#flip|#8ball|#bully|#bullcount|#bulltotal|#syncwatch(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
+var dice_re = /(#flip|#8ball|#bully|#bullcount|#bulltotal|#sw(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 exports.dice_re = dice_re;
 
 var eight_ball = config.EIGHT_BALL;
@@ -382,7 +382,7 @@ function parse_dice(frag) {
 			info.bias = parseInt(m[3], 10);
 		return info;
 	}
-	var sw = frag.match(/^#syncwatch(\d+:)?(\d+):(\d+)([+-]\d+)?$/i);//first capture group may or may not be present.
+	var sw = frag.match(/^#sw(\d+:)?(\d+):(\d+)([+-]\d+)?$/i);//first capture group may or may not be present.
 	if (sw){
 		var hour= parseInt(sw[1], 10) || 0,min = parseInt(sw[2], 10), sec = parseInt(sw[3], 10);
 		var time = new Date().getTime();
@@ -408,7 +408,7 @@ function readable_dice(bit, d) {
 		return '#bullcount(' + d + ')';
 	if (bit == '#bulltotal')
 		return '#bulltotal(' + d + ')';
-	if(/^#syncwatch/.test(bit)){
+	if(/^#sw/.test(bit)){
 		return safe('<syncwatch class="embed" datetime='+d[0].start+
 				" hour="+d[0].hour+
 				" min="+d[0].min+
