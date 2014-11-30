@@ -454,7 +454,6 @@ function option_user_bg_image(target){
 
 function append_glass(){
 	// Check if theme is glass, user-bg is set and blurred BG is generated
-
 	if (options.get(option_theme.id) == 'glass' && options.get(option_user_bg.id) &&
 		localStorage.userBG && localStorage.userBGBlurred){
 			// Apply blurred background
@@ -463,14 +462,14 @@ function append_glass(){
 			$('<style />', {id: 'blurred'})
 				.appendTo('head')
 				.html(
-					'article, aside, .pagination, .popup-menu, .modal, #FAQ, .preview, #banner {\
+					'article, aside, .pagination, .popup-menu, .modal, .bmodal, .preview, #banner {\
 						background:\
 							linear-gradient(rgba(40, 42, 46, 0.5), rgba(40, 42, 46, 0.5)),' +
-							bg +
-					'article.editing{\
+							'url(' + blurred + ') center fixed no-repeat; background-size: cover;}' +
+					'.editing{\
 						background:\
 							linear-gradient(rgba(145, 145, 145, 0.5), rgba(145, 145, 145, 0.5)),' +
-							bg
+							'url(' + blurred + ') center fixed no-repeat !important; background-size: cover;}'
 				);
 	} else
 		$('#blurred').remove();
