@@ -462,7 +462,7 @@ function append_glass(){
 			$('<style />', {id: 'blurred'})
 				.appendTo('head')
 				.html(
-					'article, aside, .pagination, .popup-menu, .modal, .bmodal, .preview, #banner {\
+					'article, aside, .pagination, .popup-menu, .modal, .bmodal, .preview, #bannerTop {\
 						background:\
 							linear-gradient(rgba(40, 42, 46, 0.5), rgba(40, 42, 46, 0.5)),' +
 							'url(' + blurred + ') center fixed no-repeat; background-size: cover;}' +
