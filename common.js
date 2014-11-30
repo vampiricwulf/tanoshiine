@@ -562,17 +562,9 @@ OS.gazou = function (info, toppu) {
 		src = encodeURI(this.image_paths().src + info.src);
 		caption = ['Image ', new_tab_link(src, info.src)];
 	}
-	function reduce(numerator,denominator){
-  		var gcd = function gcd(a,b){
-    		return b ? gcd(b, a%b) : a;
- 		};
-  		gcd = gcd(numerator,denominator);
- 		return numerator/gcd+":"+denominator/gcd;
-	}
+
 	var img = this.gazou_img(info, toppu);
 	var dims = info.dims[0] + 'x' + info.dims[1];
-	var ratio = reduce(info.dims[0],info.dims[1]);
-
 
 	return [safe('<figure data-MD5="'), info.MD5,
 		safe('" data-size="'), info.size, safe('"><figcaption>'),
@@ -581,7 +573,7 @@ OS.gazou = function (info, toppu) {
 		info.audio ? (audioIndicator + ', ') : '',
 		info.length ? (info.length + ', ') : '',
 		readable_filesize(info.size), ', ',
-		dims, ', ', ratio, (info.apng ? ', APNG' : ''),
+		dims, (info.apng ? ', APNG' : ''),
 		this.full ? [', ', chibi(info.imgnm, img.src)] : '',
 		safe(')</i></figcaption>'),
 		this.thumbStyle == 'hide' ? '' : img.html,
