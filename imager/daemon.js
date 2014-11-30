@@ -361,11 +361,13 @@ IU.exifdel = function (err) {
 		return self.deduped();
 	child_process.execFile(exiftoolBin, ['-all=', image.path],
 	function(err, stdout, stderr){
-		if (err)
-			winston.warn("Failure in removing EXIF data on " + image.name);
+		if (err) {
+			self.status('Failure in removing EXIF');
+			winston.warn('Failure in removing EXIF data on ' + image.name + ' || ' + stderr);
+		}
+		self.deduped();
 	});
-	self.deduped();
-}
+};
 
 IU.deduped = function (err) {
 	if (this.failed)
