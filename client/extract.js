@@ -92,6 +92,7 @@ function scan_threads_for_extraction() {
 
 	if (THREAD)
 		CurThread = Threads.get(THREAD);
+	Backbone.trigger('extracted');
 }
 
 scan_threads_for_extraction();
