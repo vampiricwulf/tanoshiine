@@ -10,18 +10,18 @@ var config = {
 	// Honour X-Forwarded-For HTTP headers for client IP determination
 	TRUST_X_FORWARDED_FOR: false,
 	// Use internal HTTP server to serve these resources.
-	// It is recommended to serve the www directory with a dedicated webserver, like nginx, 
+	// It is recommended to serve the www directory with a dedicated webserver, like nginx,
 	// and set MEDIAURL in imager/config.js to the served directory's address.
 	SERVE_STATIC_FILES: false,
 	SERVE_IMAGES: false,
 	// Not preferred; use nginx (or other)'s gzipping
-	GZIP: false, 
+	GZIP: false,
 	// Force usage of websocket protocol
 	USE_WEBSOCKETS: true,
 
 	REDIS_PORT: 6379,
 	READ_ONLY: false,
-	
+
 	BOARDS: ['moe', 'gar', 'meta', 'archive', 'staff'],
 	DEFAULT_BOARD: 'moe',
 	GAME_BOARDS: ['moe', 'archive'],
@@ -54,7 +54,7 @@ var config = {
 	// Loging in can be done by either going to the /login/ board or typing "misaki" into the email field.
 	ADMIN_PERSONAS: ['lalc@doushio.com'],
 	MODERATOR_PERSONAS: ['mod@doushio.com'],
-	// URL to pass to Mozilla's servers. 
+	// URL to pass to Mozilla's servers.
 	PERSONA_AUDIENCE: 'http://example.com:80',
 	LOGIN_COOKIE_DOMAIN: 'example.com',
 	LOGIN_SESSION_TIME: 60*60*24*14,
@@ -69,7 +69,7 @@ var config = {
 	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
 	CURFEW_BOARDS: ['moe'],
 
-	// Array of answers for the 8ball random wisdom dispenser. To use, type "#8ball" in post, followed by enter. 
+	// Array of answers for the 8ball random wisdom dispenser. To use, type "#8ball" in post, followed by enter.
     EIGHT_BALL: [
         "Yes",
         "No",
@@ -98,11 +98,13 @@ var config = {
 	// A semi random set of hours each day will make all posts Anonymous
 	ANON_HOURS: false,
 	// Accepted values are [1, 2, 3, 4, 6, 12, 24]
-	ANON_HOURS_PER_DAY: 2, 
+	ANON_HOURS_PER_DAY: 2,
 	// Sets a semi-random ratio of anon hours to he converted into random name hours
 	// All posts will have a random name assigned to them from the posted name set
 	// Set to integer from 0 to 10. 0 disables random name hours. 10 makes all anon hours random name hours
-	RANDOM_NAME_HOURS: 0, 
+	RANDOM_NAME_HOURS: 0,
+
+	SUGGESTIONBOX: false,
 };
 
 module.exports = config;

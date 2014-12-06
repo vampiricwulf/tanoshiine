@@ -16,6 +16,7 @@ var _ = require('../lib/underscore'),
     Muggle = require('../etc').Muggle,
     okyaku = require('./okyaku'),
     persona = require('./persona'),
+    suggest = require('./issuetracker');
     render = require('./render'),
     STATE = require('./state'),
     tripcode = require('./../tripcode/tripcode'),
@@ -229,6 +230,15 @@ web.resource(/^\/$/, function (req, cb) {
 	cb(null, 'redirect', config.DEFAULT_BOARD + '/');
 });
 
+if(config.SUGGESTIONBOX){
+  web.resource(/^\/suggestionbox$/, true, function (req, resp) {
+    resp.writeHead(200, web.noCacheHeaders);
+    resp.write(RES.suggestionTmpl[0]);
+    resp.end(RES.suggestionTmpl[1]);
+  })
+  web.route_post(/^\/suggestionbox$/, suggest.newIssue);
+}
+
 web.route_post(/^\/login$/, persona.login);
 web.route_post_auth(/^\/logout$/, persona.logout);
 if (config.DEBUG) {
@@ -271,6 +281,7 @@ else {
 web.resource(/^\/(login|logout)\/$/, function (req, params, cb) {
 	cb(null, 'redirect', '../' + params[1]);
 });
+
 
 function write_mod_js(resp, ident) {
 	if (!RES.modJs) {

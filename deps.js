@@ -84,6 +84,7 @@ exports.SERVER_STATE = [
 	'tmpl/index.html',
 	'tmpl/login.html',
 	'tmpl/redirect.html',
+	'tmpl/suggestionbox.html',
 ];
 
 exports.MOD_CLIENT_DEPS = [

@@ -1,0 +1,45 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>Suggestions</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+  body {
+    background-color: #ddd;
+  }
+  form {
+    background-color: #eee;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 2px solid white;
+    padding: 5%;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    width: 50%;
+  }
+  input, textarea {
+    display: block;
+    width: 100%;
+  }
+  #body {
+    height: 100px;
+  }
+  </style>
+</head>
+<body>
+  <form action='/suggestionbox' enctype='multipart/form-data' method='post'>
+    <label>Title</label>
+    <input id='title' name='title'></input>
+    <label>Body</label>
+    <textarea id='body' name='body'></textarea>
+    <label>Labels (Optional, separate with spaces)<br>[Current Labels: bug, enhancement, question]</label>
+    <input id='labels' name='labels'></input>
+    <input type="submit" value="Submit">
+  </form>
+</body>

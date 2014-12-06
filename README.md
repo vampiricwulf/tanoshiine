@@ -37,6 +37,7 @@ Optional npm deps for various features:
 * icecast now-playing banners: node-expat
 * [send](https://github.com/visionmedia/send) (if you want to serve static files directly from the node.js process; useful in debug mode also)
 * forced anonymity hours: cron
+* suggestion box: github
 
 Standalone upkeep scripts:
 
