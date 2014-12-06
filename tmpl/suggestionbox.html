@@ -21,25 +21,39 @@
     transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
-    width: 50%;
+    width: 80%;
+  }
+  span > input, span {
+    display: inline;
+    text-align: left;
+    width: auto;
   }
   input, textarea {
     display: block;
     width: 100%;
   }
+  div {
+    display: inline-block;
+    width: auto;
+    position: relative;
+  }
   #body {
     height: 100px;
   }
   </style>
+  <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
-  <form action='/suggestionbox' enctype='multipart/form-data' method='post'>
+  <form action='#' enctype='multipart/form-data' method='post'>
     <label>Title</label>
     <input id='title' name='title'></input>
     <label>Body</label>
     <textarea id='body' name='body'></textarea>
-    <label>Labels (Optional, separate with spaces)<br>[Current Labels: bug, enhancement, question]</label>
-    <input id='labels' name='labels'></input>
+    <label>Labels (Optional)</label>
+    <br>
+    <span><input value='bug' id='labels' type='checkbox' name='bug'> bug <input value='enhancement' id='labels' type='checkbox' name='enhancement'> enhancement <input value='question' id='labels' type='checkbox' name='question'> question</span>
+    <br>
+    <div class="g-recaptcha" data-sitekey="6Lc97P4SAAAAAN9YF3W9fFeJyyjcr89NgDj9UIkB"></div>
     <input type="submit" value="Submit">
   </form>
 </body>
