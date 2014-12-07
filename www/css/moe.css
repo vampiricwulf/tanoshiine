@@ -22,7 +22,7 @@ article.highlight {
 	background-color: #d6bad0;
 	border-color: #ba9dbf;
 }
-.editing {
+article.editing {
 	background-color: #fa6;
 	border-color: #e95;
 }

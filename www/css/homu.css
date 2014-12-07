@@ -26,7 +26,7 @@ article.highlight {
 	background-color: #bda1bf;
 	border-color: #a499a8;
 }
-.editing {
+article.editing {
 	background-color: #a391cc;
 	border-color: #9686bd;
 }

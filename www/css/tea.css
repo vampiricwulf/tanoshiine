@@ -19,7 +19,7 @@ article.highlight {
 	background-color: #b9ccb4;
 	border-color: #9fbf9d;
 }
-.editing {
+article.editing {
 	background-color: #f0e5ba;
 	border-color: #dbd1aa;
 }

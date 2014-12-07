@@ -25,21 +25,21 @@ article.highlight, .preview, .popup-menu {
     -webkit-box-shadow: inset 0 0 7px #000000;
     box-shadow:         inset 0 0 7px #000000;
 }
-.editing {
+article.editing {
 	background-color: rgba(210,180,140,0.90);
 	border-color: purple;
 	color: black;
 }
-.editing a, .editing header {
+article.editing a, article.editing header {
 	color: #222;
 }
-.editing em {
+article.editing em {
 	color: #656d28;
 }
-.editing li {
+article.editing li {
 	color: #ddd;
 }
-.editing .themed {
+article.editing .themed {
 	color: #333;
 }
 b.admin {
@@ -70,7 +70,7 @@ del, del em{
 	/* For Fx 3.6 to 15 */
 	background: -moz-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
 	/* Standard syntax */
-	background: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet); 
+	background: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet);
 }
 del:hover, del:hover em, del.reveal, del.reveal em {
 	color: black;

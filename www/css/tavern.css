@@ -21,7 +21,7 @@ article.highlight, .preview, .popup-menu {
 	background: url(wood.jpg);
     color: white;
 }
-.editing {
+article.editing {
 	background:
         linear-gradient(
            rgba(239, 157, 106, 0.25),
@@ -30,16 +30,16 @@ article.highlight, .preview, .popup-menu {
         url(wood.jpg);
 	color: white;
 }
-.editing a, .editing header {
+article.editing a, article.editing header {
 	color: white;
 }
-.editing em {
+article.editing em {
 	color: #B7BA3E;
 }
-.editing li {
+article.editing li {
 	color: white;
 }
-.editing .themed {
+article.editing .themed {
 	color: white;
 }
 b.admin {
@@ -65,7 +65,7 @@ body, pre, .themed {
 	background-color: white;
 }
 em {
-	color: #B7BA3E;   
+	color: #B7BA3E;
 }
 h1 {
 	font: bolder 28px Tahoma;
@@ -102,4 +102,3 @@ hr {
 .themed {
 	color: white;
 }
-
