@@ -138,11 +138,12 @@ var themes = [
 	'ashita',
 	'console',
 	'tea',
+	'coffee',
 	'higan',
 	'best',
 	'classic',
 	'homu',
-    'glass'
+  'glass'
 ];
 
 function option_theme(theme) {
@@ -507,12 +508,12 @@ function option_image_hover(toggle){
 		} else
 			fadein(html);
 	}
-	
+
 	function fadein(html){
 		$('#hover_overlay').html(html);
 		$('#hover_overlay_image').fadeIn({duration: 200});
 	}
-	
+
 	function fadeout(){
 		// Do nothing, if image is already removed
 		if ($('#hover_overlay_image').length){
@@ -523,10 +524,10 @@ function option_image_hover(toggle){
 			}});
 		}
 	}
-	
+
 	// Currently hovered over element
 	var target;
-	
+
 	if (toggle){
 		$DOC
 			.on('mouseover', function(e){
@@ -558,7 +559,7 @@ function option_horizontal(toggle){
 	var style = '<style id="horizontal">article,aside{display:inline-block;}</style>';
 	if (toggle)
 		$('body').append(style);
-	else 
+	else
 		$('#horizontal').remove();
 }
 
