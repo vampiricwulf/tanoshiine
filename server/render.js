@@ -135,6 +135,11 @@ exports.write_board_head = function (out, board, nav) {
 	out.write(indexTmpl[i++]);
 };
 
+exports.write_board_title = function(out, board){
+	var title = STATE.hot.TITLES[board] || escape(board);
+	out.write('<h1>'+title+'</h1>');
+};
+
 exports.write_thread_head = function (out, board, op, opts) {
 	var indexTmpl = RES.indexTmpl;
 	var title = '/'+escape(board)+'/ - ';
@@ -157,6 +162,17 @@ exports.write_thread_head = function (out, board, op, opts) {
 	out.write(indexTmpl[i++]);
 	out.write('Thread #' + op);
 	out.write(indexTmpl[i++]);
+	out.write(common.action_link_html('#bottom', 'Bottom'));
+	out.write('<hr class="sectionHr">\n');
+};
+
+exports.write_thread_title = function(out, board, op, opts){
+	var title = '/'+escape(board)+'/';
+	if (opts.subject)
+		title += ' - ' + escape(opts.subject) + ' (#' + op + ')';
+	else
+		title += ' - #' + op;
+	out.write('<h1>'+title+'</h1>');
 	out.write(common.action_link_html('#bottom', 'Bottom'));
 	out.write('<hr class="sectionHr">\n');
 };
@@ -205,12 +221,13 @@ exports.make_pagination_html = function (info) {
 var returnHTML = common.action_link_html('.', 'Return').replace(
 		'span', 'span id="bottom"');
 
-exports.write_page_end = function (out, ident, returnLink) {
+exports.write_page_end = function (out, ident, returnLink, min) {
 	if (returnLink)
 		out.write(returnHTML);
 	var last = RES.indexTmpl.length - 1;
-	out.write(RES.indexTmpl[last]);
-	if (ident) {
+	if (!min)
+		out.write(RES.indexTmpl[last]);
+	if (ident && !min) {
 		if (caps.can_administrate(ident))
 			out.write('<script src="../admin.js"></script>\n');
 		else if (caps.can_moderate(ident))
