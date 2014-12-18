@@ -40,6 +40,7 @@ optSpecs.push(option_inline_expansion);
 if (window.devicePixelRatio > 1)
 	optSpecs.push(option_high_res);
 optSpecs.push(option_thumbs);
+optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
 optSpecs.push(option_image_hover);
@@ -326,6 +327,18 @@ option_relative_time.id = 'relativeTime';
 option_relative_time.label = 'Relative Timestamps';
 option_relative_time.type = 'checkbox';
 option_relative_time.tooltip = 'Relative post timestamps. Ex.: "1 hour ago." Requires page refresh';
+
+
+/* SAUCE TOGGLE */
+
+function option_sauce(saucetoggle) {
+	$.cookie('sauce',saucetoggle, {path: '/'});
+	oneeSama.sauceToggle = saucetoggle;
+}
+option_sauce.id = 'nosaucetoggle';
+option_sauce.label = 'Sauce Links';
+option_sauce.type = 'checkbox';
+option_sauce.tooltip = "Replace 'Image' with sauce links. Requires page refresh";
 
 
 /* SPOILER TOGGLE */

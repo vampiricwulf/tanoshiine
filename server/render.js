@@ -27,6 +27,8 @@ exports.write_thread_html = function (reader, req, out, opts) {
 	var cookies = web.parse_cookie(req.headers.cookie);
 	if (cookies.spoil == 'true')
 		oneeSama.spoilToggle = (cookies.spoil == 'true');
+  if (cookies.sauce == 'true')
+    oneeSama.sauceToggle = (cookies.sauce == 'true');
 	if (cookies.noimg == 'true')
 		oneeSama.noimg = (cookies.noimg == 'true');
 	if (cookies.agif == 'true')

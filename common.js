@@ -530,6 +530,12 @@ function new_tab_link(srcEncoded, inside, cls) {
 		' rel="nofollow">'), inside, safe('</a>')];
 }
 
+function image_sauce_id(src) {
+	return [safe('<a href="/outbound/sn/' + src + '" target="_blank" rel="nofollow">'),
+	'SN', safe('</a>'), ' ',
+	safe('<a href="/outbound/iq/' + src + '" target="_blank" rel="nofollow">'),
+	'IQ', safe('</a>')];
+}
 
 OS.image_paths = function () {
 	if (!this._imgPaths) {
@@ -551,18 +557,18 @@ OS.gazou = function (info, toppu) {
 		return safe('<figure>Image Removed</figure>');
 	var src, name, caption;
 	var spoilertoggle = (this.spoilToggle == true);
+	var saucetoggle = (this.sauceToggle == true);
 	if (info.vint) {
 		src = encodeURI('../outbound/hash/' + info.MD5);
 		var google = encodeURI('../outbound/g/' + info.vint);
 		var iqdb = encodeURI('../outbound/iqdb/' + info.vint);
 		caption = ['Search ', new_tab_link(google, '[Google]'), ' ',
 			new_tab_link(iqdb, '[iqdb]'), ' ',
-			new_tab_link(src, '[foolz]')/*,
-			new_tab_link(src, '[secret]')*/]; //related to server/server.js
+			new_tab_link(src, '[foolz]')];
 	}
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
-		caption = [(info.src.match('.webm')?'Video ':'Image '), new_tab_link(src, info.src)];
+		caption = [(info.src.match('.webm')?'Video':(saucetoggle?image_sauce_id(info.src):'Image')), ' ', new_tab_link(src, info.src)];
 	}
 
 	var img = this.gazou_img(info, toppu);

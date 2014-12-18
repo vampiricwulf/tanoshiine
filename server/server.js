@@ -533,6 +533,8 @@ web.resource(/^\/(\w+)\/(\d+)$/, function (req, params, cb) {
 			var thumb = req.cookies.thumb;
 			if (thumb && common.thumbStyles.indexOf(thumb) >= 0)
 				etag += '-' + thumb;
+      if (chunks.sauce == 'true' || chunks.sauce == 'false')
+        etag += '-sa_' + chunks.sauce;
 			if (chunks.spoil == 'true' || chunks.spoil == 'false')
 				etag += '-sp_' + chunks.spoil;
 			if (chunks.noimg == 'true' || chunks.noimg == 'false')
@@ -634,6 +636,20 @@ web.resource(/^\/(\w+)\/(\d+)\/$/, function (req, params, cb) {
 		cb(null, 302, '..');
 	else
 		cb(null, 'redirect', '../' + params[2]);
+});
+
+web.resource(/^\/outbound\/(sn|iq)\/([\d]{13})\.([\w]{3,4})$/,
+function (req, params, cb) {
+  var src = imager.config.MEDIA_URL + 'src/' + params[2] + '.' + params[3];
+  var u = urlParse(src, false, true);
+  if (!u.protocol) {
+    u.protocol = 'http:';
+    src = u.format();
+  }
+  var service = params[1] == 'sn' ? 'http://saucenao.com/search.php?url='
+  : 'http://iqdb.org/?url=';
+  var dest = service + encodeURIComponent(src);
+  cb(null, 303.1, dest);
 });
 
 web.resource(/^\/outbound\/(g|iqdb)\/([\w+\/]{22}\.jpg)$/,
