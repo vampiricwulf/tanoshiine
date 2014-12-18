@@ -562,7 +562,7 @@ OS.gazou = function (info, toppu) {
 	}
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
-		caption = ['Image ', new_tab_link(src, info.src)];
+		caption = [(info.src.match('.webm')?'Video ':'Image '), new_tab_link(src, info.src)];
 	}
 
 	var img = this.gazou_img(info, toppu);
