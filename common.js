@@ -568,7 +568,7 @@ OS.gazou = function (info, toppu) {
 	}
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
-		caption = [(info.src.test('.webm')?'Video':(saucetoggle?image_sauce_id(info.src):'Image')), ' ', new_tab_link(src, info.src)];
+		caption = [(/\.webm/.test(info.src)?'Video':(saucetoggle?image_sauce_id(info.src):'Image')), ' ', new_tab_link(src, info.src)];
 	}
 
 	var img = this.gazou_img(info, toppu);
