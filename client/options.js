@@ -40,6 +40,7 @@ optSpecs.push(option_inline_expansion);
 if (window.devicePixelRatio > 1)
 	optSpecs.push(option_high_res);
 optSpecs.push(option_thumbs);
+optSpecs.push(option_theme);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
@@ -49,7 +50,6 @@ optSpecs.push(option_reply_at_right);
 optSpecs.push(option_relative_time);
 optSpecs.push(option_syncwatch);
 optSpecs.push(option_horizontal);
-optSpecs.push(option_theme);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
 optSpecs.push(option_last_n);
