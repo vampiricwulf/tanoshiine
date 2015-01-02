@@ -572,8 +572,14 @@ OS.gazou = function (info, toppu) {
 	var img = this.gazou_img(info, toppu);
 	var dims = info.dims[0] + 'x' + info.dims[1];
 
+	// We need da data for da client to walk da podium
 	return [safe('<figure data-MD5="'), info.MD5,
-		safe('" data-size="'), info.size, safe('"><figcaption>'),
+		safe('" data-SHA1="'), info.SHA1,
+		safe('" data-size="'), info.size,
+		safe('" data-dims="'), info.dims.join(),
+		safe('" data-thumb="'), info.thumb,
+		info.mid ? safe('" data-mid="'+info.mid) : '',
+		safe('"><figcaption>'),
 		caption, safe(' <i>('),
 		(this.spoilToggle && (info.spoiler || info.realthumb) ? 'Spoiler, ' : ''),
 		info.audio ? (audioIndicator + ', ') : '',
