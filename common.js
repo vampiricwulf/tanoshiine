@@ -564,23 +564,21 @@ OS.gazou = function (info, toppu) {
 	}
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
-		caption = [(/\.webm/.test(info.src)?'Video':(this.sauceToggle?image_sauce_id(info.src):'Image')), ' ', new_tab_link(src, info.src)];
+		caption = [
+			new_tab_link(src, (this.thumbStyle == 'hide') ? '[Show]' : info.src, 'imageSrc'), 
+			(/\.webm/.test(info.src)?'Video':(this.sauceToggle?image_sauce_id(info.src):'Image')), ' ',
+			new_tab_link(src, info.src)
+		];
 	}
 
 	var img = this.gazou_img(info, toppu);
 	var dims = info.dims[0] + 'x' + info.dims[1];
 
 	// We need da data for da client to walk da podium
-	var data = encodeURIComponent(JSON.stringify({
-		MD5: info.MD5,
-		SHA1: info.SHA1,
-		size: info.size,
-		dims: info.dims,
-		src: info.src,
-		thumb: info.thumb,
-		mid: info.mid,
-	}));
-	return [safe('<figure data-img="'), data,
+	if (typeof navigator === 'undefined')
+		var data = encodeURIComponent(JSON.stringify(info));
+
+	return [safe('<figure data-img="'), data || '',
 		safe('"><figcaption>'),
 		caption, safe(' <i>('),
 		(this.spoilToggle && (info.spoiler || info.realthumb) ? 'Spoiler, ' : ''),
