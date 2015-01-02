@@ -427,8 +427,6 @@ dispatcher[SPOILER_IMAGES] = function (msg, op) {
 
 function insert_image(info, header, toppu) {
 	var fig = $(flatten(oneeSama.gazou(info, toppu)).join(''));
-	if (oneeSama.noimg)
-		fig = '<figure>Image Removed</figure>';
 	if (toppu)
 		header.before(fig);
 	else

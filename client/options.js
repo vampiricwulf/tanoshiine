@@ -171,50 +171,20 @@ var revealSetup = false;
 
 function option_thumbs(type) {
 	$.cookie('thumb', type);
-	// really ought to apply the style immediately
-	// need pinky/mid distinction in the model to do properly
 	oneeSama.thumbStyle = type;
-	var hide = type == 'hide';
-	var noimg = type == 'noimg';
-	if (hide)
-		$('img').hide();
-	else
-		$('img').show();
-	if (noimg) {
-		$('img').hide();
-		$('article figcaption').hide();
-		if ($('article figcaption').length)
-			$('article figure').prepend('<span>Image Removed</span>');
-	}
-	else {
-		$('img').show();
-		$('article figcaption').show();
-		if ($('article figcaption').length)
-			$('article figure span').remove();
-	}
-
-	if (hide && !revealSetup)
-		$DOC.on('click', 'article', reveal_thumbnail);
-	else if (!hide && revealSetup)
-		$DOC.off('click', 'article', reveal_thumbnail);
-	revealSetup = hide;
-
-	$.cookie('noimg',noimg);
-	oneeSama.noimg = noimg;
 }
-option_thumbs.id = 'board.$BOARD.thumbs';
+option_thumbs.id = 'thumbs';
 option_thumbs.label = 'Thumbnails';
 option_thumbs.type = thumbStyles;
 option_thumbs.tooltip = 'Set thumbnail type: ' +
 	'Small: 125x125, small file size; ' +
 	'Sharp: 125x125, more detailed; ' +
-	'Large: 250x250; ' +
+	'Expand All: expand all images; ' +
 	'Hide: hide all images; ' +
-	'NoImg: keep site from loading any images on load; ' +
 	'Requires page refresh';
 
 /* Alt-click a post to reveal its thumbnail if hidden */
-function reveal_thumbnail(event) {
+/*function reveal_thumbnail(event) {
 	if (!event.altKey)
 		return;
 	var $article = $(event.target);
@@ -224,7 +194,7 @@ function reveal_thumbnail(event) {
 		return false;
 	}
 
-	/* look up the image info and make the thumbnail */
+	// look up the image info and make the thumbnail
 	var thread = Threads.get(extract_num($article.closest('section')));
 	if (!thread)
 		return;
@@ -241,7 +211,7 @@ function reveal_thumbnail(event) {
 		$article.find('figcaption').after($img);
 	});
 	return false;
-}
+}*/
 
 /* REPLY AT RIGHT */
 

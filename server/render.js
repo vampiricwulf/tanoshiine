@@ -28,11 +28,9 @@ exports.write_thread_html = function (reader, req, out, opts) {
 	if (cookies.spoil == 'true')
 		oneeSama.spoilToggle = (cookies.spoil == 'true');
   if (cookies.sauce == 'true')
-    oneeSama.sauceToggle = (cookies.sauce == 'true');
-	if (cookies.noimg == 'true')
-		oneeSama.noimg = (cookies.noimg == 'true');
+    oneeSama.sauceToggle = true;
 	if (cookies.agif == 'true')
-		oneeSama.autoGif = (cookies.agif == 'true');
+		oneeSama.autoGif = true;
 	if (cookies.rTime == 'true')
 		oneeSama.rTime = true;
 	if (cookies.linkify == 'true')
