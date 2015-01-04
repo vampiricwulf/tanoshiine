@@ -565,10 +565,8 @@ OS.gazou = function (info, toppu) {
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
 		caption = [
-			(this.thumbStyle == 'hide' ? new_tab_link(src,'[Show]') : ''), 
-			(this.thumbStyle == 'hide' ? ' ' : ''),
 			(/\.webm/.test(info.src)?'Video':(this.sauceToggle?image_sauce_id(info.src):'Image')), ' ',
-			new_tab_link(src, info.src)
+			new_tab_link(src, (this.thumbStyle == 'hide') ? '[Show]' : info.src, 'imageSrc')
 		];
 	}
 
