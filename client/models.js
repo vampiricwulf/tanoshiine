@@ -78,6 +78,7 @@ function changeThumbnailStyle(model, type){
 // Rerenders all thumbnails, which is pretty expensive, but good enough for now
 function rerenderThumbnail($el, img, type){
 	var $fig = $el.children('figure');
+	var $caption = $fig.children('figcaption');
 	var $a = $fig.children('a');
 	var $img = $a.children('img');
 	if (type == 'hide'){
@@ -95,6 +96,14 @@ function toggleSpoiler(model, toggle){
 	var img = this.model.get('image');
 	if (!img || options.get('thumbs') == 'hide')
 		return;
+	var $fig = this.$el.children('figure');
+	var $caption = $fig.find('i');
+	if (/(realthumb|spoiler)/.test($fig.attr("data-img"))) {
+		if (/^\(Spoiler/.test($caption.text()))
+			$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
+		else
+			$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
+	}
 	oneeSama.spoilToggle = toggle;
 	rerenderThumbnail(this.$el, img, null);
 }
