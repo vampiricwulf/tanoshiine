@@ -623,6 +623,14 @@ OS.gazou_img = function (info, toppu) {
 			th *= 2;
 		}
 	}
+	// For composite spoilers
+	else if (this.spoilToggle && info.realthumb) {
+		thumb = encodeURI(imgPaths.thumb + info.realthumb);
+		if (w > h)
+			th = Math.round(tw/w*h);
+		else
+			tw = Math.round(th/h*w);
+	}
 	else if (info.thumb)
 		thumb = encodeURI(imgPaths.thumb + info.thumb);
 	else {
