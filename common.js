@@ -549,6 +549,8 @@ OS.image_paths = function () {
 };
 
 var audioIndicator = "\u266B"; // musical note
+// Runing on the server
+var isNode = (typeof navigator === 'undefined');
 
 OS.gazou = function (info, toppu) {
 	var src, name, caption;
@@ -572,7 +574,7 @@ OS.gazou = function (info, toppu) {
 	var dims = info.dims[0] + 'x' + info.dims[1];
 
 	// We need da data for da client to walk da podium
-	if (typeof navigator === 'undefined')
+	if (isNode)
 		var data = encodeURIComponent(JSON.stringify(info));
 
 	return [safe('<figure data-img="'), data || '',
