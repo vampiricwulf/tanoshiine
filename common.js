@@ -578,6 +578,7 @@ OS.gazou = function (info, toppu) {
 		var data = encodeURIComponent(JSON.stringify(info));
 
 	return [safe('<figure data-img="'), data || '',
+		safe(info.spoiler ? '" data-spoiler="' : ''), info.spoiler || '',
 		safe('"><figcaption>'),
 		caption, safe(' <i>('),
 		(this.spoilToggle && (info.spoiler || info.realthumb) ? 'Spoiler, ' : ''),
@@ -614,8 +615,6 @@ OS.gazou_img = function (info, toppu) {
 		src = encodeURI('../outbound/hash/' + info.MD5);
 		thumb = imgPaths.vint + info.vint;
 	}
-	else if (m && this.autoGif)
-		thumb = src;
 	else if (this.thumbStyle != 'small' && info.mid) {
 		thumb = encodeURI(imgPaths.mid + info.mid);
 		if (!toppu && this.thumbStyle == 'large') {
@@ -633,12 +632,11 @@ OS.gazou_img = function (info, toppu) {
 	}
 	else if (info.thumb)
 		thumb = encodeURI(imgPaths.thumb + info.thumb);
+	else if (m && this.autoGif)
+		thumb = src;
 	else {
 		tw = w;
 		th = h;
-	}
-	if (m && this.autoGif && !info.spoiler) {
-		thumb = src;
 	}
 
 	var img = '<img src="'+thumb+'"';

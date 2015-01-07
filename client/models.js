@@ -97,7 +97,7 @@ function toggleSpoiler(model, toggle){
 		return;
 	var $fig = this.$el.children('figure');
 	var $caption = $fig.find('i');
-	if (/(realthumb|spoiler)/.test($fig.attr("data-img"))) {
+	if ($fig.data("spoiler")) {
 		if (/^\(Spoiler/.test($caption.text()))
 			$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
 		else
@@ -162,6 +162,8 @@ var Section = Backbone.View.extend({
 	renderSpoiler: function (model, spoiler) {
 		var $img = this.$el.children('figure').find('img');
 		var $spoiltag = this.$el.children('figure').find('i');
+		var $fig = this.$el.find('figure');
+		$fig.attr("data-spoiler", spoiler);
 		var sp = oneeSama.spoiler_info(spoiler, true);
 		if (oneeSama.spoilToggle) {
 			$spoiltag.first().text($spoiltag.first().text().replace(/^\(/,"\(Spoiler, "));
@@ -188,9 +190,9 @@ var Section = Backbone.View.extend({
 	removePost: function (model) {
 		model.trigger('removeSelf');
 	},
-	
+
 	revealThumbnail: function(e){
-		revealThumbnail.bind(this)(e);	
+		revealThumbnail.bind(this)(e);
 	},
 });
 
@@ -277,6 +279,8 @@ var Article = Backbone.View.extend({
 	renderSpoiler: function (model, spoiler) {
 		var $img = this.$('figure').find('img');
 		var $spoiltag = this.$el.children('figure').find('i');
+		var $fig = this.$el.find('figure');
+		$fig.attr("data-spoiler", spoiler);
 		var sp = oneeSama.spoiler_info(spoiler, false);
 		if (oneeSama.spoilToggle) {
 			$spoiltag.first().text($spoiltag.first().text().replace(/^\(/,"\(Spoiler, "));
