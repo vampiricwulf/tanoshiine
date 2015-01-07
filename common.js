@@ -578,7 +578,8 @@ OS.gazou = function (info, toppu) {
 		var data = encodeURIComponent(JSON.stringify(info));
 
 	return [safe('<figure data-img="'), data || '',
-		safe(info.spoiler ? '" data-spoiler="' : ''), info.spoiler || '',
+		safe(info.spoiler || info.realthumb ? '" data-spoiler="' : ''),
+		(info.spoiler || info.realthumb) || '',
 		safe('"><figcaption>'),
 		caption, safe(' <i>('),
 		(this.spoilToggle && (info.spoiler || info.realthumb) ? 'Spoiler, ' : ''),
@@ -615,6 +616,16 @@ OS.gazou_img = function (info, toppu) {
 		src = encodeURI('../outbound/hash/' + info.MD5);
 		thumb = imgPaths.vint + info.vint;
 	}
+	// For composite spoilers
+	else if (this.spoilToggle && info.realthumb) {
+		thumb = (m && this.autoGif ? src : encodeURI(imgPaths.thumb + info.realthumb));
+		if (w > h)
+			th = Math.round(tw/w*h);
+		else
+			tw = Math.round(th/h*w);
+	}
+	else if (m && this.autoGif && !info.spoiler && !info.realthumb)
+		thumb = src;
 	else if (this.thumbStyle != 'small' && info.mid) {
 		thumb = encodeURI(imgPaths.mid + info.mid);
 		if (!toppu && this.thumbStyle == 'large') {
@@ -622,18 +633,8 @@ OS.gazou_img = function (info, toppu) {
 			th *= 2;
 		}
 	}
-	// For composite spoilers
-	else if (this.spoilToggle && info.realthumb) {
-		thumb = encodeURI(imgPaths.thumb + info.realthumb);
-		if (w > h)
-			th = Math.round(tw/w*h);
-		else
-			tw = Math.round(th/h*w);
-	}
 	else if (info.thumb)
 		thumb = encodeURI(imgPaths.thumb + info.thumb);
-	else if (m && this.autoGif)
-		thumb = src;
 	else {
 		tw = w;
 		th = h;
