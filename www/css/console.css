@@ -23,9 +23,6 @@ article.editing {
 article.editing header {
 	color: white;
 }
-article header {
-	padding-left: 0;
-}
 b {
 	font-weight: normal;
 }
@@ -54,8 +51,13 @@ blockquote strong {
 header a {
 	color: #00a5b2;
 }
+article header b, article header time, article header nav {
+	position: relative;
+	top: -2px;
+}
 #bannerTop {
 	background: rgba(31, 31, 31, 0.7);
+	margin: 0 !important;
 }
 body {
 	background-color: #050505;
@@ -99,14 +101,11 @@ figcaption, figcaption a {
 	color: #989800;
 	text-transform: lowercase;
 }
-.pagination input, .control {
+.pagination input {
 	display: none;
 }
 header {
 	color: gray;
-	background-image: none;
-	margin: 0;
-	padding: 0;
 }
 h1, h2 {
 	color: white;
