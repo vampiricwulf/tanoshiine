@@ -43,12 +43,12 @@ Hidamari.prototype.render = function(hide, contract){
 Hidamari.prototype.spoiler = function(toggle){
 	if (options.get('thumbs') == 'hide')
 		return;
-	var $caption = $fig.find('i');
-	if ($fig.data("spoiler")) {
-		if (/^\(Spoiler/.test($caption.text()))
-			$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
+	var this.$caption = this.$fig.find('i');
+	if (this.$fig.data("spoiler")) {
+		if (/^\(Spoiler/.test(this.$caption.text()))
+			this.$caption.text(this.$caption.text().replace(/^\(Spoiler\,\ /, '('));
 		else
-			$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
+			this.$caption.text(this.$caption.text().replace(/^\(/, '(Spoiler, '));
 	}
 	oneeSama.spoilToggle = toggle;
 	this.render();
@@ -56,7 +56,7 @@ Hidamari.prototype.spoiler = function(toggle){
 
 // Toggle animated GIF thumbnails
 Hidamari.prototype.autogif = function(toggle){
-	if (!/\.gif$/i.test(this.img.src) || options.get('thumbs') == 'hide')
+	if (!/\.gif$/i.test(this.$img.src) || options.get('thumbs') == 'hide')
 		return;
 	oneeSama.autoGif = toggle;
 	this.render();
