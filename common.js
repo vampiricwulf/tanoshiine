@@ -578,6 +578,7 @@ OS.gazou = function (info, toppu) {
 		var data = encodeURIComponent(JSON.stringify(info));
 
 	return [safe('<figure data-img="'), data || '',
+		safe(info.spoiler ? '" data-spoiler="' : ''), info.spoiler || '',
 		safe('"><figcaption>'),
 		caption, safe(' <i>('),
 		(this.spoilToggle && info.spoiler ? 'Spoiler, ' : ''),
