@@ -56,7 +56,7 @@ Hidamari.prototype.spoiler = function(toggle){
 
 // Toggle animated GIF thumbnails
 Hidamari.prototype.autogif = function(toggle){
-	if (!/\.gif$/i.test(this.$img.src) || options.get('thumbs') == 'hide')
+	if (!/\.gif$/i.test(this.img.src) || options.get('thumbs') == 'hide')
 		return;
 	oneeSama.autoGif = toggle;
 	this.render();
