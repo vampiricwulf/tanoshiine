@@ -536,6 +536,16 @@ option_inline_expansion.labels = ['none', 'full-size', 'fit to width',
 		'fit to height', 'fit to both'];
 option_inline_expansion.tooltip = "Expand images inside the parent post and resize according to setting";
 
+/* Clear LocalStorage */
+
+function option_clean_ls() {
+}
+option_clean_ls.id = 'cleanls';
+option_clean_ls.label = 'Restore Default Options';
+option_clean_ls.type = 'button';
+option_clean_ls.tooltip = 'Last resort to fix options.';
+option_clean_ls.click = "localStorage.removeItem('options');";
+
 /* SHORTCUT KEYS */
 
 var shortcuts = [
