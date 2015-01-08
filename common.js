@@ -629,9 +629,6 @@ OS.gazou_img = function (info, toppu) {
 		tw = w;
 		th = h;
 	}
-	if (m && this.autoGif && !info.spoiler) {
-		thumb = src;
-	}
 
 	var img = '<img src="'+thumb+'"';
 	if (tw && th)
