@@ -39,8 +39,9 @@ var Hidamari = {
 	toggleSpoiler: function(model, toggle){
 		if (!this.model.has('image') || options.get('thumbs') == 'hide')
 			return;
-		var $caption = this.$fig.find('i');
-		if (this.$fig.data("spoiler")) {
+		var $fig = this.$el.children('figure');
+		var $caption = $fig.find('i');
+		if ($fig.data("spoiler")) {
 			if (/^\(Spoiler/.test($caption.text()))
 				$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
 			else
