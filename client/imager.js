@@ -43,12 +43,12 @@ Hidamari.prototype.render = function(hide, contract){
 Hidamari.prototype.spoiler = function(toggle){
 	if (options.get('thumbs') == 'hide')
 		return;
-	var this.$caption = this.$fig.find('i');
+	var $caption = this.$fig.find('i');
 	if (this.$fig.data("spoiler")) {
-		if (/^\(Spoiler/.test(this.$caption.text()))
-			this.$caption.text(this.$caption.text().replace(/^\(Spoiler\,\ /, '('));
+		if (/^\(Spoiler/.test($caption.text()))
+			$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
 		else
-			this.$caption.text(this.$caption.text().replace(/^\(/, '(Spoiler, '));
+			$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
 	}
 	oneeSama.spoilToggle = toggle;
 	this.render();
