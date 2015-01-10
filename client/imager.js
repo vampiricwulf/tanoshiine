@@ -8,6 +8,11 @@ var Hidamari = {
 	
 	renderSpoiler: function(spoiler){
 		this.model.get('image').spoiler = spoiler;
+		var $fig = this.$el.find('figure');
+		$fig.attr('data-spoiler', this.model.get('image').spoiler);
+		var $caption = $fig.find('i');
+		if (oneeSama.spoilToggle)
+			$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
 		this.renderThumbnail();
 	},
 
