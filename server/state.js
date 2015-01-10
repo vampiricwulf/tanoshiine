@@ -120,7 +120,7 @@ function expand_templates(res) {
 	_.extend(templateVars, config);
 
 	function tmpl(data) {
-		var expanded = _.template(data, templateVars);
+		var expanded = _.template(data)(templateVars);
 		return {tmpl: expanded.split(/\$[A-Z]+/),
 			src: expanded};
 	}
