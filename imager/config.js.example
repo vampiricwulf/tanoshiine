@@ -36,11 +36,6 @@ module.exports = {
 	WEBM: false,
 	// Allow upload of WebM video with sound
 	WEBM_AUDIO: false,
-	// uncomment this to have all audio WebMs overlaid with
-	// the corresponding spoiler image
-	/*
-	WEBM_AUDIO_SPOILER: 20,
-	*/
 	// Enable SVG upload
 	SVG: false,
 	
@@ -56,14 +51,7 @@ module.exports = {
 	// (named spoilX.png, spoilerX.png and spoilersX.png)
 	// [spoil (the button), spoiler (OP spoiler), and spoilers (reply spoiler), you need one for each spoiler you add]
 	// (e.g. https://github.com/lalcmellkmal/assets/tree/master/kana)
-	//
-	// the spoilers in the `normal` list are simple images,
-	// while the spoilers in the `trans` list are composited on top
-	// of the original image semi-opaquely (and must be transparent PNGs)
-	SPOILER_IMAGES: {
-		normal: [],
-		trans: [4, 5, 6, 7, 8, 9, 10, 11] 
-	},
+	SPOILER_IMAGES: [4, 5, 6, 7, 8, 9, 10, 11],
 
 	IMAGE_HATS: false, //to change the hat icon, it's default located www/css/ui/hat.png (make sure to keep name as hat.png)
 

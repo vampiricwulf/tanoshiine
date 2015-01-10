@@ -512,15 +512,13 @@ var spoilerImages = imagerConfig.SPOILER_IMAGES;
 
 function pick_spoiler(metaIndex) {
 	var imgs = spoilerImages;
-	var n = imgs.normal.length;
-	var count = n + imgs.trans.length;
+	var n = imgs.length;
 	var i;
 	if (metaIndex < 0)
-		i = Math.floor(Math.random() * count);
+		i = Math.floor(Math.random() * n);
 	else
-		i = metaIndex % count;
-	var spoiler = i < n ? imgs.normal[i] : imgs.trans[i - n];
-	return {index: spoiler, next: (i+1) % count};
+		i = metaIndex % n;
+	return {index: imgs[i], next: (i+1) % n};
 }
 exports.pick_spoiler = pick_spoiler;
 
@@ -551,6 +549,8 @@ OS.image_paths = function () {
 };
 
 var audioIndicator = "\u266B"; // musical note
+// Runing on the server
+var isNode = (typeof navigator === 'undefined');
 
 OS.gazou = function (info, toppu) {
 	var src, name, caption;
@@ -574,15 +574,14 @@ OS.gazou = function (info, toppu) {
 	var dims = info.dims[0] + 'x' + info.dims[1];
 
 	// We need da data for da client to walk da podium
-	if (typeof navigator === 'undefined')
+	if (isNode)
 		var data = encodeURIComponent(JSON.stringify(info));
 
 	return [safe('<figure data-img="'), data || '',
-		safe(info.spoiler || info.realthumb ? '" data-spoiler="' : ''),
-		(info.spoiler || info.realthumb) || '',
+		safe(info.spoiler ? '" data-spoiler="' : ''), info.spoiler || '',
 		safe('"><figcaption>'),
 		caption, safe(' <i>('),
-		(this.spoilToggle && (info.spoiler || info.realthumb) ? 'Spoiler, ' : ''),
+		(this.spoilToggle && info.spoiler ? 'Spoiler, ' : ''),
 		info.audio ? (audioIndicator + ', ') : '',
 		info.length ? (info.length + ', ') : '',
 		readable_filesize(info.size), ', ',

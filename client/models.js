@@ -37,7 +37,7 @@ function renderRelativeTime(){
 		var timer = setInterval(function(){
 			$time.html(oneeSama.relative_time(t, new Date().getTime()));
 		}, 60000);
-		this.listenTo(this.model, 'removeSelf', function(){
+		this.listenToOnce(this.model, 'removeSelf', function(){
 			clearInterval(timer);
 		});
 	}
@@ -65,67 +65,6 @@ function unloadTopPost(){
 	unloadTopPost();
 }
 
-function changeThumbnailStyle(model, type){
-	var img = this.model.get('image');
-	if (!img)
-		return;
-	// Shitty hack
-	// TODO: remove when options model is rewritten
-	oneeSama.thumbStyle = type;
-	rerenderThumbnail(this.$el, img, type);
-}
-
-// Rerenders all thumbnails, which is pretty expensive, but good enough for now
-function rerenderThumbnail($el, img, type){
-	var $fig = $el.children('figure');
-	var $caption = $fig.children('figcaption');
-	var $a = $fig.children('a');
-	var $img = $a.children('img');
-	if (type == 'hide'){
-		$fig.find('.imageSrc').text('[Show]');
-		return $img.hide();
-	}
-	$fig.find('.imageSrc').text(img.src);
-	$img = $(flatten(oneeSama.gazou_img(img, $el.is('section')).html).join(''));
-	$a.remove();
-	$img.appendTo($fig);
-}
-
-function toggleSpoiler(model, toggle){
-	var img = this.model.get('image');
-	if (!img || options.get('thumbs') == 'hide')
-		return;
-	var $fig = this.$el.children('figure');
-	var $caption = $fig.find('i');
-	if ($fig.data("spoiler")) {
-		if (/^\(Spoiler/.test($caption.text()))
-			$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
-		else
-			$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
-	}
-	oneeSama.spoilToggle = toggle;
-	rerenderThumbnail(this.$el, img, null);
-}
-
-function toggleAutogif(model, toggle){
-	var img = this.model.get('image');
-	if (!img || !/\.gif$/i.test(img.src) || options.get('thumbs') == 'hide')
-		return;
-	oneeSama.autoGif = toggle;
-	rerenderThumbnail(this.$el, img, null);
-}
-
-// Reveal hidden thumbnail by clicking [Show]
-function revealThumbnail(e){
-	if (options.get('thumbs') != 'hide' || !this.model.get('image'))
-		return;
-	e.preventDefault();
-	var revealed = this.thumbnailRevealed;
-	changeThumbnailStyle.bind(this)(null, revealed ? 'hide' : 'sharp');
-	this.$el.children('figure').find('.imageSrc').text(revealed ? '[Show]' : '[Hide]');
-	this.thumbnailRevealed = !revealed;
-}
-
 var Section = Backbone.View.extend({
 	tagName: 'section',
 
@@ -133,7 +72,7 @@ var Section = Backbone.View.extend({
 		this.listenTo(this.model, {
 			'change:hide': this.renderHide,
 			'change:locked': this.renderLocked,
-			'change:spoiler': this.renderSpoiler,
+			'spoiler': this.renderSpoiler,
 			destroy: this.remove,
 			'add': renderRelativeTime,
 		});
@@ -141,14 +80,10 @@ var Section = Backbone.View.extend({
 			remove: this.removePost,
 		});
 		this.listenTo(options, {
-			'change:thumbs': changeThumbnailStyle,
-			'change:noSpoilers': toggleSpoiler,
-			'change:autogif': toggleAutogif,
+			'change:thumbs': this.changeThumbnailStyle,
+			'change:noSpoilers': this.toggleSpoiler,
+			'change:autogif': this.toggleAutogif,
 		});
-	},
-
-	events: {
-		'click >figure>figcaption>.imageSrc': 'revealThumbnail',
 	},
 
 	renderHide: function (model, hide) {
@@ -157,23 +92,6 @@ var Section = Backbone.View.extend({
 
 	renderLocked: function (model, locked) {
 		this.$el.toggleClass('locked', !!locked);
-	},
-
-	renderSpoiler: function (model, spoiler) {
-		var $img = this.$el.children('figure').find('img');
-		var $spoiltag = this.$el.children('figure').find('i');
-		var $fig = this.$el.find('figure');
-		$fig.attr("data-spoiler", spoiler);
-		var sp = oneeSama.spoiler_info(spoiler, true);
-		if (oneeSama.spoilToggle) {
-			$spoiltag.first().text($spoiltag.first().text().replace(/^\(/,"\(Spoiler, "));
-		}
-		else
-		{
-			$img.replaceWith($('<img>', {
-				src: sp.thumb, width: sp.dims[0], height: sp.dims[1],
-			}));
-		}
 	},
 
 	remove: function () {
@@ -190,11 +108,8 @@ var Section = Backbone.View.extend({
 	removePost: function (model) {
 		model.trigger('removeSelf');
 	},
-
-	revealThumbnail: function(e){
-		revealThumbnail.bind(this)(e);
-	},
 });
+_.extend(Section.prototype, Hidamari);
 
 /* XXX: Move into own views module once more substantial */
 var Article = Backbone.View.extend({
@@ -205,14 +120,14 @@ var Article = Backbone.View.extend({
 			'change:editing': this.renderEditing,
 			'change:hide': this.renderHide,
 			'change:image': this.renderImage,
-			'change:spoiler': this.renderSpoiler,
+			'spoiler': this.renderSpoiler,
 			'removeSelf': this.bumplessRemove,
 			'add': renderRelativeTime,
 		});
 		this.listenTo(options, {
-			'change:thumbs': changeThumbnailStyle,
-			'change:noSpoilers': toggleSpoiler,
-			'change:autogif': toggleAutogif,
+			'change:thumbs': this.changeThumbnailStyle,
+			'change:noSpoilers': this.toggleSpoiler,
+			'change:autogif': this.toggleAutogif,
 		});
 		if (!options.get('postUnloading') && CurThread)
 			this.listenTo(this.model, {
@@ -224,10 +139,6 @@ var Article = Backbone.View.extend({
 		var html = oneeSama.mono(this.model.attributes);
 		this.setElement($($.parseHTML(html)).filter('article')[0]);
 		return this;
-	},
-
-	events: {
-		'click .imageSrc': 'revealThumbnail',
 	},
 
 	renderBacklinks: function () {
@@ -276,23 +187,6 @@ var Article = Backbone.View.extend({
 		}
 	},
 
-	renderSpoiler: function (model, spoiler) {
-		var $img = this.$('figure').find('img');
-		var $spoiltag = this.$el.children('figure').find('i');
-		var $fig = this.$el.find('figure');
-		$fig.attr("data-spoiler", spoiler);
-		var sp = oneeSama.spoiler_info(spoiler, false);
-		if (oneeSama.spoilToggle) {
-			$spoiltag.first().text($spoiltag.first().text().replace(/^\(/,"\(Spoiler, "));
-		}
-		else
-		{
-			$img.replaceWith($('<img>', {
-				src: sp.thumb,
-				width: sp.dims[0], height: sp.dims[1],
-			}));
-		}
-	},
 	// To not shift the scroll position on remove
 	bumplessRemove: function(){
 		var pos = $(window).scrollTop();
@@ -301,11 +195,8 @@ var Article = Backbone.View.extend({
 			$(window).scrollTop(pos - this.$el.outerHeight() - 2);
 		this.remove();
 	},
-
-	revealThumbnail: function(e){
-		revealThumbnail.bind(this)(e);
-	},
 });
+_.extend(Article.prototype, Hidamari);
 
 /* BATCH DOM UPDATE DEFER */
 
