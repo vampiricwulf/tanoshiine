@@ -5,14 +5,14 @@ var Hidamari = {
 		'click >figure>figcaption>.imageSrc': 'revealThumbnail',
 		'click >figure>a': 'toggleImageExpansion',
 	},
-	
+
 	renderSpoiler: function(spoiler){
 		this.model.get('image').spoiler = spoiler;
 		var $fig = this.$el.find('figure');
 		$fig.attr('data-spoiler', this.model.get('image').spoiler);
 		var $caption = $fig.find('i');
 		if (oneeSama.spoilToggle)
-			$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
+			$caption.html($caption.html().replace(/^\(/, '(Spoiler, '));
 		this.renderThumbnail();
 	},
 
@@ -54,10 +54,10 @@ var Hidamari = {
 		var $fig = this.$el.children('figure');
 		var $caption = $fig.find('i');
 		if ($fig.data("spoiler")) {
-			if (/^\(Spoiler/.test($caption.text()))
-				$caption.text($caption.text().replace(/^\(Spoiler\,\ /, '('));
+			if (/^\(Spoiler/.test($caption.html()))
+				$caption.html($caption.html().replace(/^\(Spoiler\,\ /, '('));
 			else
-				$caption.text($caption.text().replace(/^\(/, '(Spoiler, '));
+				$caption.html($caption.html().replace(/^\(/, '(Spoiler, '));
 		}
 		oneeSama.spoilToggle = toggle;
 		this.renderThumbnail();
@@ -79,7 +79,7 @@ var Hidamari = {
 		this.renderThumbnail(revealed);
 		this.$el.children('figure').find('.imageSrc').text(revealed ? '[Show]' : '[Hide]');
 	},
-	
+
 	toggleImageExpansion: function(e){
 		var img = this.model.get('image');
 		var fit = options.get('inlinefit');
