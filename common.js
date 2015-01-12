@@ -615,15 +615,7 @@ OS.gazou_img = function (info, toppu) {
 		src = encodeURI('../outbound/hash/' + info.MD5);
 		thumb = imgPaths.vint + info.vint;
 	}
-	// For composite spoilers
-	else if (this.spoilToggle && info.realthumb) {
-		thumb = (m && this.autoGif ? src : encodeURI(imgPaths.thumb + info.realthumb));
-		if (w > h)
-			th = Math.round(tw/w*h);
-		else
-			tw = Math.round(th/h*w);
-	}
-	else if (m && this.autoGif && !info.spoiler && !info.realthumb)
+	else if (m && this.autoGif)
 		thumb = src;
 	else if (this.thumbStyle != 'small' && info.mid) {
 		thumb = encodeURI(imgPaths.mid + info.mid);
