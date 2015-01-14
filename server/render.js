@@ -161,6 +161,7 @@ exports.write_thread_head = function (out, board, op, opts) {
 	out.write('Thread #' + op);
 	out.write(indexTmpl[i++]);
 	out.write(common.action_link_html('#bottom', 'Bottom'));
+	out.write(common.action_link_html('', 'Expand Images', 'expandImages'));
 	out.write('<hr class="sectionHr">\n');
 };
 
@@ -172,6 +173,7 @@ exports.write_thread_title = function(out, board, op, opts){
 		title += ' - #' + op;
 	out.write('<h1>'+title+'</h1>');
 	out.write(common.action_link_html('#bottom', 'Bottom'));
+	out.write(common.action_link_html('', 'Expand Images', 'expandImages'));
 	out.write('<hr class="sectionHr">\n');
 };
 
