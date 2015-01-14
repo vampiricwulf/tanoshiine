@@ -89,7 +89,9 @@ var Hidamari = {
 	},
 
 	autoExpandImage: function(){
-		if (massExpander.get('expand'))
+		var img = this.model.get('image');
+		// Don't autoexpand WebM
+		if (img && massExpander.get('expand') && !/\.webm$/i.test(img.src))
 			this.toggleImageExpansion();
 	},
 
