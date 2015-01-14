@@ -140,7 +140,7 @@ var Hidamari = {
 			autoplay: true,
 			loop: true,
 			// Even wider
-			'class': fullWidth ? 'fullWidth' : '',
+			'class': 'expanded'+ (fullWidth ? ' fullWidth' : ''),
 		}));
 		this.model.set('imageExpanded', true);
 	},
