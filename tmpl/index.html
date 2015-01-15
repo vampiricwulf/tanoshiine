@@ -7,6 +7,23 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 $META	<!--[if lt IE 9]><script src="{{MEDIA_URL}}js/ie.js"></script><![endif]-->
 	<script src="{{MEDIA_URL}}js/setup.js?v=6"></script>
+	<!-- Pass configuration variables -->
+	<script src="{{MEDIA_URL}}js/jquery-2.1.1.min.js"></script>
+	<script src="{{MEDIA_URL}}js/pixastic.blurfast.min.js"></script>
+	<script src="{{MEDIA_URL}}js/sockjs-0.3.4.min.js"></script>
+	<script src="{{MEDIA_URL}}js/yepnope-1.5.min.js"></script>
+	<script src="{{MEDIA_URL}}js/underscore-1.7.0.min.js"></script>
+	<script src="{{MEDIA_URL}}js/backbone-1.1.2.min.js"></script>
+	<script src="{{MEDIA_URL}}js/oninput-1.1.min.js"></script>
+	<script src="{{MEDIA_URL}}js/jquery.cookie-1.4.1.min.js"></script>
+	<!-- Bootstrap options model, so that it is available on model extraction -->
+	<script>
+		_.defaults(options, {
+			lastn: {{THREAD_LAST_N}},
+			inlinefit: 'width',
+		});
+		options = new Backbone.Model(options);
+	</script>
 </head>
 <a id="feedback" href="mailto:{{EMAIL}}" target="_blank">Feedback</a>
 $NAV
@@ -20,15 +37,4 @@ $NAV
 <div id="hover_overlay"></div>
 $THREADS
 $NAV
-<script src="{{MEDIA_URL}}js/jquery-2.1.1.min.js"></script>
-<script src="{{MEDIA_URL}}js/pixastic.blurfast.min.js"></script>
-<script src="{{MEDIA_URL}}js/sockjs-0.3.4.min.js"></script>
-<script src="{{MEDIA_URL}}js/{{VENDOR_JS}}"></script>
-<script>
-	_.defaults(options, {
-		lastn: {{THREAD_LAST_N}},
-		inlinefit: 'width',
-	});
-	options = new Backbone.Model(options);
-</script>
 <script src="{{MEDIA_URL}}js/{{CLIENT_JS}}"></script>
