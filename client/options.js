@@ -486,7 +486,7 @@ function fadeOutHoverOverlay(cb){
 		// More responsive transition with fast pointer movements
 		imageHoverPreview();
 	}});
-	if (cb)
+	if (typeof cb === 'function')
 		cb();
 }
 
