@@ -303,7 +303,7 @@ var AddressView = Backbone.View.extend({
 			act = 'Unban';
 			type = 'unban';
 			sentence = 0;
-			description = '?'; 
+			description = '?';
 		}
 		if (!confirm(act + ' ' + ip + description))
 			return;
