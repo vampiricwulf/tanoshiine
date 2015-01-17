@@ -69,28 +69,6 @@ var config = {
 	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
 	CURFEW_BOARDS: ['moe'],
 
-	// Array of answers for the 8ball random wisdom dispenser. To use, type "#8ball" in post, followed by enter.
-  EIGHT_BALL: [
-    "Yes",
-    "No",
-    "Maybe",
-    "You're waifu a shit",
-    "It can't be helped",
-    "You'll have to use THAT",
-    "The purest form of love",
-    "Pls no bully",
-    "Lurk more",
-    "Go whine in the IRC",
-    "Google it",
-    "Hell yeah, motherfucker",
-    "Best Girl",
-    "Give her the D",
-    "Become the little girl",
-    ">>>/d/",
-    'Ara ara',
-    "That is my fetish",
-  ],
-
 	// A semi random set of hours each day will make all posts Anonymous
 	ANON_HOURS: false,
 	// Accepted values are [1, 2, 3, 4, 6, 12, 24]

@@ -43,6 +43,18 @@ this.hot = {
 	/* Bump this version whenever you modify any existing theme CSS */
 	THEME_CSS_VERSION: 8,
 
+	// Array of answers for the 8ball random wisdom dispenser. To use, type "#8ball" in post, followed by enter.
+  EIGHT_BALL: [
+	  "Yes",
+	  "No",
+	  "Maybe",
+	  "It can't be helped",
+	  "Hell yeah, motherfucker",
+	  'Ara ara~',
+	  "That is my fetish",
+	  "Anta baka?",
+  ],
+
 	INTER_BOARD_NAVIGATION: true,
 	SPECIAL_TRIPCODES: {
 		kyubey: "／人◕ ‿‿ ◕人＼",
