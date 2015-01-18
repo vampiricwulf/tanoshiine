@@ -1060,7 +1060,7 @@ dispatcher[common.EXECUTE_JS] = function (msg, client) {
 	if (!check(['id'], msg))
 		return false;
 	var op = msg[0];
-	client.db.set_fun_thread(op, function (err) {
+	client.db.toggle_fun_thread(op, function (err) {
 		if (err)
 			client.kotowaru(err);
 	});

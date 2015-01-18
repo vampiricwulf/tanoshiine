@@ -1740,16 +1740,17 @@ Y.get_fun = function (op, callback) {
 		callback(null);
 };
 
-Y.set_fun_thread = function (op, callback) {
+Y.toggle_fun_thread = function (op, callback) {
 	if (OPs[op] != op)
 		return callback(Muggle("Thread not found."));
 	var self = this;
 	fs.readFile('client/fun.js', 'UTF-8', function (err, funJs) {
 		if (err)
 			return callback(err);
-		cache.funThread = op;
+		cache.funThread = (cache.funThread != op ? op : 0);
 		var m = self.connect().multi();
 		self._log(m, op, common.EXECUTE_JS, [funJs]);
+    winston.info("thread:" + op + ",fun:" + (cache.funThread == op));
 		m.exec(callback);
 	});
 };
@@ -1879,4 +1880,3 @@ function hmget_obj(r, key, keys, cb) {
 		cb(null, result);
 	});
 }
-
