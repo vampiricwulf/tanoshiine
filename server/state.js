@@ -60,6 +60,7 @@ function reload_hot_config(cb) {
 			SUBJECT_MAX_LENGTH: HOT.SUBJECT_MAX_LENGTH,
 			ADMIN_ALIAS: HOT.ADMIN_ALIAS,
 			MOD_ALIAS: HOT.MOD_ALIAS,
+			SAGE_ENABLED: HOT.SAGE_ENABLED,
 		};
 		HOT.CLIENT_HOT = JSON.stringify(clientHot);
 		exports.clientHotHash = HOT.CLIENT_HOT_HASH = crypto.createHash('MD5').update(HOT.CLIENT_HOT).digest('hex');
