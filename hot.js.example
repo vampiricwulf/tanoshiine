@@ -23,6 +23,21 @@ this.hot = {
 	CUSTOM_BANNER_BOTTOM: false,
 	// Top Banner is changed with www/banner.txt
 
+	// Bump this version whenever you change base.css
+	BASE_CSS_VERSION: 42,
+	// Bump this version whenever you modify any existing theme CSS
+	THEME_CSS_VERSION: 8,
+
+	THREADS_PER_PAGE: 10,
+	// Replies to display under each thread on the board's root page
+	ABBREVIATED_REPLIES: 5,
+	// Default number of posts to display, when thread is expanded with the "Last N" link
+	THREAD_LAST_N: 100,
+	SUBJECT_MAX_LENGTH: 50,
+	// Titles for staff that will be displayed in their posts' headers
+	ADMIN_ALIAS: 'Admin',
+	MOD_ALIAS: 'Moderator',
+
 	FAQ: [
 		'Upload size limit is 20 MB',
 		'Accepted upload file types: JPG, JPEG, PNG, APNG, GIF, WEBM',
@@ -37,11 +52,6 @@ this.hot = {
 		'#sw&#60;hours(optional)&#62;:&#60;minutes&#62;:&#60;seconds&#62;[+-]&#60;offset seconds(optional)&#62 - Syncronised duration timer',
 		'&emsp;A positive offset adds a countdown. A negative offset starts the timer n seconds into the episode.'
 	],
-
-	/* Bump this version whenever you change base.css */
-	BASE_CSS_VERSION: 42,
-	/* Bump this version whenever you modify any existing theme CSS */
-	THEME_CSS_VERSION: 8,
 
 	// Array of answers for the 8ball random wisdom dispenser. To use, type "#8ball" in post, followed by enter.
   EIGHT_BALL: [
