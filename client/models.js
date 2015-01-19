@@ -141,6 +141,7 @@ var Article = Backbone.View.extend({
 			'spoiler': this.renderSpoiler,
 			'removeSelf': this.bumplessRemove,
 			'add': this.renderRelativeTime,
+			'add': this.fun,
 		});
 		this.commonListeners();
 		if (options.get('postUnloading') && CurThread)
@@ -210,6 +211,10 @@ var Article = Backbone.View.extend({
 			$(window).scrollTop(pos - this.$el.outerHeight() - 2);
 		Posts.remove(this.model);
 		this.remove();
+	},
+	
+	fun: function(){
+		// Fun goes here
 	},
 });
 _.extend(Article.prototype, Hidamari, PostMixins);
