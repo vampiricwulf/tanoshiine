@@ -627,6 +627,11 @@ _.defer(function () {
 		$iden.toggle('fast');
 	});
 
+	$('#bannerFAQ').click(function(){
+		var $faq = $('#FAQ');
+		$faq.toggle('fast');
+	});
+
 	$('<a id="options">Options</a>').click(function () {
 		var $opts = $('#options-panel');
 		if (!$opts.length)

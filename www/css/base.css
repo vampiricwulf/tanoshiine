@@ -210,7 +210,7 @@ body > #navTop {
 #bannerCenter{
 	vertical-align: text-top;
 	display: inline-block;
-	width:34%;
+	width:33%;
 	text-align: center;
 	white-space: nowrap;
 	z-index: 101;
@@ -221,9 +221,11 @@ body > #navTop {
 	width:33%;
 	text-align: right;
 	white-space: nowrap;
+	float: right;
 }
 #bannerRight > a {
 	margin: 0 2.5px;
+	text-decoration: none;
 }
 #indentityContainer, #bannerFAQ {
 	cursor: pointer;
@@ -237,7 +239,15 @@ body > #navTop {
 	right: 3px !important;
 	top: 20px !important;
 	text-align: left !important;
+	margin: 0;
 	display: none;
+}
+.modal ul {
+	padding: 0;
+	margin: 0;
+}
+.modal li {
+	display: inherit !important;
 }
 #bannerBot {
 	color: gray;

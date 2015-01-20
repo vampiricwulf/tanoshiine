@@ -52,7 +52,6 @@ function reload_hot_config(cb) {
 		_.extend(HOT, hot.hot);
 		// Pass some of the hot variables to the client
 		var clientHot = exports.clientHot = {
-      CUSTOM_BANNER_BOTTOM: HOT.CUSTOM_BANNER_BOTTOM,
 		};
 		HOT.CLIENT_HOT = JSON.stringify(clientHot);
 		exports.clientHotHash = HOT.CLIENT_HOT_HASH = crypto.createHash('MD5').update(HOT.CLIENT_HOT).digest('hex');
