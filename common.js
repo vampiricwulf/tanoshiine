@@ -363,8 +363,8 @@ exports.dice_re = dice_re;
 function parse_dice(frag) {
 	if (frag == '#flip')
 		return {n: 1, faces: 2};
-    if (frag == '#8ball')
-        return {n: 1, faces: HOT.EIGHT_BALL.length};
+  if (frag == '#8ball')
+    return {n: 1, faces: HOT.EIGHT_BALL.length};
 	// Increment counter
 	if (frag == '#bully')
 		return {bully: 'increment'};
@@ -404,8 +404,8 @@ exports.parse_dice = parse_dice;
 function readable_dice(bit, d) {
 	if (bit == '#flip')
 		return '#flip (' + (d[1] == 2) + ')';
-  if (bit == '#8ball')
-    return '#8ball (' + HOT.EIGHT_BALL[d[1]- 1] + ')';
+	if (bit == '#8ball')
+	    return '#8ball (' + HOT.EIGHT_BALL[d[1]- 1] + ')';
 	if (bit == '#bully')
 		return '#bully(' + d + ')';
 	if (bit == '#bullcount')

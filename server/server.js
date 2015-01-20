@@ -795,11 +795,6 @@ function allocate_post(msg, client, callback) {
 			return callback(Muggle('Bad post body.'));
 		if (msg.frag.length > common.MAX_POST_CHARS)
 			return callback(Muggle('Post is too long.'));
-<<<<<<< HEAD
-		body = msg.frag.replace(config.EXCLUDE_REGEXP, '');
-=======
-		body = hot_filter(msg.frag.replace(STATE.hot.EXCLUDE_REGEXP, ''));
->>>>>>> 7559d87... Hot-reloadable more configs
 	}
 
 	if (msg.op) {
@@ -813,7 +808,7 @@ function allocate_post(msg, client, callback) {
 		if (!image_alloc)
 			return callback(Muggle('Image missing.'));
 		var subject = (msg.subject || '').trim();
-		subject = subject.replace(STATE.hot.EXCLUDE_REGEXP, '');
+    subject = subject.replace(STATE.hot.EXCLUDE_REGEXP, '');
 		subject = subject.replace(/[「」]/g, '');
 		subject = subject.slice(0, STATE.hot.SUBJECT_MAX_LENGTH);
 		if (subject)
@@ -919,11 +914,7 @@ function update_post(frag, client) {
 		return false;
 	if (config.DEBUG)
 		debug_command(client, frag);
-<<<<<<< HEAD
-	frag = frag.replace(config.EXCLUDE_REGEXP, '');
-=======
-	frag = hot_filter(frag.replace(STATE.hot.EXCLUDE_REGEXP, ''));
->>>>>>> 7559d87... Hot-reloadable more configs
+  frag = hot_filter(frag.replace(STATE.hot.EXCLUDE_REGEXP, ''));
 	var post = client.post;
 	if (!post)
 		return false;
@@ -1091,6 +1082,30 @@ hooks.hook('clientSynced', function(info, cb){
 	info.client.send([0, common.HOT_INJECTION, false, STATE.clientHotHash]);
 	cb(null);
 });
+
+// Regex replacement filter
+function hot_filter(frag){
+  var filter = STATE.hot.FILTER;
+  if (!filter)
+    return frag;
+  for (i =0; i < filter.length; i++){
+    var f = filter[i];
+    var m = frag.match(f.p);
+    if (m){
+      // Case sensitivity
+      if (m[0].length > 2){
+        var first = m[0].charAt(0);
+      var second = m[0].charAt(1);
+      if (/[A-Z]/.test(second))
+        f.r = f.r.toUpperCase();
+      else if (/[A-Z]/.test(first))
+        f.r = f.r.charAt(0).toUpperCase()+f.r.slice(1);
+      }
+    return frag.replace(f.p, f.r);
+    }
+  }
+  return frag;
+}
 
 function render_suspension(req, resp) {
 setTimeout(function () {

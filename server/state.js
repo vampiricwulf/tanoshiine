@@ -52,15 +52,16 @@ function reload_hot_config(cb) {
 		_.extend(HOT, hot.hot);
 		// Pass some of the hot variables to the client
 		var clientHot = exports.clientHot = {
-      CUSTOM_BANNER_BOTTOM: HOT.CUSTOM_BANNER_BOTTOM
+      CUSTOM_BANNER_BOTTOM: HOT.CUSTOM_BANNER_BOTTOM,
 			EIGHT_BALL: HOT.EIGHT_BALL,
 			THREADS_PER_PAGE: HOT.THREADS_PER_PAGE,
-			THREADS_PER_PAGE: HOT.THREADS_PER_PAGE,
+      THREAD_LAST_N: HOT.THREAD_LAST_N,
 			ABBREVIATED_REPLIES: HOT.ABBREVIATED_REPLIES,
 			SUBJECT_MAX_LENGTH: HOT.SUBJECT_MAX_LENGTH,
 			ADMIN_ALIAS: HOT.ADMIN_ALIAS,
 			MOD_ALIAS: HOT.MOD_ALIAS,
 			SAGE_ENABLED: HOT.SAGE_ENABLED,
+      EXCLUDE_REGEXP: HOT.EXCLUDE_REGEXP
 		};
 		HOT.CLIENT_HOT = JSON.stringify(clientHot);
 		exports.clientHotHash = HOT.CLIENT_HOT_HASH = crypto.createHash('MD5').update(HOT.CLIENT_HOT).digest('hex');
