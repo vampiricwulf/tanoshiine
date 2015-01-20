@@ -24,8 +24,18 @@ this.hot = {
 	// Top Banner is changed with www/banner.txt
 
 	FAQ: [
-		"lol",
-		"totes cool"
+		'Upload size limit is 20 MB',
+		'Accepted upload file types: JPG, JPEG, PNG, APNG, GIF, WEBM',
+		'<hr>',
+		'Hash commands: ',
+		'#&#60;number of dice(1-10)&#62;d&#60;dice sides(1-100)&#62; - Roll dice',
+		'#flip - Coinflip',
+		'#8ball - An 8ball',
+		'#bully - Bully Spotted',
+		'#bullcount - In-thread bully count',
+		'#bulltotal - Total amount of bullies spotted',
+		'#sw&#60;hours(optional)&#62;:&#60;minutes&#62;:&#60;seconds&#62;[+-]&#60;offset seconds(optional)&#62 - Syncronised duration timer',
+		'&emsp;A positive offset adds a countdown. A negative offset starts the timer n seconds into the episode.'
 	],
 
 	/* Bump this version whenever you change base.css */
