@@ -38,7 +38,7 @@ oneeSama.hook('insertOwnPost', function (extra) {
 	}
 });
 
-var bannerExtra = config.CUSTOM_BANNER_BOTTOM ? $.parseHTML('<b>'+config.CUSTOM_BANNER_BOTTOM+'</b>') : null;
+var bannerExtra = HOT.CUSTOM_BANNER_BOTTOM ? $.parseHTML('<b>'+HOT.CUSTOM_BANNER_BOTTOM+'</b>') : null;
 
 if (!$banner && bannerExtra) {
 	var dest;

@@ -319,7 +319,7 @@ option_autogif.tooltip = 'Animate GIF thumbnails';
 
 function option_topbanner(bannertoggle) {
 	if(!bannertoggle) {
-		_.each(['#bannerTop', '#indentityContainer'], function(el){$(el).show();});
+		$('#bannerTop').show();
 		_.each(['#feedback', '#sync'], function(el){$(el).prependTo('#bannerRight');});
 		_.each(['#identity', '#options', '#options-panel'], function(el){$(el).appendTo('#bannerRight');});
 		if(!$("#bannerscript").length)
@@ -334,7 +334,7 @@ function option_topbanner(bannertoggle) {
 		$("h1").css("margin-top", 18 + $('#bannerTop').height() + "px");
 		$("#sync").replaceWith($('<b id="sync">' + $("#sync").html() + '</b>'));
 	} else {
-		_.each(['#bannerTop', '#indentityContainer'], function(el){$(el).hide();});
+		$('#bannerTop').hide();
 		if($("#bannerscript").length) {
 			$("#sync").insertAfter("body > h1");
 			_.each(['#identity', '#options'], function(el){$(el).insertAfter('#sync');});
