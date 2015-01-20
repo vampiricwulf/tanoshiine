@@ -980,7 +980,7 @@ dispatcher[common.FINISH_POST] = function (msg, client) {
 			client.kotowaru(Muggle("Couldn't finish post.", err));
 	});
 	return true;
-}
+};
 
 dispatcher[common.DELETE_POSTS] = caps.mod_handler(function (nums, client) {
 	if (!inactive_board_check(client))
@@ -1070,6 +1070,19 @@ dispatcher[common.EXECUTE_JS] = function (msg, client) {
 function is_game_board(board) {
 	return config.GAME_BOARDS.indexOf(board) >= 0;
 }
+// Update hot client variables on client request
+dispatcher[common.HOT_INJECTION] = function(msg, client){
+	if (!check(['boolean'], msg) || msg[0] !== true)
+		return false;
+	client.send([0, common.HOT_INJECTION, true, STATE.clientHotHash, STATE.clientHot]);
+	return true;
+};
+
+// Send current hot hash to client on sync
+hooks.hook('clientSynced', function(info, cb){
+	info.client.send([0, common.HOT_INJECTION, false, STATE.clientHotHash]);
+	cb(null);
+});
 
 function render_suspension(req, resp) {
 setTimeout(function () {
@@ -1169,6 +1182,8 @@ function hot_reloader() {
 			return;
 		}
 		okyaku.scan_client_caps();
+		// Push new hot variable hash to all clients
+		okyaku.push([0, common.HOT_INJECTION, false, STATE.clientHotHash]);
 		winston.info('Reloaded initial state.');
 	});
 }

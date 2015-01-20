@@ -26,6 +26,8 @@ exports.dbCache = {
 
 var HOT = exports.hot = {};
 var RES = exports.resources = {};
+exports.clientHot = {};
+exports.clientHotHash = '';
 exports.clients = {};
 exports.clientsByIP = {};
 
@@ -48,6 +50,12 @@ function reload_hot_config(cb) {
 			delete HOT[k];
 		});
 		_.extend(HOT, hot.hot);
+		// Pass some of the hot variables to the client
+		var clientHot = exports.clientHot = {
+      CUSTOM_BANNER_BOTTOM: HOT.CUSTOM_BANNER_BOTTOM,
+		};
+		HOT.CLIENT_HOT = JSON.stringify(clientHot);
+		exports.clientHotHash = HOT.CLIENT_HOT_HASH = crypto.createHash('MD5').update(HOT.CLIENT_HOT).digest('hex');
 		read_exits('exits.txt', function () {
 			hooks.trigger('reloadHot', HOT, cb);
 		});
@@ -117,6 +125,12 @@ function expand_templates(res) {
 	var templateVars = _.clone(HOT);
 	_.extend(templateVars, require('../imager/config'));
 	_.extend(templateVars, config);
+	_.extend(templateVars, make_navigation_html());
+
+	templateVars.FAQ = build_FAQ(templateVars.FAQ);
+	// Format info banner
+	if (templateVars.BANNERINFO)
+		templateVars.BANNERINFO = '&nbsp;&nbsp;&nbsp;[' + templateVars.BANNERINFO + ']';
 
 	function tmpl(data) {
 		var expanded = _.template(data)(templateVars);
@@ -144,6 +158,18 @@ function expand_templates(res) {
 	return ex;
 }
 
+
+function build_FAQ(faq){
+	if (faq.length > 0){
+		var list = ['<ul>'];
+		faq.forEach(function(entry){
+			list.push('<li>' + entry + '</li>');
+		});
+		list.push('<ul>');
+		return list.join('');
+	}
+}
+
 exports.reload_hot_resources = function (cb) {
 	pipeline.refresh_deps();
 
@@ -153,7 +179,7 @@ exports.reload_hot_resources = function (cb) {
 		reload_scripts,
 		reload_resources,
 	], cb);
-}
+};
 
 function make_navigation_html() {
 	if (!HOT.INTER_BOARD_NAVIGATION)

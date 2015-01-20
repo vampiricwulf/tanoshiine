@@ -484,6 +484,17 @@ if (!isMobile){
 dispatcher[SYNCHRONIZE] = connSM.feeder('sync');
 dispatcher[INVALID] = connSM.feeder('invalid');
 
+dispatcher[HOT_INJECTION] = function(msg){
+	// Request new varibles, if hashes don't match
+	if (msg[0] == false && msg[1] != HOT_HASH)
+		send([HOT_INJECTION, true]);
+	// Update variables and hash
+	else if (msg[0] == true){
+		HOT = msg[2];
+		HOT_HASH = msg[1];
+	}
+};
+
 function lookup_model_path(path) {
 	var o = window;
 	if (!Array.isArray(path))

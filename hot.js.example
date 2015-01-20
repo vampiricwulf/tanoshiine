@@ -19,6 +19,15 @@ this.hot = {
 		staff: 'moe',
 	},
 
+	// Client-side custom site-wide banner.
+	CUSTOM_BANNER_BOTTOM: false,
+	// Top Banner is changed with www/banner.txt
+
+	FAQ: [
+		"lol",
+		"totes cool"
+	],
+
 	/* Bump this version whenever you change base.css */
 	BASE_CSS_VERSION: 42,
 	/* Bump this version whenever you modify any existing theme CSS */
