@@ -12,6 +12,7 @@ hot.js
 jsmin
 node_modules/
 imager/tmp
+imager/perceptual
 state
 tripcode/.build
 tripcode/build
