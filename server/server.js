@@ -795,6 +795,7 @@ function allocate_post(msg, client, callback) {
 			return callback(Muggle('Bad post body.'));
 		if (msg.frag.length > common.MAX_POST_CHARS)
 			return callback(Muggle('Post is too long.'));
+    body = hot_filter(msg.frag.replace(STATE.hot.EXCLUDE_REGEXP, ''));
 	}
 
 	if (msg.op) {
