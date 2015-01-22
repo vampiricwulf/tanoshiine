@@ -97,7 +97,7 @@ function shift_replies(section) {
 		cull.remove();
 	}
 	$stat.text(abbrev_msg(omit, img));
-	if (omitsBefore <= THREAD_LAST_N && omit > THREAD_LAST_N) {
+	if (omitsBefore <= HOT.THREAD_LAST_N && omit > HOT.THREAD_LAST_N) {
 		var $expand = section.find('header .act');
 		if ($expand.length == 1) {
 			var num = extract_num(section);
