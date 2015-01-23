@@ -1074,13 +1074,13 @@ function is_game_board(board) {
 dispatcher[common.HOT_INJECTION] = function(msg, client){
 	if (!check(['boolean'], msg) || msg[0] !== true)
 		return false;
-	client.send([0, common.HOT_INJECTION, true, STATE.clientHotHash, STATE.clientHot]);
+	client.send([0, common.HOT_INJECTION, true, STATE.clientConfigHash, STATE.clientConfig]);
 	return true;
 };
 
 // Send current hot hash to client on sync
 hooks.hook('clientSynced', function(info, cb){
-	info.client.send([0, common.HOT_INJECTION, false, STATE.clientHotHash]);
+	info.client.send([0, common.HOT_INJECTION, false, STATE.clientConfigHash]);
 	cb(null);
 });
 
@@ -1207,7 +1207,7 @@ function hot_reloader() {
 		}
 		okyaku.scan_client_caps();
 		// Push new hot variable hash to all clients
-		okyaku.push([0, common.HOT_INJECTION, false, STATE.clientHotHash]);
+		okyaku.push([0, common.HOT_INJECTION, false, STATE.clientConfigHash]);
 		winston.info('Reloaded initial state.');
 	});
 }

@@ -1,31 +1,5 @@
 var config = require('./config');
 
-exports.CLIENT_DEPS = [
-	'common.js',
-	'client/init.js',
-	'client/memory.js',
-	'client/imager.js',
-	'client/models.js',
-	'client/extract.js',
-	'client/options.js',
-	'client/scroll.js',
-	'client/client.js',
-	'client/posting.js',
-	'client/menu.js',
-	'client/conn.js',
-	'client/notify.js',
-	'client/drop.js',
-	'client/hide.js',
-	'client/hover.js',
-	'client/amusement.js',
-	'client/embed.js',
-	'client/gravitas.js',
-	'curfew/client.js',
-	'report/client.js',
-	'time/client.js',
-	'voice/client.js',
-];
-
 exports.SERVER_DEPS = [
 	'admin/common.js',
 	'admin/index.js',
@@ -36,11 +10,8 @@ exports.SERVER_DEPS = [
 	'deps.js',
 	'etc.js',
 	'hooks.js',
-	'make_client.js',
-	'pipeline.js',
 	'tail.js',
 	'curfew/server.js',
-	'node_modules/underscore/underscore.js',
 	'imager/config.js',
 	'imager/daemon.js',
 	'imager/db.js',
@@ -64,7 +35,43 @@ exports.SERVER_DEPS = [
 	'voice/server.js',
 ];
 
-// Changes to these only require a state.js reload
+/* Changes to the below only require a state.js reload */
+
+exports.VENDOR_DEPS = [
+	'./node_modules/jquery/dist/jquery.js',
+	'./yepnope.js',
+	'./node_modules/underscore/underscore.js',
+	'./node_modules/backbone/backbone.js',
+	'./lib/oninput.js',
+	'./node_modules/jquery.cookie/jquery.cookie.js',
+	'./lib/pixastic.blurfast.min.js',
+];
+
+exports.CLIENT_DEPS = [
+	'common.js',
+	'client/init.js',
+	'client/memory.js',
+	'client/imager.js',
+	'client/models.js',
+	'client/extract.js',
+	'client/options.js',
+	'client/scroll.js',
+	'client/client.js',
+	'client/posting.js',
+	'client/menu.js',
+	'client/conn.js',
+	'client/notify.js',
+	'client/drop.js',
+	'client/hide.js',
+	'client/hover.js',
+	'client/amusement.js',
+	'client/embed.js',
+	'client/gravitas.js',
+	'curfew/client.js',
+	'report/client.js',
+	'time/client.js',
+];
+
 exports.SERVER_STATE = [
 	'admin/client.js',
 	'hot.js',

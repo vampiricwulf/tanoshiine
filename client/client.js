@@ -2,7 +2,7 @@ function inject(frag) {
 	var dest = this.buffer;
 	for (var i = 0; i < this.state[1]; i++)
 		dest = dest.children('del:last');
-	if (this.state[0] == S_QUOTE)
+	if (this.state[0] == DEF.S_QUOTE)
 		dest = dest.children('em:last');
 	if (this.strong)
 		dest = dest.children('strong:last');
@@ -73,7 +73,7 @@ function shift_replies(section) {
 		return;
 	var shown = section.children('article[id]:not(:has(form))');
 	var rem = shown.length;
-	if (rem < HOT.ABBREVIATED_REPLIES)
+	if (rem < hotConfig.ABBREVIATED_REPLIES)
 		return;
 	var $stat, omit = 0, img = 0;
 	var info = section_abbrev(section);
@@ -89,7 +89,7 @@ function shift_replies(section) {
 	var omitsBefore = omit;
 	for (var i = 0; i < shown.length; i++) {
 		var cull = $(shown[i]);
-		if (rem-- < HOT.ABBREVIATED_REPLIES)
+		if (rem-- < hotConfig.ABBREVIATED_REPLIES)
 			break;
 		if (cull.has('figure').length)
 			img++;
@@ -97,7 +97,7 @@ function shift_replies(section) {
 		cull.remove();
 	}
 	$stat.text(abbrev_msg(omit, img));
-	if (omitsBefore <= HOT.THREAD_LAST_N && omit > HOT.THREAD_LAST_N) {
+	if (omitsBefore <= hotConfig.THREAD_LAST_N && omit > hotConfig.THREAD_LAST_N) {
 		var $expand = section.find('header .act');
 		if ($expand.length == 1) {
 			var num = extract_num(section);
@@ -112,14 +112,14 @@ function spill_page() {
 		return;
 	/* Ugh, this could be smarter. */
 	var ss = $('body > section[id]:visible');
-	for (var i = HOT.THREADS_PER_PAGE; i < ss.length; i++)
+	for (var i = hotConfig.THREADS_PER_PAGE; i < ss.length; i++)
 		$(ss[i]).prev('hr').andSelf().hide();
 
 }
 
 var dispatcher = {};
 
-dispatcher[INSERT_POST] = function (msg) {
+dispatcher[DEF.INSERT_POST] = function (msg) {
 	var orig_focus = get_focus();
 	var num = msg[0];
 	msg = msg[1];
@@ -238,7 +238,7 @@ dispatcher[INSERT_POST] = function (msg) {
 		orig_focus.focus();
 };
 
-dispatcher[MOVE_THREAD] = function (msg, op) {
+dispatcher[DEF.MOVE_THREAD] = function (msg, op) {
 	msg = msg[0];
 	msg.num = op;
 	var orig_focus = get_focus();
@@ -273,7 +273,7 @@ dispatcher[MOVE_THREAD] = function (msg, op) {
 		orig_focus.focus();
 };
 
-dispatcher[INSERT_IMAGE] = function (msg, op) {
+dispatcher[DEF.INSERT_IMAGE] = function (msg, op) {
 	var focus = get_focus();
 	var num = msg[0];
 	var post = Threads.lookup(num, op);
@@ -298,7 +298,7 @@ dispatcher[INSERT_IMAGE] = function (msg, op) {
 		focus.focus();
 };
 
-dispatcher[UPDATE_POST] = function (msg, op) {
+dispatcher[DEF.UPDATE_POST] = function (msg, op) {
 	var num = msg[0], links = msg[4], extra = msg[5];
 	var state = [msg[2] || 0, msg[3] || 0];
 	var post = Threads.lookup(num, op);
@@ -327,7 +327,7 @@ dispatcher[UPDATE_POST] = function (msg, op) {
 	}
 };
 
-dispatcher[FINISH_POST] = function (msg, op) {
+dispatcher[DEF.FINISH_POST] = function (msg, op) {
 	var num = msg[0];
 	delete ownPosts[num];
 	var thread = Threads.get(op);
@@ -347,7 +347,7 @@ dispatcher[FINISH_POST] = function (msg, op) {
 		post.set('editing', false);
 };
 
-dispatcher[DELETE_POSTS] = function (msg, op) {
+dispatcher[DEF.DELETE_POSTS] = function (msg, op) {
 	var replies = Threads.lookup(op, op).get('replies');
 	var $section = $('#' + op);
 	var ownNum = saku && saku.get('num');
@@ -380,7 +380,7 @@ dispatcher[DELETE_POSTS] = function (msg, op) {
 	});
 };
 
-dispatcher[DELETE_THREAD] = function (msg, op) {
+dispatcher[DEF.DELETE_THREAD] = function (msg, op) {
 	delete syncs[op];
 	delete ownPosts[op];
 	if (saku) {
@@ -395,19 +395,19 @@ dispatcher[DELETE_THREAD] = function (msg, op) {
 		thread.trigger('destroy', thread, thread.collection);
 };
 
-dispatcher[LOCK_THREAD] = function (msg, op) {
+dispatcher[DEF.LOCK_THREAD] = function (msg, op) {
 	var thread = Threads.get(op);
 	if (thread)
 		thread.set('locked', true);
 };
 
-dispatcher[UNLOCK_THREAD] = function (msg, op) {
+dispatcher[DEF.UNLOCK_THREAD] = function (msg, op) {
 	var thread = Threads.get(op);
 	if (thread)
 		thread.set('locked', false);
 };
 
-dispatcher[DELETE_IMAGES] = function (msg, op) {
+dispatcher[DEF.DELETE_IMAGES] = function (msg, op) {
 	var replies = Threads.lookup(op, op).get('replies');
 	msg.forEach(function (num) {
 		var post = replies.get(num);
@@ -416,7 +416,7 @@ dispatcher[DELETE_IMAGES] = function (msg, op) {
 	});
 };
 
-dispatcher[SPOILER_IMAGES] = function (msg, op) {
+dispatcher[DEF.SPOILER_IMAGES] = function (msg, op) {
 	var thread = Threads.get(op);
 	var replies = thread.get('replies');
 	msg.forEach(function (info) {
@@ -481,17 +481,20 @@ if (!isMobile){
 	});
 }
 
-dispatcher[SYNCHRONIZE] = connSM.feeder('sync');
-dispatcher[INVALID] = connSM.feeder('invalid');
+dispatcher[DEF.SYNCHRONIZE] = connSM.feeder('sync');
+dispatcher[DEF.INVALID] = connSM.feeder('invalid');
 
-dispatcher[HOT_INJECTION] = function(msg){
+dispatcher[DEF.HOT_INJECTION] = function(msg){
 	// Request new varibles, if hashes don't match
-	if (msg[0] == false && msg[1] != HOT_HASH)
-		send([HOT_INJECTION, true]);
+	if (msg[0] == false && msg[1] != configHash)
+		send([DEF.HOT_INJECTION, true]);
 	// Update variables and hash
 	else if (msg[0] == true){
-		HOT = msg[2];
-		HOT_HASH = msg[1];
+		configHash = msg[1];
+		config = msg[2][0];
+		imagerConfig = msg[2][1];
+		reportConfig = msg[2][2];
+		hotConfig = msg[2][3];
 	}
 };
 
@@ -510,19 +513,19 @@ function lookup_model_path(path) {
 	return o;
 }
 
-dispatcher[MODEL_SET] = function (msg, op) {
+dispatcher[DEF.MODEL_SET] = function (msg, op) {
 	var target = lookup_model_path(msg[0]);
 	if (target && target.set)
 		target.set(msg[1]);
 };
 
-dispatcher[COLLECTION_RESET] = function (msg, op) {
+dispatcher[DEF.COLLECTION_RESET] = function (msg, op) {
 	var target = lookup_model_path(msg[0]);
 	if (target && target.reset)
 		target.reset(msg[1]);
 };
 
-dispatcher[COLLECTION_ADD] = function (msg, op) {
+dispatcher[DEF.COLLECTION_ADD] = function (msg, op) {
 	var target = lookup_model_path(msg[0]);
 	if (target && target.add)
 		target.add(msg[1], {merge: true});

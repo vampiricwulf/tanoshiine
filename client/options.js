@@ -324,7 +324,7 @@ function option_topbanner(bannertoggle) {
 		_.each(['#identity', '#options', '#options-panel'], function(el){$(el).appendTo('#bannerRight');});
 		if(!$("#bannerscript").length)
 			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
-		if(HOT.VOLUME_CONTROL)
+		if(imagerConfig.WEBM || imagerConfig.SOUNDFILES)
 			$("#volumeButton").show();
 		else
 			$("#volumeButton").hide();
