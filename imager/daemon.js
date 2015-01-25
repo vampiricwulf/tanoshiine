@@ -314,7 +314,7 @@ AudioStillJob.prototype.encode_thumb = function (total, length) {
   var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
   var args = ['-hide_banner', '-loglevel', 'info',
-  '-f', 'lavfi', '-itsoffset', '-' + (total <= 10 ? total : 10),
+  '-f', 'lavfi', '-ss', (total <= 10 ? total : Math.floor(total/2)),
   '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
   '-f', 'image2', '-vframes', '1', '-vframes', '1', '-vcodec', 'png',
   '-y', dest];
