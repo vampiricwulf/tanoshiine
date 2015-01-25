@@ -157,7 +157,7 @@ var Hidamari = {
 			width: (soundfile ? 'auto' : width),
 			height: (soundfile ? 'auto' : height),
 			autoplay: true,
-			loop: true,
+			loop: (soundfile ? false : true),
 			// Even wider
 			'class': 'expanded'+ (fullWidth ? ' fullWidth' : ''),
 		}));
