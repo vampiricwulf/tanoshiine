@@ -320,7 +320,7 @@ AudioStillJob.prototype.get_length = function () {
   });
 }
 
-AudioStillJob.prototype.encode_thumb = function (total, length) {
+AudioStillJob.prototype.encode_thumb = function (total, length, type) {
   var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
   var args = ['-hide_banner', '-loglevel', 'info',
