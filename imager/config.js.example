@@ -38,8 +38,8 @@ module.exports = {
 	WEBM_AUDIO: false,
 	// Enable SVG upload
 	SVG: false,
-	// Enable MP3 upload
-	MP3: false,
+	// Enable MP3/OGG/WAV upload
+	SOUNDFILES: false,
 
 	// Delete EXIF data from image.
 	DEL_EXIF: false,

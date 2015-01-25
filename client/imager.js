@@ -114,7 +114,7 @@ var Hidamari = {
 		var width = newWidth = img.dims[0];
 		var height = newHeight = img.dims[1];
 		var video = !!img.length;
-		var soundfile = /mp3/.test(img.src);
+		var soundfile = /\.(mp3|ogg|wav)/.test(img.src);
 		if (fit == 'full')
 			return this.expandImage(width, height, video);
 		var both = fit == 'both';
