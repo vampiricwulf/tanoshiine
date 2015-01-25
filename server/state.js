@@ -53,7 +53,7 @@ function reload_hot_config(cb) {
 		// Pass some of the hot variables to the client
 		var clientHot = exports.clientHot = {
       CUSTOM_BANNER_BOTTOM: HOT.CUSTOM_BANNER_BOTTOM,
-			EIGHT_BALL: HOT.EIGHT_BALL,
+      EIGHT_BALL: HOT.EIGHT_BALL,
 			THREADS_PER_PAGE: HOT.THREADS_PER_PAGE,
       THREAD_LAST_N: HOT.THREAD_LAST_N,
 			ABBREVIATED_REPLIES: HOT.ABBREVIATED_REPLIES,

@@ -11,10 +11,12 @@ Replies.purge_expired_soon();
 var normalTitle = document.title;
 
 // Pass visibility changes to Unread model
-document.addEventListener('visibilitychange', function (e) {
-	var hidden = !!e.target.hidden;
-	// Unread post count will reset
-	Unread.set({hidden: hidden, unreadCount: 0, reply: !hidden});
+window.addEventListener('focus', function () {
+	Unread.set({hidden: false, unreadCount: 0, reply: true});
+}, false);
+
+window.addEventListener('blur', function () {
+	Unread.set({hidden: true, unreadCount: 0, reply: false});
 }, false);
 
 connSM.on('synced', function () {
@@ -35,7 +37,7 @@ Backbone.on('repliedToMe', function (post) {
 	if (options.get('notification')) {
 		var body = post.get('body');
 		var image = post.get('image');
-		if((body || image) && document.hidden){
+		if((body || image) && Unread.get('hidden')){
 			var n = new Notification('見て見て!',{
 				// if the post doesn't have a image we use a bigger favicon
 				icon: encodeURI(mediaURL+ (image ? 'thumb/'+image.thumb : 'css/ui/favbig.png')),
@@ -54,7 +56,7 @@ Backbone.on('repliedToMe', function (post) {
 });
 Backbone.on('syncCountdown', function(time){
 	if (options.get('notification')) {
-		if(document.hidden)
+		if(Unread.get('hidden'))
 			new Notification('Syncwatch Starting',{
 				body: 'syncwatch starting in : '+time+' seconds',
 			});
@@ -63,7 +65,7 @@ Backbone.on('syncCountdown', function(time){
 Backbone.on('afterInsert', function (model) {
 	if (model && model.get('mine'))
 		return; // It's ours, don't notify unread
-	if (document.hidden)
+	if (Unread.get('hidden'))
 		Unread.set('unreadCount', Unread.get('unreadCount') + 1);
 });
 

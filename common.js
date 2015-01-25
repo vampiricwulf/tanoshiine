@@ -405,7 +405,7 @@ function readable_dice(bit, d) {
 	if (bit == '#flip')
 		return '#flip (' + (d[1] == 2) + ')';
 	if (bit == '#8ball')
-	    return '#8ball (' + HOT.EIGHT_BALL[d[1]- 1] + ')';
+    return '#8ball (' + HOT.EIGHT_BALL[d[1]- 1] + ')';
 	if (bit == '#bully')
 		return '#bully(' + d + ')';
 	if (bit == '#bullcount')
