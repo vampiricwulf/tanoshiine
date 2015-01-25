@@ -114,6 +114,7 @@ var Hidamari = {
 		var width = newWidth = img.dims[0];
 		var height = newHeight = img.dims[1];
 		var video = !!img.length;
+		var soundfile = /mp3/.test(img.src);
 		if (fit == 'full')
 			return this.expandImage(width, height, video);
 		var both = fit == 'both';
@@ -146,20 +147,22 @@ var Hidamari = {
 			width = newWidth;
 			height = newHeight;
 		}
-		this.expandImage(width, height, video, fullWidth && !fullHeight);
+		this.expandImage(width, height, video, soundfile, fullWidth && !fullHeight);
 	},
 
-	expandImage: function(width, height, video, fullWidth){
+	expandImage: function(width, height, video, soundfile, fullWidth){
 		var $fig = this.$el.children('figure');
 		$fig.find('img, video').replaceWith($('<'+ (video ? 'video' : 'img') +'/>', {
 			src: $fig.find('.imageSrc').attr('href'),
-			width: width,
-			height: height,
+			width: (soundfile ? 'auto' : width),
+			height: (soundfile ? 'auto' : height),
 			autoplay: true,
 			loop: true,
 			// Even wider
 			'class': 'expanded'+ (fullWidth ? ' fullWidth' : ''),
 		}));
+		if (soundfile)
+			$fig.find('img, video').attr('controls', true);
 		this.model.set('imageExpanded', true);
 	},
 };

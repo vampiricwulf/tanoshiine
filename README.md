@@ -27,9 +27,10 @@ Dependencies:
 * libpng
 * node.js + npm
 * redis
-* ffmpeg 2.2+ if supporting WebM
+* ffmpeg 2.2+ if supporting WebM or MP3
 * pngquant 2.2.0+ if PNG thumbnails enabled
 * exiftool if you want to strip images of their exif (must be enabled in config)
+* mp3info if supporting MP3
 
 Optional npm deps for various features:
 

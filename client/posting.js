@@ -725,7 +725,7 @@ make_upload_form: function () {
 	});
 	this.$imageInput = $('<input>', {
 		type: 'file', id: 'image', name: 'image',
-		accept: imagerConfig.WEBM ? 'imager/*;.webm' : 'image/*',
+		accept: imagerConfig.WEBM ? 'image/*;.webm;.mp3' : 'image/*;.mp3',
 		change: $.proxy(this, 'on_image_chosen'),
 	});
 	this.$toggle = $('<input>', {

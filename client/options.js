@@ -451,6 +451,9 @@ function imageHoverPreview(){
 		return fadeOutHoverOverlay();
 	var src = $target.closest('a').attr('href');
 	var isWebm = /\.webm/i.test(src);
+	var isAudio = /\.mp3/i.test(src);
+	if (isAudio)
+		return;
 	// Check if WebM hover expansion is enabled
 	if (isWebm && !options.get('webmHover'))
 		return fadeOutHoverOverlay();

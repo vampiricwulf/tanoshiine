@@ -16,12 +16,14 @@ var async = require('async'),
 var IMAGE_EXTS = ['.png', '.jpg', '.gif'];
 if (config.WEBM) {
 	IMAGE_EXTS.push('.webm');
-	if (!config.DAEMON) {
-		console.warn("Please enable imager.config.DAEMON security.");
-	}
+  if (!config.DAEMON) {
+  	console.warn("Please enable imager.config.DAEMON security.");
+  }
 }
 if (config.SVG)
 	IMAGE_EXTS.push('.svg');
+if (config.MP3)
+  IMAGE_EXTS.push('.mp3');
 
 function new_upload(req, resp) {
 	var upload = new ImageUpload;
@@ -182,7 +184,9 @@ IU.process = function () {
 	this.status('Verifying...');
 	if (image.ext == '.webm')
 		video_still(image.path, this.verify_webm.bind(this));
-	else
+	else if (image.ext == '.mp3')
+    audio_still(image.path, this.verify_audio.bind(this));
+  else
 		this.verify_image();
 };
 
@@ -269,6 +273,104 @@ function video_still(src, cb) {
 	jobs.schedule(new StillJob(src), cb);
 }
 
+function AudioStillJob(src) {
+  jobs.Job.call(this);
+  this.src = src;
+}
+util.inherits(AudioStillJob, jobs.Job);
+
+AudioStillJob.prototype.describe_job = function () {
+  return "FFmpeg audio still of " + this.src;
+};
+
+
+AudioStillJob.prototype.perform_job = function () {
+  var self = this;
+  self.get_length();
+}
+
+AudioStillJob.prototype.get_length = function () {
+  var self = this;
+  var length, total;
+  child_process.execFile(mp3infoBin, ['-p "%S"', this.src],
+  function(err, stdout, stderr){
+    var time = parseInt(stdout.replace(/\"/,''), 10);
+    total = parseInt(stdout.replace(/\"/,''), 10);
+    if (time > 3600) {
+      var h = Math.floor(time / 3600);
+      time = time - h * 3600;
+    }
+    if (time > 60) {
+      var m = Math.floor(time / 60);
+      time = time - m * 60;
+    }
+    var s = time;
+    length = (h ? h + 'h' : '') + (m ? m + 'm' : '') + s + 's';
+    self.encode_thumb(total, length);
+  });
+}
+
+AudioStillJob.prototype.encode_thumb = function (total, length) {
+  var self = this;
+  var dest = index.media_path('tmp', 'still_'+etc.random_id());
+  var args = ['-hide_banner', '-loglevel', 'info',
+  '-f', 'lavfi', '-itsoffset', '-' + (total <= 10 ? total : (total > 40 ? Math.floor(total/4) : Math.floor(total/2))),
+  '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
+  '-f', 'image2', '-vframes', '1', '-vframes', '1', '-vcodec', 'png',
+  '-y', dest];
+  var opts = {env: {AV_LOG_FORCE_NOCOLOR: '1'}};
+  child_process.execFile(ffmpegBin, args, opts,
+    function (err, stdout, stderr) {
+      var lines = stderr ? stderr.split('\n') : [];
+      var first = lines[0];
+      if (err) {
+        var msg;
+        if (/no such file or directory/i.test(first))
+          msg = "Audio went missing.";
+        else if (/invalid data found when/i.test(first))
+          msg = "Invalid audio file.";
+        else if (/^ffmpeg version/i.test(first))
+          msg = "Server's ffmpeg is too old.";
+        else {
+          msg = "Unknown audio reading error.";
+          winston.warn("Unknown ffmpeg output: "+first);
+        }
+        fs.unlink(dest, function (err) {
+          self.finish_job(Muggle(msg, stderr));
+        });
+        return;
+      }
+
+      self.finish_job(null, {
+        still_path: dest,
+        length: length,
+      });
+  });
+};
+
+function audio_still(src, cb) {
+  jobs.schedule(new AudioStillJob(src), cb);
+}
+
+IU.verify_audio = function (err, info) {
+  if (err)
+    return this.failure(err);
+  var self = this;
+  this.db.track_temporary(info.still_path, function (err) {
+    if (err)
+      winston.warn("Tracking error: " + err);
+    // pretend it's a PNG for the next steps
+    var image = self.image;
+    image.video = image.path;
+    image.path = info.still_path;
+    image.ext = '.png';
+    if (info.length)
+      image.length = info.length;
+    image.soundfile = true;
+    self.verify_image();
+  });
+};
+
 IU.verify_webm = function (err, info) {
 	if (err)
 		return this.failure(err);
@@ -352,7 +454,7 @@ IU.fill_in_specs = function (specs, kind) {
 
 IU.exifdel = function (err) {
 	var image = this.image, self = this;
-	if (image.ext == '.webm' || image.ext == '.svg' || !config.DEL_EXIF)
+	if (image.ext == '.webm' || image.ext == '.mp3' || image.ext == '.svg' || !config.DEL_EXIF)
 		return self.deduped();
 	child_process.execFile(exiftoolBin, ['-all=', image.path],
 	function(err, stdout, stderr){
@@ -420,7 +522,7 @@ IU.got_nails = function () {
 	if (image.video) {
 		// stop pretending this is just a still image
 		image.path = image.video;
-		image.ext = '.webm';
+		image.ext = image.soundfile ? '.mp3' : '.webm';
 		delete image.video;
 	}
 
@@ -472,8 +574,13 @@ if (config.DEL_EXIF) {
 }
 
 var ffmpegBin;
-if (config.WEBM) {
+if (config.WEBM || config.MP3) {
 	which('ffmpeg', function (bin) { ffmpegBin = bin; });
+}
+
+var mp3infoBin;
+if (config.MP3) {
+  which('mp3info', function (bin) { mp3infoBin = bin; });
 }
 
 var pngquantBin;
