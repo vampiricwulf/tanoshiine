@@ -256,6 +256,11 @@ body > #navTop {
 	text-align: center;
 	white-space: nowrap;
 }
+.notification {
+	position: fixed;
+	left: 50%;
+	transform: translate(-50%, 0);
+}
 section #bannerBot, section #bannerTop {
 	margin-top: 1em;
 	text-align: left;
