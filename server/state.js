@@ -61,7 +61,8 @@ function reload_hot_config(cb) {
 			ADMIN_ALIAS: HOT.ADMIN_ALIAS,
 			MOD_ALIAS: HOT.MOD_ALIAS,
 			SAGE_ENABLED: HOT.SAGE_ENABLED,
-      EXCLUDE_REGEXP: HOT.EXCLUDE_REGEXP
+      EXCLUDE_REGEXP: HOT.EXCLUDE_REGEXP,
+      VOLUME_CONTROL: HOT.VOLUME_CONTROL
 		};
 		HOT.CLIENT_HOT = JSON.stringify(clientHot);
 		exports.clientHotHash = HOT.CLIENT_HOT_HASH = crypto.createHash('MD5').update(HOT.CLIENT_HOT).digest('hex');

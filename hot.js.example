@@ -40,6 +40,9 @@ this.hot = {
 	ADMIN_ALIAS: 'Admin',
 	MOD_ALIAS: 'Moderator',
 
+	// Turn on if using WEBM or SOUNDFILES
+	VOLUME_CONTROL: false.
+
 	FAQ: [
 		'Upload size limit is 20 MB',
 		'Accepted upload file types: JPG, JPEG, PNG, APNG, GIF, WEBM',

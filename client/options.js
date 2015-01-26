@@ -324,6 +324,10 @@ function option_topbanner(bannertoggle) {
 		_.each(['#identity', '#options', '#options-panel'], function(el){$(el).appendTo('#bannerRight');});
 		if(!$("#bannerscript").length)
 			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
+		if(HOT.VOLUME_CONTROL)
+			$("#volumeButton").show();
+		else
+			$("#volumeButton").hide();
  		$("#navTop").appendTo("#bannerLeft");
 		$("#feedback").html('<svg xmlns="http://www.w3.org/2000/svg" width="17px" height="17px" viewBox="0 0 30 30"><path d="M28.516,7.167H3.482l12.517,7.108L28.516,7.167zM16.74,17.303C16.51,17.434,16.255,17.5,16,17.5s-0.51-0.066-0.741-0.197L2.5,10.06v14.773h27V10.06L16.74,17.303z" /></svg>');
  		$("#feedback").attr('title', 'Feedback');
