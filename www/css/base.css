@@ -227,14 +227,14 @@ body > #navTop {
 	margin: 0 2.5px;
 	text-decoration: none;
 }
-#indentityContainer, #bannerFAQ {
+#indentityContainer, #bannerFAQ, #volumeButton {
 	cursor: pointer;
 }
 #bannerRight > #sync {
 	position: relative;
 	top: -4px;
 }
-#bannerRight > #options-panel, #bannerRight > #identity, #bannerRight > #FAQ {
+#bannerRight > #options-panel, #bannerRight > #identity, #bannerRight > #FAQ, #bannerRight > #volumeController {
 	position: fixed !important;
 	right: 3px !important;
 	top: 20px !important;

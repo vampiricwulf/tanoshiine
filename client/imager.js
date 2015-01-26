@@ -163,6 +163,8 @@ var Hidamari = {
 		}));
 		if (soundfile)
 			$fig.find('img, video').attr('controls', true);
+		if (vol && (soundfile || video))
+			$fig.find('video')['0'].volume = vol;
 		this.model.set('imageExpanded', true);
 	},
 };

@@ -635,6 +635,11 @@ _.defer(function () {
 		$faq.toggle('fast');
 	});
 
+	$('#volumeButton').click(function(){
+		var $vol = $('#volumeController');
+		$vol.toggle('fast');
+	});
+
 	$('<a id="options">Options</a>').click(function () {
 		var $opts = $('#options-panel');
 		if (!$opts.length)
