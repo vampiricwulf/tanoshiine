@@ -256,6 +256,11 @@ body > #navTop {
 	text-align: center;
 	white-space: nowrap;
 }
+/* Proper fixed element renderring with dynamic animated backgrounds */
+#banner, .bmodal, .modal {
+	-webkit-backface-visibility: hidden;
+	-webkit-transform: translateZ(0);
+}
 .notification {
 	position: fixed;
 	left: 50%;
