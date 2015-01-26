@@ -304,13 +304,13 @@ AudioStillJob.prototype.get_length = function () {
       if (h == '00:'){
         h = '';
       } else {
-        total = parseInt(h.replace(':',''),10);
+        total = parseInt(h.replace(':',''),10) * 3600;
         h = h.replace(':', 'h');
       }
       if (m == '00:'){
         m = '';
       } else {
-        total = total + parseInt(m.replace(':',''),10);
+        total = total + parseInt(m.replace(':',''),10) * 60;
         m = m.replace(':', 'm')
       }
       total = total + parseInt(l[1].slice(6),10);
