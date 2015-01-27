@@ -62,7 +62,7 @@ $NAV
 			<input id="volumeSlider" type="range" min="0" max="100"
 			onchange="
 				vol = this.value / 100;
-				$.cookie('lastVolume', vol, {path: '/'});
+				localStorage.lastVolume = vol;
 				var $vid = $('video');
 				if ($vid[0]) {
 					for (var i = 0; i < $vid.length; i++){
@@ -77,8 +77,8 @@ $NAV
 $THREADS
 $NAV
 <script>
-	if ($.cookie('lastVolume')) {
-		vol = parseFloat($.cookie('lastVolume'), 10);
+	if (localStorage.lastVolume) {
+		vol = parseFloat(localStorage.lastVolume, 10);
 		$('#volumeSlider')[0].value = vol * 100;
 	}
 </script>
