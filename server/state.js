@@ -6,7 +6,8 @@ var _ = require('underscore'),
     hooks = require('../hooks'),
     path = require('path'),
     pipeline = require('../pipeline'),
-    vm = require('vm');
+    vm = require('vm'),
+    imagerConfig = require('../imager/config');
 
 _.templateSettings = {
 	interpolate: /\{\{(.+?)\}\}/g
@@ -62,7 +63,7 @@ function reload_hot_config(cb) {
 			MOD_ALIAS: HOT.MOD_ALIAS,
 			SAGE_ENABLED: HOT.SAGE_ENABLED,
       EXCLUDE_REGEXP: HOT.EXCLUDE_REGEXP,
-      VOLUME_CONTROL: HOT.VOLUME_CONTROL
+      VOLUME_CONTROL: (imagerConfig.WEBM || imagerConfig.SOUNDFILES)
 		};
 		HOT.CLIENT_HOT = JSON.stringify(clientHot);
 		exports.clientHotHash = HOT.CLIENT_HOT_HASH = crypto.createHash('MD5').update(HOT.CLIENT_HOT).digest('hex');
@@ -133,7 +134,7 @@ function read_templates(cb) {
 
 function expand_templates(res) {
 	var templateVars = _.clone(HOT);
-	_.extend(templateVars, require('../imager/config'));
+	_.extend(templateVars, imagerConfig);
 	_.extend(templateVars, config);
 	_.extend(templateVars, make_navigation_html());
 
