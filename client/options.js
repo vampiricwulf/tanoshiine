@@ -557,6 +557,7 @@ option_clean_ls.click = "localStorage.removeItem('options');";
 var shortcuts = [
 	{label: 'New post', name: 'new', which: 78},
 	{label: 'Image spoiler', name: 'togglespoiler', which: 73},
+	{label: 'Text Spoiler', name: 'textSpoiler', which: 68},
 	{label: 'Finish post', name: 'done', which: 83},
 ];
 
@@ -600,7 +601,7 @@ function change_shortcut(event) {
 		return;
 	shortcutKeys[name] = which;
 
-	var shorts = options.get('shortcuts')
+	var shorts = options.get('shortcuts');
 	if (!_.isObject(shorts)) {
 		shorts = {};
 		shorts[name] = which;
