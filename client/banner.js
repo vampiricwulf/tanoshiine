@@ -11,7 +11,7 @@ var NotificationView = Backbone.View.extend({
 	},
 
 	render: function(msg){
-		var $banner = $('#banner');
+		var $banner = $('#bannerCenter');
 		$('.notification').remove();
 		this.$el = $('<div/>', {
 			'class': 'notification modal'
