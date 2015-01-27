@@ -73,7 +73,7 @@ function reload_hot_config(cb) {
 	});
 }
 
-var clientConfig = _.pick(config,'IP_MNEMONIC', 'USE_WEBSOCKETS', 'SOCKET_PATH', 'DEBUG', 'READ_ONLY');
+var clientConfig = _.pick(config,'IP_MNEMONIC', 'GAME_BOARDS', 'USE_WEBSOCKETS', 'SOCKET_PATH', 'DEBUG', 'READ_ONLY');
 var clientImager = _.pick(imager,'WEBM', 'SOUNDFILES', 'UPLOAD_URL','MEDIA_URL', 'THUMB_DIMENSIONS',
 	'PINKY_DIMENSIONS', 'SPOILER_IMAGES', 'IMAGE_HATS');
 var clientReport = _.pick(report, 'RECAPTCHA_PUBLIC_KEY');
