@@ -318,6 +318,18 @@ option_autogif.tooltip = 'Animate GIF thumbnails';
 /* TOP BANNER TOGGLE */
 
 function option_topbanner(bannertoggle) {
+	if ($(window).width() <= 640 && !bannertoggle) {
+		$('.notification').remove();
+		this.$el = $('<div/>', {
+			'class': 'notification modal'
+		})
+			.html('<b><center>Your browser screen is too small<br>to fit the banner properly.<br>Click to remove.</center></b>')
+			.css('top', 10 + 'px')
+			.insertAfter($('body'))
+			.attr('onclick', 'this.remove();');
+		$('#bannerTop').hide();
+		return;
+	}
 	if(!bannertoggle) {
 		$('#bannerTop').show();
 		_.each(['#feedback', '#sync'], function(el){$(el).prependTo('#bannerRight');});
