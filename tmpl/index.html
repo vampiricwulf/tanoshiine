@@ -43,7 +43,24 @@ $NAV
 		<div id="volumeController" class="modal bmodal">
 			Volume:
 			<br>
-			<input id="volumeSlider" type="range" min="0" max="100"
+			<button id="playButton" style="font-size:18pt; text-decoration: none;"
+			onclick="
+			var $vid = $('video');
+			if (this.innerHTML == '►') {
+				if ($vid[0]) {
+					for (var i = 0; i < $vid.length; i++){
+						$('video')[i].pause();
+					}
+					this.innerHTML = 'Ⅱ';
+				}
+			} else {
+				if ($vid[0]) {
+					for (var i = 0; i < $vid.length; i++){
+						$('video')[i].play();
+					}
+					this.innerHTML = '►';
+				}
+			}" >►</button>   <input id="volumeSlider" type="range" min="0" max="100"
 			onchange="
 				vol = this.value / 100;
 				localStorage.lastVolume = vol;
