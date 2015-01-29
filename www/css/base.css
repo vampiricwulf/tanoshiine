@@ -19,7 +19,7 @@ aside a {
 	position: relative;
 	z-index: 15;
 }
-#options {
+#options, #volumeText {
 	cursor: pointer;
 	position: relative;
 	z-index: 101;
@@ -400,12 +400,18 @@ body > #feedback {
 	top: 0.2em;
 	z-index: 101;
 }
-body > #options, body > #sync {
+body > #options, body > #sync, #volumeText {
 	clear: right;
 	color: gray;
 	display: block;
 	float: right;
 	margin-bottom: 2px;
+}
+body > #volumeController {
+	position: absolute;
+	right: 70px;
+	top: 125px;
+	z-index: 101;
 }
 body > #options-panel {
 	position: absolute;

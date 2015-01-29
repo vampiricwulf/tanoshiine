@@ -1,6 +1,12 @@
 var optSpecs = [];
 var nashi = {opts: []}, inputMinSize = 300;
 var shortcutKeys = {};
+var volumeConfig = (imagerConfig.WEBM || imagerConfig.SOUNDFILES);
+if (volumeConfig) {
+	$("#volumeController").appendTo('body').hide();
+	$("#volumeText").show();
+	$("#volumeButton").show();
+}
 
 function extract_num(q) {
 	return parseInt(q.attr('id'), 10);
@@ -330,16 +336,18 @@ function option_topbanner(bannertoggle) {
 		$('#bannerTop').hide();
 		return;
 	}
+
 	if(!bannertoggle) {
 		$('#bannerTop').show();
 		_.each(['#feedback', '#sync'], function(el){$(el).prependTo('#bannerRight');});
 		_.each(['#identity', '#options', '#options-panel'], function(el){$(el).appendTo('#bannerRight');});
 		if(!$("#bannerscript").length)
 			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
-		if(imagerConfig.WEBM || imagerConfig.SOUNDFILES)
-			$("#volumeButton").show();
-		else
-			$("#volumeButton").hide();
+		if (volumeConfig) {
+			if($("body > #volumeController"))
+				$("#volumeController").insertAfter('#FAQ');
+			$("#volumeText").hide();
+		}
  		$("#navTop").appendTo("#bannerLeft");
 		$("#feedback").html('<svg xmlns="http://www.w3.org/2000/svg" width="17px" height="17px" viewBox="0 0 30 30"><path d="M28.516,7.167H3.482l12.517,7.108L28.516,7.167zM16.74,17.303C16.51,17.434,16.255,17.5,16,17.5s-0.51-0.066-0.741-0.197L2.5,10.06v14.773h27V10.06L16.74,17.303z" /></svg>');
  		$("#feedback").attr('title', 'Feedback');
@@ -353,12 +361,16 @@ function option_topbanner(bannertoggle) {
 		$('#bannerTop').hide();
 		if($("#bannerscript").length) {
 			$("#sync").insertAfter("body > h1");
-			_.each(['#identity', '#options'], function(el){$(el).insertAfter('#sync');});
+			_.each(['#identity', '#volumeText', '#options'], function(el){$(el).insertAfter('#sync');});
 			_.each(['#navTop', '#feedback'], function(el){$(el).prependTo('body');});
 			_.each(['#options', '#feedback'], function(el){$(el).removeAttr('title');});
 			$("#options").text('Options');
 			$("#options-panel").appendTo("body");
 			$("#feedback").text('Feedback');
+			if (volumeConfig) {
+				$("#volumeController").appendTo('body');
+				$("#volumeText").show();
+			}
 			$("#identity").removeClass("modal bmodal");
 			$("#identity").show();
 			$("h1").css("margin-top", "18px");
@@ -652,11 +664,7 @@ _.defer(function () {
 			}
 		if ($opts.is(':hidden'))
 			oneeSama.trigger('renderOptions', $opts);
-		if ($("#bannerscript").length){
-			position_bmodal("#options-panel");
-		} else {
-			$opts.toggle('fast');
-		}
+		position_bmodal("#options-panel");
 	}).insertAfter('#sync');
 
 	optSpecs.forEach(function (spec) {
@@ -689,6 +697,10 @@ $('#bannerFAQ').click(function(){
 });
 
 $('#volumeButton').click(function(){
+	position_bmodal('#volumeController');
+});
+
+$('#volumeText').click(function(){
 	position_bmodal('#volumeController');
 });
 
