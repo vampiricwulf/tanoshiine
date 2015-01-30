@@ -332,7 +332,7 @@ function option_topbanner(bannertoggle) {
 			.html('<b><center>Your browser screen is too small<br>to fit the banner properly.<br>Click to remove.</center></b>')
 			.css('top', 10 + 'px')
 			.insertAfter($('body'))
-			.attr('onclick', 'this.remove();');
+			.attr('onclick', '$(this).remove();');
 		$('#bannerTop').hide();
 		return;
 	}
