@@ -223,6 +223,12 @@ body > #navTop {
 	white-space: nowrap;
 	float: right;
 }
+#bannerCenter .mobile:-webkit-full-screen, #bannerCenter .mobile:-moz-full-screen {
+	display: block;
+}
+#bannerCenter.mobile {
+	display: none;
+}
 #bannerRight > a {
 	margin: 0 2.5px;
 	text-decoration: none;
