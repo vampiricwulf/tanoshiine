@@ -269,8 +269,15 @@ body > #navTop {
 }
 .notification {
 	position: fixed;
-	left: 50%;
-	transform: translate(-50%, 0);
+	display: table;
+	text-align: center;
+	white-space: pre-line !important;
+	font-size: 120%;
+	right: 0;
+	left: 0;
+	margin-right: auto;
+	margin-left: auto;
+	width: 90%;
 }
 section #bannerBot, section #bannerTop {
 	margin-top: 1em;
