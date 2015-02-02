@@ -210,24 +210,12 @@ StillJob.prototype.get_length = function () {
   var length, total = 0;
   child_process.execFile(ffmpegBin, ['-i', this.src],
   function(err, stdout, stderr){
-    var l = stderr.match(/Duration: (\d{2}:\d{2}:\d{2})/);
+    var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
     if (l){
-      var h = l[1].slice(0, 3);
-      var m = l[1].slice(3,6);
-      var s = l[1].slice(6) + 's';
-      if (h == '00:'){
-        h = '';
-      } else {
-        total = parseInt(h.replace(':',''),10) * 3600;
-        h = h.replace(':', 'h');
-      }
-      if (m == '00:'){
-        m = '';
-      } else {
-        total = total + parseInt(m.replace(':',''),10) * 60;
-        m = m.replace(':', 'm')
-      }
-      total = total + parseInt(l[1].slice(6),10);
+      var h = (l[1] != '00' ? l[1] + 'h' : '');
+      var m = (l[2] != '00' ? l[2] + 'm' : '');
+      var s = (l[3] != '00' ? l[3] + 's' : '');
+      total = parseFloat(parseFloat(l[1])*3600 + parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
     self.encode_thumb(length, total);
@@ -237,7 +225,7 @@ StillJob.prototype.get_length = function () {
 StillJob.prototype.encode_thumb = function (length, total) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
-      '-ss', (Math.floor(total/2) <= 10 ? total : Math.floor(total/2)),
+      '-ss', (total > 5 ? 5 : total/2),
 			'-i', this.src,
 			'-f', 'image2', '-vframes', '1', '-vcodec', 'png',
 			'-y', dest];
@@ -311,24 +299,12 @@ AudioStillJob.prototype.get_length = function () {
   function(err, stdout, stderr){
     var t = stderr.match(/Input #0, (.{3})/)
     type = t[1];
-    var l = stderr.match(/Duration: (\d{2}:\d{2}:\d{2})/);
+    var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
     if (l){
-      var h = l[1].slice(0, 3);
-      var m = l[1].slice(3,6);
-      var s = l[1].slice(6) + 's';
-      if (h == '00:'){
-        h = '';
-      } else {
-        total = parseInt(h.replace(':',''),10) * 3600;
-        h = h.replace(':', 'h');
-      }
-      if (m == '00:'){
-        m = '';
-      } else {
-        total = total + parseInt(m.replace(':',''),10) * 60;
-        m = m.replace(':', 'm')
-      }
-      total = total + parseInt(l[1].slice(6),10);
+      var h = (l[1] != '00' ? l[1] + 'h' : '');
+      var m = (l[2] != '00' ? l[2] + 'm' : '');
+      var s = (l[3] != '00' ? l[3] + 's' : '');
+      total = parseFloat(parseFloat(l[1])*3600 + parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
     self.encode_thumb(total, length, type);
