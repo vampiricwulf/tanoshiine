@@ -225,7 +225,7 @@ StillJob.prototype.get_length = function () {
 StillJob.prototype.encode_thumb = function (length, total) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
-      '-ss', (total > 5 ? 5 : total/2),
+      '-ss', (total < 8 ? Math.floor(total/4) : 5 ),
 			'-i', this.src,
 			'-f', 'image2', '-vframes', '1', '-vcodec', 'png',
 			'-y', dest];
@@ -315,7 +315,7 @@ AudioStillJob.prototype.encode_thumb = function (total, length, type) {
   var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
   var args = ['-hide_banner', '-loglevel', 'info',
-  '-f', 'lavfi', '-ss', (Math.floor(total/2) <= 10 ? total : Math.floor(total/2)),
+  '-f', 'lavfi', '-ss', (Math.floor(total/2) <= 10 ? Math.floor(total) : Math.floor(total/2)),
   '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
   '-f', 'image2', '-vframes', '1', '-vcodec', 'png',
   '-y', dest];
