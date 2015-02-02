@@ -15,6 +15,7 @@ imager/tmp
 imager/perceptual
 imager/findapng
 state
+imager/build
 tripcode/.build
 tripcode/build
 upkeep/credentials.json
