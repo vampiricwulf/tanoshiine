@@ -201,10 +201,45 @@ StillJob.prototype.describe_job = function () {
 };
 
 StillJob.prototype.perform_job = function () {
+  var self = this;
+  self.get_length();
+}
+
+StillJob.prototype.get_length = function () {
+  var self = this;
+  var length, total = 0;
+  child_process.execFile(ffmpegBin, ['-i', this.src],
+  function(err, stdout, stderr){
+    var l = stderr.match(/Duration: (\d{2}:\d{2}:\d{2})/);
+    if (l){
+      var h = l[1].slice(0, 3);
+      var m = l[1].slice(3,6);
+      var s = l[1].slice(6) + 's';
+      if (h == '00:'){
+        h = '';
+      } else {
+        total = parseInt(h.replace(':',''),10) * 3600;
+        h = h.replace(':', 'h');
+      }
+      if (m == '00:'){
+        m = '';
+      } else {
+        total = total + parseInt(m.replace(':',''),10) * 60;
+        m = m.replace(':', 'm')
+      }
+      total = total + parseInt(l[1].slice(6),10);
+      length = h + m + s;
+    }
+    self.encode_thumb(length, total);
+  });
+}
+
+StillJob.prototype.encode_thumb = function (length, total) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
+      '-ss', (Math.floor(total/2) <= 10 ? total : Math.floor(total/2)),
 			'-i', this.src,
-			'-f', 'image2', '-vf', 'thumbnail', '-vframes', '1', '-vcodec', 'png',
+			'-f', 'image2', '-vframes', '1', '-vcodec', 'png',
 			'-y', dest];
 	var opts = {env: {AV_LOG_FORCE_NOCOLOR: '1'}};
 	var self = this;
@@ -240,26 +275,6 @@ StillJob.prototype.perform_job = function () {
 
 		/* Could have false positives due to chapter titles. Bah. */
 		var has_audio = /audio:\s*vorbis/i.test(stderr);
-
-		// Parse webm length
-		var length;
-		var l = stderr.match(/Duration: (\d{2}:\d{2}:\d{2})/);
-		if (l){
-			var h = l[1].slice(0, 3);
-			var m = l[1].slice(3,6);
-			var s = l[1].slice(6) + 's';
-			if (h == '00:'){
-				h = '';
-			} else {
-				h = h.replace(':', 'h');
-			}
-			if (m == '00:'){
-				m = '';
-			} else {
-				m = m.replace(':', 'm')
-			}
-			length = h + m + s;
-		}
 
 		self.finish_job(null, {
 			still_path: dest,
@@ -326,7 +341,7 @@ AudioStillJob.prototype.encode_thumb = function (total, length, type) {
   var args = ['-hide_banner', '-loglevel', 'info',
   '-f', 'lavfi', '-ss', (Math.floor(total/2) <= 10 ? total : Math.floor(total/2)),
   '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
-  '-f', 'image2', '-vframes', '1', '-vframes', '1', '-vcodec', 'png',
+  '-f', 'image2', '-vframes', '1', '-vcodec', 'png',
   '-y', dest];
   var opts = {env: {AV_LOG_FORCE_NOCOLOR: '1'}};
   child_process.execFile(ffmpegBin, args, opts,
