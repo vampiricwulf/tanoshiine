@@ -13,10 +13,12 @@ var normalTitle = document.title;
 // Pass visibility changes to Unread model
 window.addEventListener('focus', function () {
 	Unread.set({hidden: false, unreadCount: 0, reply: true});
+	autoUnlock(false);
 }, false);
 
 window.addEventListener('blur', function () {
 	Unread.set({hidden: true, unreadCount: 0, reply: false});
+	autoUnlock(true);
 }, false);
 
 connSM.on('synced', function () {
