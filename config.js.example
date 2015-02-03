@@ -58,15 +58,6 @@ var config = {
 	CURFEW_HOURS: [5,6,16,17,18,19], //Hours you want the site to be running (GMT)
 	CURFEW_BOARDS: ['moe'],
 
-	// A semi random set of hours each day will make all posts Anonymous
-	ANON_HOURS: false,
-	// Accepted values are [1, 2, 3, 4, 6, 12, 24]
-	ANON_HOURS_PER_DAY: 2,
-	// Sets a semi-random ratio of anon hours to he converted into random name hours
-	// All posts will have a random name assigned to them from the posted name set
-	// Set to integer from 0 to 10. 0 disables random name hours. 10 makes all anon hours random name hours
-	RANDOM_NAME_HOURS: 0,
-
 	SUGGESTIONBOX: false,
 };
 
