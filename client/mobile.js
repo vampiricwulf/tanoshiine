@@ -23,5 +23,5 @@
 			$(e.target).remove();
 			localStorage.homescreenRefused = true;
 		})
-		.appendTo($('#banner_center'));
+		.appendTo($('#bannerCenter'));
 })();
