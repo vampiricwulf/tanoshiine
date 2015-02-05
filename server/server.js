@@ -29,7 +29,6 @@ if (!imager.is_standalone())
 	require('../imager/daemon'); // preload and confirm it works
 if (config.CURFEW_BOARDS)
 	require('../curfew/server');
-}
 try {
 	var reportConfig = require('../report/config');
 	if (reportConfig.RECAPTCHA_PUBLIC_KEY)
