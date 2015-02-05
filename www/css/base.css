@@ -27,6 +27,9 @@ aside a {
 article figure img {
 	margin-bottom: 0;
 }
+body, html {
+	overflow-x: hidden;
+}
 body > aside {
 	margin: 1em;
 }
