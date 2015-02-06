@@ -128,11 +128,11 @@ options.on('change:lastn', function (model, lastN) {
 
 /* KEEP THREAD LENGTH WITHIN LASTN */
 
-function option_postUnloading(toggle){}
+function option_postUnloading(){}
 
 option_postUnloading.id = 'postUnloading';
 option_postUnloading.label = 'Dynamic Post Unloading';
-option_postUnloading.type = 'revcheckbox';
+option_postUnloading.type = 'checkbox';
 option_postUnloading.tooltip = 'Improves thread responsiveness by unloading posts from the'+
 		' top of the thread, so that post count stays within the Last # value. Only applies to '+
 		'Last # enabled threads';
@@ -404,6 +404,7 @@ option_notification.id = 'notification';
 option_notification.label = 'Desktop Notifications';
 option_notification.type = 'checkbox';
 option_notification.tooltip = 'Get desktop notifications when quoted or a syncwatch is about to start';
+
 
 /* CUSTOM USER-SET BACKGROUND */
 
@@ -713,6 +714,25 @@ $('#volumeButton').click(function(){
 $('#volumeText').click(function(){
 	position_bmodal('#volumeController');
 });
+
+// Highlight options button, if no options are set
+if (!localStorage.getItem('options')){
+	$('#options').addClass('noOptions');
+	function fadeout(){
+		$('.noOptions').fadeOut(fadein);
+	}
+	function fadein(){
+		// Stop animation, if options pannel is opened
+		if (!$('.noOptions').length)
+			$('#options').fadeIn();
+		$('.noOptions').fadeIn(fadeout);
+	}
+	fadeout();
+
+	$('#options').click(function(){
+		$('#options').removeClass('noOptions');
+	});
+}
 
 function make_options_panel() {
 	var $opts = $('<div/>', {"class": 'modal bmodal', id: 'options-panel'});
