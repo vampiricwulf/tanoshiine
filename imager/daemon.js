@@ -289,33 +289,40 @@ AudioStillJob.prototype.describe_job = function () {
 
 AudioStillJob.prototype.perform_job = function () {
   var self = this;
-  self.get_length();
+  self.get_info();
 }
 
-AudioStillJob.prototype.get_length = function () {
+AudioStillJob.prototype.get_info = function () {
   var self = this;
-  var length, total = 0, type;
+  var songData = {};
   child_process.execFile(ffmpegBin, ['-i', this.src],
   function(err, stdout, stderr){
-    var t = stderr.match(/Input #0, (.{3})/)
-    type = t[1];
+    var type = stderr.match(/Input #0, (.{3})/);
+    if (type)
+      songData.type = type[1];
+    var title = stderr.match(/title\s+: (.*)/i);
+    if (title)
+      songData.title = title[1];
+    var artist = stderr.match(/artist\s+: (.*)/i);
+    if (artist)
+      songData.artist = artist[1];
     var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
     if (l){
       var h = (l[1] != '00' ? l[1] + 'h' : '');
       var m = (l[2] != '00' ? l[2] + 'm' : '');
       var s = (l[3] != '00' ? l[3] + 's' : '');
-      total = parseFloat(parseFloat(l[1])*3600 + parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
-      length = h + m + s;
+      songData.total = parseFloat(parseFloat(l[1])*3600 + parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
+      songData.length = h + m + s;
     }
-    self.encode_thumb(total, length, type);
+    self.encode_thumb(songData);
   });
 }
 
-AudioStillJob.prototype.encode_thumb = function (total, length, type) {
+AudioStillJob.prototype.encode_thumb = function (songData) {
   var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
   var args = ['-hide_banner', '-loglevel', 'info',
-  '-f', 'lavfi', '-ss', (Math.floor(total/2) <= 10 ? Math.floor(total) : Math.floor(total/2)),
+  '-f', 'lavfi', '-ss', (Math.floor(songData.total/2) <= 10 ? Math.floor(songData.total) : Math.floor(songData.total/2)),
   '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
   '-f', 'image2', '-vframes', '1', '-vcodec', 'png',
   '-y', dest];
@@ -344,8 +351,10 @@ AudioStillJob.prototype.encode_thumb = function (total, length, type) {
 
       self.finish_job(null, {
         still_path: dest,
-        length: length,
-        soundtype: type,
+        length: songData.length,
+        soundtype: songData.type,
+        title: songData.title,
+        artist: songData.artist,
       });
   });
 };
@@ -368,7 +377,12 @@ IU.verify_audio = function (err, info) {
     image.ext = '.png';
     if (info.length)
       image.length = info.length;
-    image.soundfile = info.soundtype;
+    if (info.soundtype)
+      image.soundfile = info.soundtype;
+    if (info.title)
+      image.title = info.title;
+    if (info.artist)
+      image.artist = info.artist;
     self.verify_image();
   });
 };

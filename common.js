@@ -550,6 +550,7 @@ OS.image_paths = function () {
 };
 
 var audioIndicator = "\u266B"; // musical note
+var soundInformation = '\u24D8'; // circled information source
 
 OS.gazou = function (info, toppu) {
 	var src, name, caption;
@@ -574,6 +575,10 @@ OS.gazou = function (info, toppu) {
 	var img = this.gazou_img(info, toppu);
 	var dims = info.dims[0] + 'x' + info.dims[1];
 
+	var songTitleText = (info.artist ? info.artist : '') +
+	(info.artist && info.title ? ' - ' : '') +
+	(info.title ? info.title : '');
+
 	// We need da data for da client to walk da podium
 
 	return [safe('<figure data-img="'), (isNode ? escapeJSON(info) : ''),
@@ -582,6 +587,8 @@ OS.gazou = function (info, toppu) {
 		caption, safe(' <i>('),
 		(this.spoilToggle && info.spoiler ? 'Spoiler, ' : ''),
 		info.audio ? (audioIndicator + ', ') : '',
+		(info.songTitle || info.artist) ? [safe('<abbr style="font-weight: bold;" title="'), songTitleText,
+		safe('">'), soundInformation, safe('</abbr>'), ', '] : '',
 		info.length ? (info.length + ', ') : '',
 		readable_filesize(info.size), ', ',
 		dims, (info.apng ? ', APNG' : ''),
