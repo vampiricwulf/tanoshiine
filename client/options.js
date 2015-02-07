@@ -52,7 +52,6 @@ optSpecs.push(option_image_hover);
 optSpecs.push(option_webm_hover);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_relative_time);
-optSpecs.push(option_syncwatch);
 optSpecs.push(option_horizontal);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
@@ -283,16 +282,6 @@ option_relative_time.id = 'relativeTime';
 option_relative_time.label = 'Relative Timestamps';
 option_relative_time.type = 'checkbox';
 option_relative_time.tooltip = 'Relative post timestamps. Ex.: "1 hour ago." Requires page refresh';
-
-
-/* SYNCWATCH */
-
-function option_syncwatch(toggle){}
-
-option_syncwatch.id = 'syncWatch';
-option_syncwatch.label = 'Syncwatch';
-option_syncwatch.type = 'checkbox';
-option_syncwatch.tooltip = 'Transform #sw hash commands into syncronised duration progress timers. Does not stop already running timers. Not recommended on mobile devices.';
 
 
 /* SAUCE TOGGLE */
