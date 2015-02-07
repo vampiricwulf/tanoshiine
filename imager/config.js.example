@@ -55,6 +55,8 @@ module.exports = {
 	// (e.g. https://github.com/lalcmellkmal/assets/tree/master/kana)
 	SPOILER_IMAGES: [4, 5, 6, 7, 8, 9, 10, 11],
 
+	SOUNDFILE_IMAGE: '../assets/kana/sound.png', //must be PNG, required for short sounds.
+
 	IMAGE_HATS: false, //to change the hat icon, it's default located www/css/ui/hat.png (make sure to keep name as hat.png)
 
 	// uncomment DAEMON if you will run `node imager/daemon.js` separately.

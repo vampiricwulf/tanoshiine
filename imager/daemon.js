@@ -215,7 +215,8 @@ StillJob.prototype.get_length = function () {
       var h = (l[1] != '00' ? l[1] + 'h' : '');
       var m = (l[2] != '00' ? l[2] + 'm' : '');
       var s = (l[3] != '00' ? l[3] + 's' : '');
-      total = parseFloat(parseFloat(l[1])*3600 + parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
+      total = parseFloat(parseFloat(l[1])*3600 +
+      parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
     self.encode_thumb(length, total);
@@ -311,7 +312,8 @@ AudioStillJob.prototype.get_info = function () {
       var h = (l[1] != '00' ? l[1] + 'h' : '');
       var m = (l[2] != '00' ? l[2] + 'm' : '');
       var s = (l[3] != '00' ? l[3] + 's' : '');
-      songData.total = parseFloat(parseFloat(l[1])*3600 + parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
+      songData.total = parseFloat(parseFloat(l[1])*3600 +
+      parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       songData.length = h + m + s;
     }
     self.encode_thumb(songData);
@@ -321,8 +323,29 @@ AudioStillJob.prototype.get_info = function () {
 AudioStillJob.prototype.encode_thumb = function (songData) {
   var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
+  if (songData.total <= 10) {
+    child_process.execFile(cpBin, [config.SOUNDFILE_IMAGE, dest], null, function (err, stdout, stderr) {
+      if (err) {
+        var msg = 'Something went wrong';
+        winston.warn(stderr);
+        fs.unlink(dest, function (err) {
+          self.finish_job(Muggle(msg, stderr));
+        });
+        return;
+      }
+      self.finish_job(null, {
+        still_path: dest,
+        length: songData.length,
+        soundtype: songData.type,
+        title: songData.title,
+        artist: songData.artist,
+      });
+    });
+    return;
+  }
   var args = ['-hide_banner', '-loglevel', 'info',
-  '-f', 'lavfi', '-ss', (Math.floor(songData.total/2) <= 10 ? Math.floor(songData.total) : Math.floor(songData.total/2)),
+  '-f', 'lavfi', '-ss', (Math.floor(songData.total/2) <= 10 ?
+  Math.floor(songData.total - songData.total/10) : Math.floor(songData.total/2)),
   '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
   '-f', 'image2', '-vframes', '1', '-vcodec', 'png',
   '-y', dest];
@@ -470,7 +493,7 @@ IU.fill_in_specs = function (specs, kind) {
 
 IU.exifdel = function (err) {
 	var image = this.image, self = this;
-	if (/\.(webm|svg|mp3|ogg|wav)/.test(image.ext) || !config.DEL_EXIF)
+	if (image.video || !config.DEL_EXIF)
 		return self.deduped();
 	child_process.execFile(exiftoolBin, ['-all=', image.path],
 	function(err, stdout, stderr){
@@ -572,13 +595,15 @@ IU.read_image_filesize = function (callback) {
 };
 
 // Look up binary paths
-var identifyBin, convertBin, exiftoolBin, ffmpegBin, pngquantBin;
+var identifyBin, convertBin, exiftoolBin, ffmpegBin, pngquantBin, cpBin;
 etc.which('identify', function (bin) { identifyBin = bin; });
 etc.which('convert', function (bin) { convertBin = bin; });
 if (config.DEL_EXIF)
 	etc.which('exiftool', function (bin) { exiftoolBin = bin; });
 if (config.WEBM || config.SOUNDFILES)
 	etc.which('ffmpeg', function (bin) { ffmpegBin = bin; });
+if (config.SOUNDFILES)
+  etc.which('cp', function (bin) { cpBin = bin; });
 if (config.PNG_THUMBS)
 	etc.which('pngquant', function (bin) { pngquantBin = bin; });
 
