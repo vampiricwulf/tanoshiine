@@ -22,7 +22,7 @@ if (config.WEBM) {
 }
 if (config.SVG)
 	IMAGE_EXTS.push('.svg');
-if (config.SOUNDFILES)
+if (config.AUDIOFILES)
   IMAGE_EXTS.push('.mp3', '.ogg', '.wav');
 
 function new_upload(req, resp) {
@@ -295,36 +295,36 @@ AudioStillJob.prototype.perform_job = function () {
 
 AudioStillJob.prototype.get_info = function () {
   var self = this;
-  var songData = {};
+  var audioData = {};
   child_process.execFile(ffmpegBin, ['-i', this.src],
   function(err, stdout, stderr){
     var type = stderr.match(/Input #0, (.{3})/);
     if (type)
-      songData.type = type[1];
+      audioData.type = type[1];
     var title = stderr.match(/title\s+: (.*)/i);
     if (title)
-      songData.title = title[1];
+      audioData.title = title[1];
     var artist = stderr.match(/artist\s+: (.*)/i);
     if (artist)
-      songData.artist = artist[1];
+      audioData.artist = artist[1];
     var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
     if (l){
       var h = (l[1] != '00' ? l[1] + 'h' : '');
       var m = (l[2] != '00' ? l[2] + 'm' : '');
       var s = (l[3] != '00' ? l[3] + 's' : '');
-      songData.total = parseFloat(parseFloat(l[1])*3600 +
+      audioData.total = parseFloat(parseFloat(l[1])*3600 +
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
-      songData.length = h + m + s;
+      audioData.length = h + m + s;
     }
-    self.encode_thumb(songData);
+    self.encode_thumb(audioData);
   });
 }
 
-AudioStillJob.prototype.encode_thumb = function (songData) {
+AudioStillJob.prototype.encode_thumb = function (audioData) {
   var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
-  if (songData.total <= 10) {
-    child_process.execFile(cpBin, [config.SOUNDFILE_IMAGE, dest], null, function (err, stdout, stderr) {
+  if (audioData.total <= 10) {
+    child_process.execFile(cpBin, [config.AUDIOFILE_IMAGE, dest], null, function (err, stdout, stderr) {
       if (err) {
         var msg = 'Something went wrong';
         winston.warn(stderr);
@@ -335,17 +335,17 @@ AudioStillJob.prototype.encode_thumb = function (songData) {
       }
       self.finish_job(null, {
         still_path: dest,
-        length: songData.length,
-        soundtype: songData.type,
-        title: songData.title,
-        artist: songData.artist,
+        length: audioData.length,
+        audiotype: audioData.type,
+        title: audioData.title,
+        artist: audioData.artist,
       });
     });
     return;
   }
   var args = ['-hide_banner', '-loglevel', 'info',
-  '-f', 'lavfi', '-ss', (Math.floor(songData.total/2) <= 10 ?
-  Math.floor(songData.total - songData.total/10) : Math.floor(songData.total/2)),
+  '-f', 'lavfi', '-ss', (Math.floor(audioData.total/2) <= 10 ?
+  Math.floor(audioData.total - audioData.total/10) : Math.floor(audioData.total/2)),
   '-i', 'amovie=' + this.src + ', asplit [a][out1];[a] showspectrum=mode=separate:color=intensity:slide=1:scale=cbrt [out0]',
   '-f', 'image2', '-vframes', '1', '-vcodec', 'png',
   '-y', dest];
@@ -374,10 +374,10 @@ AudioStillJob.prototype.encode_thumb = function (songData) {
 
       self.finish_job(null, {
         still_path: dest,
-        length: songData.length,
-        soundtype: songData.type,
-        title: songData.title,
-        artist: songData.artist,
+        length: audioData.length,
+        audiotype: audioData.type,
+        title: audioData.title,
+        artist: audioData.artist,
       });
   });
 };
@@ -400,8 +400,8 @@ IU.verify_audio = function (err, info) {
     image.ext = '.png';
     if (info.length)
       image.length = info.length;
-    if (info.soundtype)
-      image.soundfile = info.soundtype;
+    if (info.audiotype)
+      image.audiofile = info.audiotype;
     if (info.title)
       image.title = info.title;
     if (info.artist)
@@ -561,7 +561,7 @@ IU.got_nails = function () {
 	if (image.video) {
 		// stop pretending this is just a still image
 		image.path = image.video;
-		image.ext = image.soundfile ? '.'+image.soundfile : '.webm';
+		image.ext = image.audiofile ? '.'+image.audiofile : '.webm';
 		delete image.video;
 	}
 
@@ -600,9 +600,9 @@ etc.which('identify', function (bin) { identifyBin = bin; });
 etc.which('convert', function (bin) { convertBin = bin; });
 if (config.DEL_EXIF)
 	etc.which('exiftool', function (bin) { exiftoolBin = bin; });
-if (config.WEBM || config.SOUNDFILES)
+if (config.WEBM || config.AUDIOFILES)
 	etc.which('ffmpeg', function (bin) { ffmpegBin = bin; });
-if (config.SOUNDFILES)
+if (config.AUDIOFILES)
   etc.which('cp', function (bin) { cpBin = bin; });
 if (config.PNG_THUMBS)
 	etc.which('pngquant', function (bin) { pngquantBin = bin; });
