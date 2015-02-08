@@ -134,7 +134,7 @@ var Article = Backbone.View.extend({
 			'add': this.renderRelativeTime,
 		});
 		this.commonListeners();
-		if (!options.get('postUnloading') && CurThread)
+		if (options.get('postUnloading') && CurThread)
 			this.listenTo(this.model, {
 				'add': unloadTopPost
 			});
