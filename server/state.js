@@ -3,7 +3,7 @@ var _ = require('underscore'),
 	config = require('../config'),
 	crypto = require('crypto'),
 	etc = require('../etc'),
-	exec = require('child_process').execFile,
+	exec = require('child_process').exec,
 	fs = require('fs'),
 	gulp = require('../gulpfile'),
 	hooks = require('../hooks'),
@@ -115,9 +115,6 @@ function getScriptRevision(name, cb){
 }
 
 function reload_resources(cb) {
-
-	var deps = require('../deps');
-
 	read_templates(function (err, tmpls) {
 		if (err)
 			return cb(err);
@@ -195,13 +192,10 @@ function build_FAQ(faq){
 }
 
 function buildClient(cb){
-	// XXX: Reruns which each hot reload
-	etc.which('gulp', function(gulp){
-		exec(gulp, ['client', 'mod', 'vendor'], function(err, stdout, stderr){
-			if (err)
-				return console.error('Error: Failed to build client:', err, stderr);
-			cb();
-		});
+	exec('./node_modules/gulp/bin/gulp.js client mod vendor', function(err, stdout, stderr){
+		if (err)
+			return console.error('Error: Failed to build client:', err, stderr);
+		cb();
 	});
 }
 
