@@ -439,6 +439,7 @@ IU.verify_image = function () {
 	var image = this.image;
 	this.tagged_path = image.ext.replace('.', '') + ':' + image.path;
 	var checks = {
+		// Get more accurate filesize. Formidable passes the gzipped one
 		stat: fs.stat.bind(fs, image.video || image.path),
 		dims: identify.bind(null, this.tagged_path),
 	};
@@ -504,13 +505,12 @@ IU.exifdel = function (err) {
 	if (image.video || !config.DEL_EXIF)
 		return self.deduped();
 	child_process.execFile(exiftoolBin, ['-all=', image.path],
-	function(err, stdout, stderr){
-		if (err) {
-			self.status('Failure in removing EXIF');
-			winston.warn('Failure in removing EXIF data on ' + image.name + ' || ' + stderr);
+		function(err, stdout, stderr){
+			if (err)
+				return self.failure(Muggle('Exiftool error: ' + stderr));
+			self.deduped();
 		}
-		self.deduped();
-	});
+	);
 };
 
 IU.deduped = function (err) {
@@ -532,8 +532,7 @@ IU.deduped = function (err) {
 
 	var self = this;
 	image.dims = [w, h].concat(specs.dims);
-	if (!sp)
-		this.status('Thumbnailing...');
+	this.status('Thumbnailing...');
 
 	self.resize_and_track(specs, function (err) {
 		if (err)
