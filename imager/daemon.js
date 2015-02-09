@@ -500,20 +500,36 @@ IU.fill_in_specs = function (specs, kind) {
 	this.image[kind + '_path'] = specs.dest;
 };
 
-IU.exifdel = function (err) {
+IU.exifdel = function () {
 	var image = this.image, self = this;
-	if (image.video || !config.DEL_EXIF)
-		return self.deduped();
+	if (image.video || image.ext == '.svg' || !config.DEL_EXIF)
+		return self.sha1();
 	child_process.execFile(exiftoolBin, ['-all=', image.path],
 		function(err, stdout, stderr){
 			if (err)
 				return self.failure(Muggle('Exiftool error: ' + stderr));
-			self.deduped();
+			self.sha1();
 		}
 	);
 };
 
-IU.deduped = function (err) {
+IU.sha1 = function(){
+	var f = fs.ReadStream(this.image.path);
+	var sha1sum = crypto.createHash('sha1');
+	var self = this;
+	f.on('data', function(d){
+		sha1sum.update(d);
+	});
+	f.on('error', function(err){
+		self.failure(Muggle('SHA1 hashing error: ' + err));
+	});
+	f.on('end', function(){
+		self.image.SHA1 = sha1sum.digest('hex');
+		self.deduped();
+	});
+};
+
+IU.deduped = function () {
 	if (this.failed)
 		return;
 	var image = this.image;
