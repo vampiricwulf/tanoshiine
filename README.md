@@ -24,8 +24,9 @@ Production:
 Dependencies:
 
 * ImageMagick
-* libpng
-* node.js + npm
+* gcc, g++, make
+* libpng with development headers
+* io.js 1.2.0+
 * gulp
 * redis
 * ffmpeg 2.2+ for WebM support
