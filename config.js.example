@@ -4,6 +4,8 @@ var config = {
 	LISTEN_HOST: null,
 	// Debuging mode. Do not use in production
 	DEBUG: true,
+	// API webserver listening port
+	API_PORT: 8002,
 	// Secure tripcode encryption salt
 	SECURE_SALT: "LALALALALALALALA", /* [A-Za-z0-9./]{16} */
 	SOCKET_PATH: '/hana',
