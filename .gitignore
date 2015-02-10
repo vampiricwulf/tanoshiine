@@ -13,6 +13,7 @@ jsmin
 node_modules/
 imager/tmp
 imager/perceptual
+imager/findapng
 state
 tripcode/.build
 tripcode/build
