@@ -12,9 +12,11 @@ const std::string apng("acTL");
 const std::string magicNum("\211PNG\r\n\032\n");
 bool isPNG(std::ifstream &in)
 {
-  char buf[8];
+  char * buf=new char[8];
   in.read(buf,8);
-  return (buf==magicNum);
+  std::string str(buf,8);
+  delete[] buf;
+  return (str==magicNum);
 }
 /*Checks if a file is png or apng.
 Input: filename
@@ -36,8 +38,8 @@ NAN_METHOD(findapngCpp)
     NanThrowError("Can't open file");
     NanReturnUndefined();
   }
-
-  if(!isPNG(in))
+  bool png(isPNG(in));
+  if(!png)
     NanReturnValue(NanNew<Number>(-1));
 
   std::istream_iterator<unsigned char> sta(in);

@@ -1136,7 +1136,7 @@ Y.check_throttle = function (ip, callback) {
 };
 
 function note_hash(m, hash, num) {
-	m.zadd('imageDups', Date.now() + 30, num + ':' + hash);
+	m.zadd('imageDups', Date.now() + 300000, num + ':' + hash);
 }
 
 Y.add_image = function (post, alloc, ip, callback) {
@@ -1886,4 +1886,4 @@ function cleanUpDups(){
 	global.redis.zremrangebyscore('imageDups', 0, Date.now());
 }
 
-setInterval(cleanUpDups, 60);
+setInterval(cleanUpDups, 60000);

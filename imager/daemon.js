@@ -446,7 +446,10 @@ IU.verify_image = function () {
 	};
 	if (image.ext == '.png'){
 		checks.apng = function(callback){
-			callback(null,findapng(image.path));
+			var isapng= findapng(image.path);
+			if(isapng<0)
+				self.failure(Muggle('File is not a PNG or APNG.'));
+			callback(null,isapng);
 		};
 	}
 
@@ -456,12 +459,8 @@ IU.verify_image = function () {
 			return self.failure(Muggle('Bad image.'));
 		image.size = rs.stat.size;
 		image.dims = [rs.dims.width, rs.dims.height];
-		if (rs.apng !== undefined){
-			if (rs.apg < 0)
-				return self.failure(Muggle('Not PNG or APNG.'));
-			if (rs.apng)
-				image.apng = 1;
-		}
+		if (rs.apng)
+			image.apng = 1;
 		self.verified();
 	});
 };
