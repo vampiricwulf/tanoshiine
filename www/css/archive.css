@@ -82,3 +82,6 @@ hr {
 .omit {
 	color: gray;
 }
+.option_tab_sel a.tab_sel{
+	color: blue;
+}

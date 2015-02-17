@@ -124,3 +124,6 @@ hr {
 		background-image: url('ui/invlock2x.png');
 	}
 }
+.option_tab_sel a.tab_sel{
+	color: #9D6D2E;
+}

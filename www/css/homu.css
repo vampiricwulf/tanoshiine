@@ -99,3 +99,6 @@ hr {
 .omit {
 	color: #707070;
 }
+.option_tab_sel a.tab_sel{
+	color: #9B00E7;
+}
