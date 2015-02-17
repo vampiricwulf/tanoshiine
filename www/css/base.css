@@ -289,11 +289,11 @@ body > #navTop {
 	margin-bottom: 0px;
 }
 .option_tab_cont li{
-	display: none;
+	display: none !important;
 	float: left;
 }
 .option_tab_cont li.tab_sel{
-	display: inline-block;
+	display: inline-block !important;
 	padding-top: 5px;
 }
 /* Proper fixed element rendering with dynamic animated backgrounds */

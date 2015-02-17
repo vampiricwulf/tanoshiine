@@ -45,19 +45,19 @@ optSpecs.push(option_backlinks);
 optSpecs.push(option_inline_expansion);
 optSpecs.push(option_thumbs);
 optSpecs.push(option_theme);
+optSpecs.push(option_reply_at_right);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
 optSpecs.push(option_image_hover);
 optSpecs.push(option_webm_hover);
-optSpecs.push(option_reply_at_right);
 optSpecs.push(option_relative_time);
 optSpecs.push(option_horizontal);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
-optSpecs.push(option_last_n);
-optSpecs.push(option_postUnloading);
 optSpecs.push(option_alwaysLock);
+optSpecs.push(option_postUnloading);
+optSpecs.push(option_last_n);
 optSpecs.push(option_clean_ls);
 
 nashi.upload = !!$('<input type="file"/>').prop('disabled');
@@ -112,6 +112,7 @@ var tabs = Object.freeze({
 	Style: "Style",
 	Fun: "Fun",
 	Shortcuts: "Shortcuts",
+	Help: "Help"
 });
 
 /* LAST N CONFIG */
@@ -337,7 +338,7 @@ option_autogif.id = 'autogif';
 option_autogif.label = 'Animated GIF Thumbnails';
 option_autogif.type = 'checkbox';
 option_autogif.tooltip = 'Animate GIF thumbnails';
-option_autogif.tab = tabs.General;
+option_autogif.tab = tabs.Style;
 
 /* TOP BANNER TOGGLE */
 
@@ -413,7 +414,7 @@ option_notification.id = 'notification';
 option_notification.label = 'Desktop Notifications';
 option_notification.type = 'checkbox';
 option_notification.tooltip = 'Get desktop notifications when quoted or a syncwatch is about to start';
-option_notification.tab = tabs.General;
+option_notification.tab = tabs.Style;
 
 
 /* HORIZONTAL POSTING */
@@ -572,7 +573,7 @@ option_image_hover.id = 'imageHover';
 option_image_hover.label = 'Image Hover Expansion';
 option_image_hover.type = 'checkbox';
 option_image_hover.tooltip = 'Display image previews on hover';
-option_image_hover.tab = tabs.General;
+option_image_hover.tab = tabs.Style;
 
 // Toogle hover expansion of WebM
 
@@ -582,7 +583,7 @@ option_webm_hover.id = 'webmHover';
 option_webm_hover.label = 'WebM Hover Expansion';
 option_webm_hover.type = 'checkbox';
 option_webm_hover.tooltip = 'Display WebM previews on hover. Requires Image Hover Expansion enabled.';
-option_webm_hover.tab = tabs.General;
+option_webm_hover.tab = tabs.Style;
 
 
 /* INLINE EXPANSION */
@@ -607,7 +608,7 @@ option_clean_ls.label = 'Restore Default Options';
 option_clean_ls.type = 'button';
 option_clean_ls.tooltip = 'Last resort to fix options.';
 option_clean_ls.click = "localStorage.removeItem('options');";
-option_clean_ls.tab = tabs.General;
+option_clean_ls.tab = tabs.Help;
 
 /* SHORTCUT KEYS */
 
