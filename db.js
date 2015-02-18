@@ -1136,7 +1136,7 @@ Y.check_throttle = function (ip, callback) {
 };
 
 function note_hash(m, hash, num) {
-	m.zadd('imageDups', Date.now() + 300000, num + ':' + hash);
+	m.zadd('imageDups', Date.now() + 30000, num + ':' + hash);
 }
 
 Y.add_image = function (post, alloc, ip, callback) {
