@@ -40,12 +40,12 @@ function parent_model($el) {
 /* OPTIONS LIST */
 optSpecs.push(option_topbanner);
 optSpecs.push(option_linkify);
-optSpecs.push(option_notification);
 optSpecs.push(option_backlinks);
 optSpecs.push(option_inline_expansion);
 optSpecs.push(option_thumbs);
 optSpecs.push(option_theme);
 optSpecs.push(option_reply_at_right);
+optSpecs.push(option_notification);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
@@ -110,7 +110,6 @@ options.on('change', function () {
 var tabs = Object.freeze({
 	General: "General",
 	Style: "Style",
-	Fun: "Fun",
 	Shortcuts: "Shortcuts",
 	Help: "Help"
 });
@@ -431,7 +430,7 @@ option_horizontal.id = 'horizontalPosting';
 option_horizontal.label = 'Horizontal Posting';
 option_horizontal.type = 'checkbox';
 option_horizontal.tooltip = '38chan nostalgia';
-option_horizontal.tab = tabs.Fun;
+option_horizontal.tab = tabs.Style;
 
 
 /* CUSTOM USER-SET BACKGROUND */
