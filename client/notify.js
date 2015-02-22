@@ -33,8 +33,8 @@ connSM.on('desynced', dropped);
 
 Backbone.on('repliedToMe', function (post) {
 	var num = post.get('num');
-	// Already read reply
-	if (readReplies[num])
+	// Already read reply || catalog view
+	if (readReplies[num]|| !BUMP)
 		return;
 	if (options.get('notification')) {
 		var body = post.get('body');
