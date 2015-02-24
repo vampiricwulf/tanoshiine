@@ -518,9 +518,11 @@ function imageHoverPreview(){
 	if (!$target.is('img') || $target.hasClass('expanded'))
 		return fadeOutHoverOverlay();
 	var src = $target.closest('a').attr('href');
-	var isWebm = /\.webm/i.test(src);
-	var isAudio = /\.(mp3|ogg|wav)/i.test(src);
-	if (isAudio)
+	// Nothing to preview for PDF
+	if (/\.pdf$/.test(src))
+		return;
+	var isWebm = /\.webm$/i.test(src);
+	if (/\.(mp3|ogg|wav)/i.test(src))
 		return;
 	// Check if WebM hover expansion is enabled
 	if (isWebm && !options.get('webmHover'))

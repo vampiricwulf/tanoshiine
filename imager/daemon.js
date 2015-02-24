@@ -27,6 +27,8 @@ if (config.SVG)
 	IMAGE_EXTS.push('.svg');
 if (config.AUDIOFILES)
   IMAGE_EXTS.push('.mp3', '.ogg', '.wav');
+if (config.PDF)
+	IMAGE_EXTS.push('.pdf');
 
 function new_upload(req, resp) {
 	var upload = new ImageUpload;
