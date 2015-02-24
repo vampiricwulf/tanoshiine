@@ -37,7 +37,7 @@
 			data.dims[3] /= 1.66;
 			// Render thumbnail
 			html.push(oneeSama.gazou_img(data, false, './' + data.num).html, safe('<br>'));
-			html.push(safe('<small>R: ' + data.replies + ' ' + oneeSama.expansion_links_html(data.num) + '<br></small>'));
+			html.push(safe('<small>R: ' + data.replies + ' I: ' + data.imgctr + ' B: ' + data.bullyctr + ' ' + oneeSama.expansion_links_html(data.num) + '<br></small>'));
 			if (data.subject)
 				html.push(safe('<h3>「' + data.subject + '」</h3>'));
 			// Render text body
