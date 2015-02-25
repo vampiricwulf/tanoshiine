@@ -360,7 +360,7 @@ function option_topbanner(bannertoggle) {
 		_.each(['#feedback', '#sync'], function(el){$(el).prependTo('#bannerRight');});
 		_.each(['#identity', '#options', '#options-panel'], function(el){$(el).appendTo('#bannerRight');});
 		if(!$("#bannerscript").length)
-			$("body").prepend('\n<script id="bannerscript" src="http://tanoshiine.info/js/top-banner-v1.js"></script>\n');
+			$("body").prepend('\n<script id="bannerscript" src="' + document.location.origin + imagerConfig.MEDIA_URL + 'js/top-banner-v1.js"></script>\n');
 		if (volumeConfig) {
 			if($("body > #volumeController"))
 				$("#volumeController").insertAfter('#FAQ');
