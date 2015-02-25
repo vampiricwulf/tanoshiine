@@ -201,6 +201,7 @@ var ref_re = '>>(\\d+';
 ref_re += '|>\\/watch\\?v=[\\w-]{11}(?:#t=[\\dhms]{1,9})?';
 ref_re += '|>\\/soundcloud\\/[\\w-]{1,40}\\/[\\w-]{1,80}';
 ref_re += '|>\\/meguca\\/(?:\\w+|)(?:\\/|)\\d{0,10}';
+ref_re += '|>\\/pastebin\\/\\w+';
 
 for (var i = 0; i < config.BOARDS.length; i++) {
     ref_re += '|>\\/' + config.BOARDS[i] + '\\/(?:\\d+)?';
@@ -252,6 +253,10 @@ OS.red_string = function (ref) {
 		if (num)
 			mExtra += num;
 		dest = '../outbound/meguca/' + mExtra;
+	}
+	else if (/^>\/pastebin/.test(ref)){
+		dest = dest = 'https://pastebin.com/' + ref.slice(11);
+		linkClass = 'embed pastebin';
 	}
 
 	// Linkify >>>/board/ URLs

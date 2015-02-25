@@ -344,56 +344,86 @@ on_allocation: function (msg) {
 		this.$input.focus();
 	}
 
-	window.onbeforeunload = function () {
-		return "You have an unfinished post.";
-	};
-},
+	on_key_down: function (event) {
+		if (lockTarget == PAGE_BOTTOM) {
+			lockKeyHeight = $DOC.height();
+			_.defer($.proxy(this, 'entry_scroll_lock'));
+		}
+		switch (event.which) {
+			case 13:
+				event.preventDefault();
+				/* fall-through */
+			case 32:
+				var c = event.which == 13 ? '\n' : ' ';
+				// predict result
+				var input = this.$input[0];
+				var val = this.$input.val();
+				val = val.slice(0, input.selectionStart) + c +
+						val.slice(input.selectionEnd);
+				this.on_input(val);
+				break;
+			default:
+				handle_shortcut.bind(this)(event);
+		}
+	},
 
-on_image_alloc: function (msg) {
-	var attrs = this.model.attributes;
-	if (attrs.cancelled)
-		return;
-	if (!attrs.num && !attrs.sentAllocRequest) {
-		send([DEF.INSERT_POST, this.make_alloc_request(null, msg)]);
-		this.model.set({sentAllocRequest: true});
-	}
-	else {
-		send([DEF.INSERT_IMAGE, msg]);
-	}
-},
+	on_input: function (val) {
+		var $input = this.$input;
+		var start = $input[0].selectionStart, end = $input[0].selectionEnd;
+		if (val === undefined)
+			val = $input.val();
 
-entry_scroll_lock: function () {
-	/* NOPE */
-	if (lockTarget == PAGE_BOTTOM) {
-		/* Special keyup<->down case */
-		var height = $DOC.height();
-		if (height > lockKeyHeight)
-			window.scrollBy(0, height - lockKeyHeight + 1);
-	}
-},
+		/* Turn YouTube links into proper refs */
+		var changed = false;
+		while (true) {
+			var m = val.match(youtube_url_re);
+			if (!m)
+				break;
+			/* Substitute */
+			var t = m[4] || '';
+			t = this.find_time_arg(m[3]) || this.find_time_arg(m[1]) || t;
+			var v = '>>>/watch?v=' + m[2] + t;
+			val = embedRewrite(m,v);
+		}
+		//Youtu.be links
+		while(true){
+		    var m = val.match(youtube_short_re);
+			if (!m)
+				break;
+			// Substitute
+			var t = this.find_time_arg(m[2]) || '';
+			var v = '>>>/watch?v=' + m[1] + t;
+			val = embedRewrite(m, v);
+		}
 
-on_key_down: function (event) {
-	if (lockTarget == PAGE_BOTTOM) {
-		lockKeyHeight = $DOC.height();
-		_.defer($.proxy(this, 'entry_scroll_lock'));
-	}
-	switch (event.which) {
-		case 13:
-			event.preventDefault();
-			/* fall-through */
-		case 32:
-			var c = event.which == 13 ? '\n' : ' ';
-			// predict result
-			var input = this.$input[0];
-			var val = this.$input.val();
-			val = val.slice(0, input.selectionStart) + c +
-					val.slice(input.selectionEnd);
-			this.on_input(val);
-			break;
-		default:
-			handle_shortcut.bind(this)(event);
-	}
-},
+		/* and SoundCloud links */
+		while (true) {
+			var m = val.match(soundcloud_url_re);
+			if (!m)
+				break;
+			var sc = '>>>/soundcloud/' + m[1];
+			val = embedRewrite(m, sc);
+		}
+
+		/* Danbooru links - To be revisited
+		while (true){
+		    var m = val.match(danbooru_re);
+		    if (!m)
+		        break;
+		    var danb = '>>>/danbooru/' + m[1];
+		    val = embedRewrite(m, danb);
+		}*/
+
+		// Pastebin links
+		while(true){
+		    var m = val.match(pastebin_re);
+		    if (!m)
+		        break;
+		    var pbin = '>>>/pastebin/' +m[1];
+		    val = embedRewrite(m, pbin);
+		}
+		if (changed)
+			$input.val(val);
 
 on_input: function (val) {
 	var $input = this.$input;
@@ -401,45 +431,59 @@ on_input: function (val) {
 	if (val === undefined)
 		val = $input.val();
 
-	/* Turn YouTube links into proper refs */
-	var changed = false;
-	while (true) {
-		var m = val.match(youtube_url_re);
-		if (!m)
-			break;
-		/* Substitute */
-		var t = m[4] || '';
-		t = this.find_time_arg(m[3]) || this.find_time_arg(m[1]) || t;
-		var v = '>>>/watch?v=' + m[2] + t;
-		var old = m[0].length;
-		val = val.substr(0, m.index) + v + val.substr(m.index + old);
-		changed = true;
-		/* Compensate caret position */
-		if (m.index < start) {
-			var diff = old - v.length;
-			start -= diff;
-			end -= diff;
+		$input.attr('maxlength', DEF.MAX_POST_CHARS - this.char_count);
+		this.resize_input(val);
+		function embedRewrite(m, rw){
+		        var old = m[0].length;
+		        var newVal = val.substr(0, m.index) + rw + val.substr(m.index + old);
+			changed = true;
+			if (m.index < start) {
+				var diff = old - rw.length;
+				start -= diff;
+				end -= diff;
+			}
+		        return newVal;
+		}
+	},
+
+	add_ref: function (num, sel, selNum) {
+		/* If a >>link exists, put this one on the next line */
+		var $input = this.$input;
+		var val = $input.val();
+		if (/^>>\d+$/.test(val)) {
+			$input.val(val + '\n');
+			this.on_input();
+			val = $input.val();
+		}
+		// Quote selected text automatically, if selction ends in target post
+		if (sel != '' && selNum == num) {
+			sel = sel.split('\n');
+			// Prepend > to each line
+			for (var i = 0; i < sel.length; i++) {
+				sel[i] = '>' + sel[i];
+			}
+			num += '\n' + sel.join('\n') + '\n';
 		}
 	}
         while(true){
             var m = val.match(youtube_short_re);
 		if (!m)
 			break;
-		// Substitute 
+		// Substitute
 		var t = this.find_time_arg(m[2]) || '';
 		var v = '>>>/watch?v=' + m[1] + t;
 		var old = m[0].length;
 		val = val.substr(0, m.index) + v + val.substr(m.index + old);
 		changed = true;
-		// Compensate caret position 
+		// Compensate caret position
 		if (m.index < start) {
 			var diff = old - v.length;
 			start -= diff;
 			end -= diff;
 		}
-           
+
         }
-        
+
 	/* and SoundCloud links */
 	while (true) {
 		var m = val.match(soundcloud_url_re);
