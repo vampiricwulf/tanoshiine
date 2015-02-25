@@ -620,9 +620,9 @@ web.resource(/^\/(\w+)\/(\d+)\/$/, function (req, params, cb) {
 		cb(null, 'redirect', '../' + params[2]);
 });
 
-web.resource(/^\/outbound\/(sn|iq)\/([\d]{13})\.([\w]{3,4})$/,
+web.resource(/^\/outbound\/(sn|iq)\/(.*)$/,
 function (req, params, cb) {
-  var src = imager.config.MEDIA_URL + 'src/' + params[2] + '.' + params[3];
+  var src = '//' + config.LOGIN_COOKIE_DOMAIN + imager.config.MEDIA_URL + 'src/' + params[2];
   var u = urlParse(src, false, true);
   if (!u.protocol) {
     u.protocol = 'http:';
@@ -636,7 +636,7 @@ function (req, params, cb) {
 
 web.resource(/^\/outbound\/(g|iqdb)\/([\w+\/]{22}\.jpg)$/,
 			function (req, params, cb) {
-	var thumb = imager.config.MEDIA_URL + 'vint/' + params[2];
+	var thumb = '//' + config.LOGIN_COOKIE_DOMAIN + imager.config.MEDIA_URL + 'vint/' + params[2];
 
 	// attempt to make protocol more absolute
 	var u = urlParse(thumb, false, true);
