@@ -71,6 +71,7 @@ exports.CLIENT_DEPS = [
 	'curfew/client.js',
 	'report/client.js',
 	'time/client.js',
+	'voice/client.js',
 	'client/banner.js',
 	'client/catalog.js',
 	'client/mobile.js',
