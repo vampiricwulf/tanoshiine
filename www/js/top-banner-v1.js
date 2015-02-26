@@ -6,7 +6,7 @@ var write_bannerTop;
 	xhr.onload = function() {
 		var text = xhr.responseText;
 		document.getElementById('bannerCenter').innerHTML = '<b>' + text + '</b>';
-		return setTimeout(write_bannerTop, 10000);
+		return setTimeout(write_bannerTop, 600000);
 	}
 	xhr.send(null);
 })();
