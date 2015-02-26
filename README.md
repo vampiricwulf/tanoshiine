@@ -13,8 +13,6 @@ Note: The git master branch contains the development version of the board. For m
 * Run `npm install` to install npm deps and compile C++ addons
 * Configure config.js, hot.js, imager/config.js and report/config.js
 * Run `node builder.js` to run an auto-reloading development server
-* Alternatively, you can run `curl -Ls https://raw.githubusercontent.com/bakape/doushio/master/DEPLOY.sh | bash -`
-	as root for a basic semiautomatic production setup. Currently Ubuntu-only
 
 ##Production
 
