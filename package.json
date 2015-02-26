@@ -15,7 +15,8 @@
   },
   "scripts": {
     "postinstall": "make",
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "test": "node travis.js"
   },
   "dependencies": {
     "async": "^0.9.0",

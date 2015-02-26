@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vampiricwulf/tanoshiine.svg?branch=master)](https://travis-ci.org/vampiricwulf/tanoshiine)
+
 Real-time imageboard.
 MIT licensed.
 

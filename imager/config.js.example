@@ -13,7 +13,7 @@ module.exports = {
 	},
 	// If using an external web server, set this to the served address of the www directory
 	// Trailing slash required
-	MEDIA_URL: '../',
+	MEDIA_URL: '/',
 	// Set to separate upload address, if needed. Otherwise null
 	UPLOAD_URL: null,
 
@@ -49,7 +49,7 @@ module.exports = {
 
 	// Location of the spoiler directory. By default the assets directory has to be placed into doushio root
 	// directory's parent folder.
-	SPOILER_DIR: '../assets/kana',
+	SPOILER_DIR: '../www/kana',
 
 	// this indicates which spoiler images may be selected by posters.
 	// each number or ID corresponds to a set of images in SPOILER_DIR
@@ -58,7 +58,7 @@ module.exports = {
 	// (e.g. https://github.com/lalcmellkmal/assets/tree/master/kana)
 	SPOILER_IMAGES: [4, 5, 6, 7, 8, 9, 10, 11],
 
-	AUDIOFILE_IMAGE: '../assets/kana/sound.png', //must be PNG, required for short sounds.
+	AUDIOFILE_IMAGE: '../www/sound.png', //must be PNG, required for short sounds.
 
 	IMAGE_HATS: false, //to change the hat icon, it's default located www/css/ui/hat.png (make sure to keep name as hat.png)
 

@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "iojs"
+services:
+  - redis-server
+before_script:
+  - "mv ./config.js.example ./config.js"
+  - "mv ./hot.js.example ./hot.js"
+  - "mv ./imager/config.js.example ./imager/config.js"
+  - "mv ./report/config.js.example ./report/config.js"
