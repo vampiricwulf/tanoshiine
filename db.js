@@ -14,8 +14,6 @@ var _ = require('underscore'),
     util = require('util'),
     winston = require('winston');
 
-var imager = require('./imager'); /* set up hooks */
-
 var OPs = exports.OPs = cache.OPs;
 var TAGS = exports.TAGS = cache.opTags;
 var SUBS = exports.SUBS = cache.threadSubs;
