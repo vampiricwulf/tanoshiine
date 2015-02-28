@@ -139,9 +139,13 @@ var Article = Backbone.View.extend({
 			'change:hide': this.renderHide,
 			'change:image': this.renderImage,
 			'spoiler': this.renderSpoiler,
-			'removeSelf': this.bumplessRemove,
-			'add': this.renderRelativeTime,
-			'add': this.fun,
+			'removeSelf': this.bumplessRemove
+		});
+		this.listenToOnce(this.model, {
+			'add': function() {
+				this.renderRelativeTime();
+				this.fun();
+			}
 		});
 		this.commonListeners();
 		if (options.get('postUnloading') && CurThread)
@@ -212,7 +216,7 @@ var Article = Backbone.View.extend({
 		Posts.remove(this.model);
 		this.remove();
 	},
-	
+
 	fun: function(){
 		// Fun goes here
 	},
