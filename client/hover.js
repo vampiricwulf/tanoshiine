@@ -35,7 +35,7 @@ function preview_miru(event, num) {
 
 			if (post.is('section'))
 				bits = bits.slice(0, 3);
-			
+
 			//get id of parent post
 			var parent=event.target.parentNode.parentElement; //gets the parent of the links in: "Replies:"
 			parent= parent.id ? parent :parent.parentElement; //gets the parent of the normal links
@@ -132,3 +132,67 @@ function touch_screen_event() {
 }
 
 })();
+
+var ImageHoverView = Backbone.View.extend({
+	initialize: function() {
+		if (isMobile)
+			return;
+		this.listenTo(Mouseover, {
+			'change:target': this.check
+		});
+		$DOC.on('click', 'img, video', function() {
+			// Prevents hover preview after expanding an image
+			this.clickLock = true;
+			this.fadeOut();
+		}.bind(this));
+	},
+
+	check: function(model, target) {
+		if (this.clickLock)
+			return this.clickLock = false;
+		// Disabled in options
+		if (!options.get('imageHover'))
+			return;
+		var $target = $(target);
+		if (!$target.is('img') || $target.hasClass('expanded'))
+			return this.fadeOut();
+		var src = $target.closest('a').attr('href'),
+			isWebm = /\.webm$/i.test(src);
+		// Nothing to preview for PDF
+		if (/\.(pdf|mp3|ogg|wav)$/.test(src) || (isWebm && !options.get('webmHover')))
+			return this.fadeOut();
+		this.fadeIn($(isWebm ? '<video />' : '<img />', {
+			src: src,
+			autoplay: true,
+			loop: true,
+		}));
+	},
+
+	fadeIn: function($img) {
+		var $el = this.$el;
+		$el.velocity('fadeIn', {
+			duration: 150,
+			display: 'flex',
+			begin: function() {
+				$el.empty().append($img);
+			}
+		});
+	},
+
+	fadeOut: function() {
+		var $el = this.$el;
+		// Already faded out
+		if (!$el.is(':visible'))
+			return;
+		$el.velocity('fadeOut', {
+			duration: 150,
+			complete: function() {
+				$el.empty();
+			}
+		});
+	}
+});
+
+var imageHover = new ImageHoverView({
+	el: $('#hover_overlay')[0]
+});
