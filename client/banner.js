@@ -26,3 +26,21 @@ var NotificationView = Backbone.View.extend({
 dispatcher[DEF.NOTIFICATION] = function(msg){
 	new NotificationView(msg);
 };
+
+dispatcher[DEF.UPDATE_BANNER] = function(msg) {
+	Banner.renderInfo(msg[0]);
+};
+
+var BannerView = Backbone.View.extend({
+	initialize: function() {
+
+	},
+
+	renderInfo: function(msg) {
+		this.$el.children('#bannerBot').html(msg);
+	}
+});
+
+var Banner = new BannerView({
+	el: $('#bannerBot')[0]
+});

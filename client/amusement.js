@@ -1,7 +1,5 @@
 (function () {
 
-var $banner;
-
 function queue_roll(bit) {
 	var n = this.allRolls.sent++;
 	var info = this.allRolls[n];
@@ -38,73 +36,14 @@ oneeSama.hook('insertOwnPost', function (extra) {
 	}
 });
 
-var bannerExtra = hotConfig.CUSTOM_BANNER_BOTTOM ? $.parseHTML('<b>'+hotConfig.CUSTOM_BANNER_BOTTOM+'</b>') : null;
-
-if (!$banner && bannerExtra) {
-	var dest;
-	if (THREAD){
-		dest = $('#lock');
-		$banner = $('<span id="bannerBot"/>').insertAfter(dest);
-		$banner.empty().append(bannerExtra);
-	}
-}
-
-dispatcher[DEF.UPDATE_BANNER] = function (msg, op) {
-	msg = msg[0];
-	if (!$banner) {
-		var dest;
-		if (THREAD == op)
-			dest = '#lock';
-		else {
-			var $s = $('#' + op);
-			if ($s.is('section'))
-				dest = $s.children('header');
+	dispatcher[DEF.EXECUTE_JS] = function (msg, op) {
+		if (THREAD != op)
+			return;
+		try {
+			eval(msg[0]);
 		}
-		if (dest)
-			$banner = $('<span id="bannerBot"/>').insertAfter(dest);
-	}
-	if ($banner) {
-		if (Array.isArray(msg)) {
-			construct_banner(msg);
-			// if (bannerExtra)
-			// 	$banner.append(' / ', bannerExtra);
+		catch (e) {
+			/* fgsfds */
 		}
-		else if (msg) {
-			$banner.text(msg);
-			// if (bannerExtra)
-			// 	$banner.append(' / ', bannerExtra);
-		}
-		else if (bannerExtra && THREAD) {
-			$banner.empty().append(bannerExtra);
-		}
-		else {
-			$banner.remove();
-			$banner = null;
-		}
-	}
-};
-
-function construct_banner(parts) {
-	$banner.empty();
-	parts.forEach(function (part) {
-		if (part.href)
-			$('<a></a>', _.extend({target: '_blank'}, part)
-					).appendTo($banner);
-		else
-			$banner.append(document.createTextNode(part));
-	});
-}
-
-dispatcher[DEF.EXECUTE_JS] = function (msg, op) {
-	if (THREAD != op)
-		return;
-	try {
-		eval(msg[0]);
-	}
-	catch (e) {
-		/* fgsfds */
-	}
-};
-
-
+	};
 })();
