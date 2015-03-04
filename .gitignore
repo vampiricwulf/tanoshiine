@@ -10,6 +10,7 @@ config.js
 graveyard
 hot.js
 jsmin
+doushio.error.log
 node_modules/
 imager/tmp
 imager/perceptual
