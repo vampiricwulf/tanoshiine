@@ -64,6 +64,9 @@ function timer_from_el($el) {
 	var maxs = pad($el.attr('sec'));
 
 	(function moumouikkai(){
+		// Prevent memory leak
+		if (!$el.length)
+			return;
 		var now = serverTime();
 		if (now > end)
 			return $el.text('Finished');
