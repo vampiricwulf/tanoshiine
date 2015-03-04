@@ -97,10 +97,11 @@ var clientConfig = _.pick(config,
 	'READ_ONLY',
 	'API_URL',
 	'IP_TAGGING',
-	'RADIO'
+	'BOARDS'
 );
 var clientImager = _.pick(imager,
 	'WEBM',
+	'AUDIOFILES',
 	'UPLOAD_URL',
 	'MEDIA_URL',
 	'THUMB_DIMENSIONS',
