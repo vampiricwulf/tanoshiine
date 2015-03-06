@@ -183,7 +183,7 @@ var Hidamari = {
 			width: 300,
 			height: '3em',
 			autoplay: true,
-			loop: true,
+			loop: false,
 			controls: true
 		}).appendTo($a);
 		if (vol)
