@@ -276,7 +276,8 @@ initialize: function (dest) {
 	this.propagate_ident();
 	dest.dest.replaceWith(post);
 
-	this.$input.input(this.on_input.bind(this, undefined));
+		if (msg.image)
+			this.insert_uploaded(msg.image);
 
 	if (op) {
 		this.resize_input();
