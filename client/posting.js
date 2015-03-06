@@ -91,7 +91,7 @@ function handle_shortcut(event) {
 			break;
 		// Insert text spoiler
 		case shortcutKeys.textSpoiler:
-			if (postForm){
+			if (postForm) {
 				var $input = this.$input;
 				var state = this.imouto.state2.spoiler;
 				// Was spoiler already started?
@@ -100,6 +100,10 @@ function handle_shortcut(event) {
 				$input.val($input.val()+sp);
 				used = true;
 			}
+			break;
+		case shortcutKeys.expandAll:
+			massExpander.set('expand', !massExpander.get('expand'));
+			used = true;
 			break;
 	}
 

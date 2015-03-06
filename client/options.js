@@ -555,6 +555,7 @@ option_clean_ls.tooltip = 'Last resort to fix options.';
 option_clean_ls.click = "localStorage.removeItem('options');";
 option_clean_ls.tab = tabs.Help;
 
+
 /* SHORTCUT KEYS */
 
 var shortcuts = [
@@ -562,6 +563,7 @@ var shortcuts = [
 	{label: 'Image Spoiler', name: 'togglespoiler', which: 73},
 	{label: 'Text Spoiler', name: 'textSpoiler', which: 68},
 	{label: 'Finish Post', name: 'done', which: 83},
+	{label: 'Expand All Images', name: 'expandAll', which: 69}
 ];
 
 function select_shortcut(event) {
