@@ -186,7 +186,7 @@ var Hidamari = {
 			controls: true
 		}).appendTo($a);
 		if (vol)
-			$fig.find('audio')['0'].volume = vol;
+			$a.find('audio')['0'].volume = vol;
 		this.model.set('imageExpanded', true);
 	},
 };
