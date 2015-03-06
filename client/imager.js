@@ -114,12 +114,13 @@ var Hidamari = {
 		// Open PDF in a new tab on click
 		if (img.ext == '.pdf')
 			return window.open(mediaURL + 'src/' + img.src, '_blank');
+		if (/\.(mp3|ogg|wav)/.test(img.ext))
+			return this.renderAudio();
 		var width = newWidth = img.dims[0];
 		var height = newHeight = img.dims[1];
 		var video = !!img.length;
-		var soundfile = /\.(mp3|ogg|wav)/.test(img.src);
 		if (fit == 'full')
-			return this.expandImage(width, height, video);
+			return this.expandImage(width, height, img.ext);
 		var both = fit == 'both';
 		var widthFlag = both || fit == 'width';
 		var heightFlag = both || fit == 'height';
@@ -129,7 +130,8 @@ var Hidamari = {
 		if (widthFlag){
 			var maxWidth = $(window).width() -
 					// We have to go wider
-					this.$el.closest('section')[0].getBoundingClientRect().left* (isArticle ? 1 : 2);
+					this.$el.closest('section')[0].getBoundingClientRect().left
+						* (isArticle ? 1 : 2);
 			if (isArticle)
 				maxWidth -= this.$el.outerWidth() - this.$el.width() + 5;
 			if (newWidth > maxWidth){
@@ -150,24 +152,42 @@ var Hidamari = {
 			width = newWidth;
 			height = newHeight;
 		}
-		this.expandImage(width, height, video, soundfile, fullWidth && !fullHeight);
+		this.expandImage(width, height, video, fullWidth && !fullHeight);
 	},
 
-	expandImage: function(width, height, video, soundfile, fullWidth){
+	expandImage: function(width, height, ext, fullWidth){
 		var $fig = this.$el.children('figure');
-		$fig.find('img, video').replaceWith($('<'+ (video ? 'video' : 'img') +'/>', {
+			tag;
+		if (ext == '.webm')
+			tag = 'video';
+		else
+			tag = 'img';
+		$fig.find('img, video').replaceWith($('<'+ tag +'/>', {
 			src: $fig.find('.imageSrc').attr('href'),
-			width: (soundfile ? 'auto' : width),
-			height: (soundfile ? 'auto' : height),
+			width: width,
+			height: height,
 			autoplay: true,
-			loop: (soundfile ? false : true),
+			loop: true,
 			// Even wider
 			'class': 'expanded'+ (fullWidth ? ' fullWidth' : ''),
 		}));
-		if (soundfile)
-			$fig.find('img, video').attr('controls', true);
-		if (vol && (soundfile || video))
+		if (vol)
 			$fig.find('video')['0'].volume = vol;
+		this.model.set('imageExpanded', true);
+	},
+
+	renderAudio: function() {
+		$a = this.$el.children('figure').children('a');
+		$('<audio/>', {
+			src: $a.attr('href'),
+			width: 300,
+			height: '3em',
+			autoplay: true,
+			loop: true,
+			controls: true
+		}).appendTo($a);
+		if (vol)
+			$fig.find('audio')['0'].volume = vol;
 		this.model.set('imageExpanded', true);
 	},
 };
