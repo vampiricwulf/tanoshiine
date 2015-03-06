@@ -152,12 +152,11 @@ var Hidamari = {
 			width = newWidth;
 			height = newHeight;
 		}
-		this.expandImage(width, height, video, fullWidth && !fullHeight);
+		this.expandImage(width, height, img.ext, fullWidth && !fullHeight);
 	},
 
 	expandImage: function(width, height, ext, fullWidth){
-		var $fig = this.$el.children('figure');
-			tag;
+		var $fig = this.$el.children('figure'), tag;
 		if (ext == '.webm')
 			tag = 'video';
 		else
