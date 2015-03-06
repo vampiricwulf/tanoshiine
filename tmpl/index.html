@@ -47,17 +47,32 @@ $NAV
 			<button id="playButton" style="font-size:18pt; text-decoration: none;"
 			onclick="
 			var $vid = $('video');
+			var $aud = $('audio');
 			if (this.innerHTML == '►') {
-				if ($vid[0]) {
-					for (var i = 0; i < $vid.length; i++){
-						$('video')[i].pause();
+				if ($vid[0] || $aud[0]) {
+					if ($vid[0]) {
+						for (var i = 0; i < $vid.length; i++){
+							$('video')[i].pause();
+						}
+					}
+					if ($aud[0]) {
+						for (var i = 0; i < $aud.length; i++){
+							$('audio')[i].pause();
+						}
 					}
 					this.innerHTML = 'Ⅱ';
 				}
 			} else {
-				if ($vid[0]) {
-					for (var i = 0; i < $vid.length; i++){
-						$('video')[i].play();
+				if ($vid[0] || $aud[0]) {
+					if ($vid[0]) {
+						for (var i = 0; i < $vid.length; i++){
+							$('video')[i].play();
+						}
+					}
+					if ($aud[0]) {
+						for (var i = 0; i < $aud.length; i++){
+							$('audio')[i].play();
+						}
 					}
 					this.innerHTML = '►';
 				}
@@ -66,9 +81,15 @@ $NAV
 				vol = this.value / 100;
 				localStorage.lastVolume = vol;
 				var $vid = $('video');
+				var $aud = $('audio');
 				if ($vid[0]) {
 					for (var i = 0; i < $vid.length; i++){
 						$('video')[i].volume = vol;
+					}
+				}
+				if ($aud[0]) {
+					for (var i = 0; i < $aud.length; i++){
+						$('audio')[i].volume = vol;
 					}
 				}"
 			style="width:200px;" />
