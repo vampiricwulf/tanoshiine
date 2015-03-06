@@ -213,7 +213,7 @@ StillJob.prototype.perform_job = function () {
 StillJob.prototype.get_length = function () {
   var self = this;
   var length, total = 0;
-  child_process.execFile(ffmpegBin, ['-i', this.src],
+  child_process.execFile(ffprobeBin, [this.src],
   function(err, stdout, stderr){
     var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
     if (l){
@@ -301,7 +301,7 @@ AudioStillJob.prototype.perform_job = function () {
 AudioStillJob.prototype.get_info = function () {
   var self = this;
   var audioData = {};
-  child_process.execFile(ffmpegBin, ['-i', this.src],
+  child_process.execFile(ffprobeBin, [this.src],
   function(err, stdout, stderr){
     var type = stderr.match(/Input #0, (.{3})/);
     if (type)
@@ -321,33 +321,59 @@ AudioStillJob.prototype.get_info = function () {
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       audioData.length = h + m + s;
     }
-    self.encode_thumb(audioData);
+    self.short_test(audioData);
   });
 }
 
-AudioStillJob.prototype.encode_thumb = function (audioData) {
-  var self = this;
+AudioStillJob.prototype.short_test = function (audioData) {
+	var self = this;
   var dest = index.media_path('tmp', 'still_'+etc.random_id());
   if (audioData.total <= 10) {
-    child_process.execFile(cpBin, [config.AUDIOFILE_IMAGE, dest], null, function (err, stdout, stderr) {
-      if (err) {
-        var msg = 'Something went wrong';
-        winston.warn(stderr);
+		if (!config.AUDIOFILE_IMAGE) {
+			var msg = "Failure serverside.";
+			var prob = "Missing AUDIOFILE_IMAGE.";
+			winston.warn(prob);
+			fs.unlink(dest, function (err) {
+				self.finish_job(Muggle(msg, prob));
+			});
+			return;
+		}
+		fs.readFile(config.AUDIOFILE_IMAGE, function (errRead, img) {
+			if (errRead) {
+        var msg = "Failure serverside.";
+				var prob = "Error reading AUDIOFILE_IMAGE";
+				winston.warn(prob);
         fs.unlink(dest, function (err) {
-          self.finish_job(Muggle(msg, stderr));
+          self.finish_job(Muggle(msg, prob));
         });
         return;
-      }
-      self.finish_job(null, {
-        still_path: dest,
-        length: audioData.length,
-        audiotype: audioData.type,
-        title: audioData.title,
-        artist: audioData.artist,
-      });
-    });
-    return;
-  }
+			}
+			fs.writeFile(dest, img, function (errWrite) {
+				if (errWrite) {
+	        var msg = "Failure serverside.";
+					var prob = "Error copying AUDIOFILE_IMAGE";
+					winston.warn(prob);
+	        fs.unlink(dest, function (err) {
+	          self.finish_job(Muggle(msg, prob));
+	        });
+	        return;
+				}
+		    self.finish_job(null, {
+		      still_path: dest,
+		      length: audioData.length,
+		      audiotype: audioData.type,
+		      title: audioData.title,
+		      artist: audioData.artist,
+		    });
+			});
+		});
+  } else {
+		self.encode_thumb(audioData, dest);
+	}
+}
+
+AudioStillJob.prototype.encode_thumb = function (audioData, dest) {
+  var self = this;
   var args = ['-hide_banner', '-loglevel', 'info',
   '-f', 'lavfi', '-ss', (Math.floor(audioData.total/2) <= 10 ?
   Math.floor(audioData.total - audioData.total/10) : Math.floor(audioData.total/2)),
@@ -608,15 +634,15 @@ IU.got_nails = function () {
 
 
 // Look up binary paths
-var identifyBin, convertBin, exiftoolBin, ffmpegBin, pngquantBin, cpBin;
+var identifyBin, convertBin, exiftoolBin, ffmpegBin, ffprobeBin, pngquantBin;
 etc.which('identify', function (bin) { identifyBin = bin; });
 etc.which('convert', function (bin) { convertBin = bin; });
 if (config.DEL_EXIF)
 	etc.which('exiftool', function (bin) { exiftoolBin = bin; });
-if (config.WEBM || config.AUDIOFILES)
+if (config.WEBM || config.AUDIOFILES) {
 	etc.which('ffmpeg', function (bin) { ffmpegBin = bin; });
-if (config.AUDIOFILES)
-  etc.which('cp', function (bin) { cpBin = bin; });
+	etc.which('ffprobe', function (bin) { ffprobeBin = bin; });
+}
 if (config.PNG_THUMBS)
 	etc.which('pngquant', function (bin) { pngquantBin = bin; });
 
