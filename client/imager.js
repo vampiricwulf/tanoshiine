@@ -170,7 +170,7 @@ var Hidamari = {
 			// Even wider
 			'class': 'expanded'+ (fullWidth ? ' fullWidth' : ''),
 		}));
-		if (vol)
+		if (vol && ext == '.webm')
 			$fig.find('video')['0'].volume = vol;
 		this.model.set('imageExpanded', true);
 	},
