@@ -1,13 +1,13 @@
 a {
 	border: none;
 	text-decoration: underline;
-}
-a.referenced {
-	text-decoration: none;
-}
-a.nope, a.nope:hover {
-	color: inherit;
-	text-decoration: none;
+	.referenced {
+		text-decoration: none;
+	}
+	&.nope, &.nope:hover {
+		color: inherit;
+		text-decoration: none;
+	}
 }
 abbr {
 	border-bottom: 1px dotted;
@@ -27,8 +27,21 @@ aside a {
 	position: relative;
 	z-index: 101;
 }
-article figure img {
-	margin-bottom: 0;
+article {
+	figure img {
+		margin-bottom: 0;
+	}
+	header {
+		margin-left: -3px;
+		padding-left: 14px;
+	}
+	.hat {
+		width: 35px;
+		height: 70px;
+		left: 10px;
+		top: -28px;
+		background-size: 35px 70px;
+	}
 }
 body, html {
 	overflow-x: hidden;
@@ -51,13 +64,17 @@ body > aside {
 .soundcloud, .watch {
 	cursor: pointer;
 }
-del, del em {
-	background-color: black;
-	color: black;
-	text-decoration: none;
-}
-del:hover, del:hover em, del.reveal, del.reveal em {
-	color: white;
+del {
+	&, em {
+		background-color: black;
+		color: black;
+		text-decoration: none;
+	}
+	&:hover, &.reveal {
+		&, em {
+			color: white;
+		}
+	}
 }
 em {
 	font-style: normal;
@@ -68,24 +85,27 @@ fieldset {
 figcaption {
 	display: block;
 	margin: 2px 0;
+	i {
+		font-style: normal;
+		a {
+			text-decoration: none;
+		}
+	}
 }
-figcaption i {
-	font-style: normal;
-}
-figcaption i a {
-	color: inherit;
+.imageSearch {
+	font-weight: bold;
 	text-decoration: none;
 }
 figure {
 	display: inline;
 	margin: 0;
-}
-figure img {
-	border: 0;
-	clear: both;
-	float: left;
-	margin: 3px 20px 20px 0;
-	vertical-align: top;
+	img {
+		border: 0;
+		clear: both;
+		float: left;
+		margin: 3px 20px 20px 0;
+		vertical-align: top;
+	}
 }
 .fullWidth {
 	margin-right: 0;
@@ -109,32 +129,28 @@ h3 {
 	pointer-events: none;
 	display: flex;
 	z-index: 300;
-}
-#hover_overlay img, #hover_overlay video {
-	max-height: 100%;
-	max-width: 100%;
-	margin: auto auto;
-	display: block;
+	img, video {
+		max-height: 100%;
+		max-width: 100%;
+		margin: auto auto;
+		display: block;
+	}
 }
 header {
 	background: url('ui/box.png') left 3px no-repeat;
 	margin-left: -14px;
 	padding-left: 14px;
 	position: relative;
-}
-article header {
-	margin-left: -3px;
-	padding-left: 14px;
+	code {
+		font-family: inherit;
+		font-weight: normal;
+	}
+	nav a {
+		text-decoration: none;
+	}
 }
 .preview header {
 	background-image: none;
-}
-header nav a {
-	text-decoration: none;
-}
-header code {
-	font-family: inherit;
-	font-weight: normal;
 }
 hr {
 	border: none;
@@ -151,6 +167,11 @@ label.ident {
 section {
 	display: block;
 	margin: 0 1em 1em 1em;
+	& >  figure > a {
+		float: left;
+		position: relative;
+		z-index: 5;
+	}
 }
 section nav, section p, .preview nav {
 	display: inline;
@@ -171,6 +192,11 @@ span.control .popup-menu {
 	padding: 5px;
 	top: -9px;
 	left: -9px;
+	li {
+		list-style: none;
+		margin: 0;
+		padding: 3px 3px 3px 21px;
+	}
 }
 .popup-menu, .act {
 	user-select: none;
@@ -178,11 +204,6 @@ span.control .popup-menu {
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-}
-.popup-menu li {
-	list-style: none;
-	margin: 0;
-	padding: 3px 3px 3px 21px;
 }
 .control {
 	cursor: pointer;
@@ -220,6 +241,12 @@ body > #navTop {
 	text-align: center;
 	white-space: nowrap;
 	z-index: 101;
+	.mobile {
+		display: none;
+		&:-webkit-full-screen, &:-moz-full-screen {
+			display: block;
+		}
+	}
 }
 #bannerRight{
 	vertical-align: text-top;
@@ -228,31 +255,25 @@ body > #navTop {
 	text-align: right;
 	white-space: nowrap;
 	float: right;
-}
-#bannerCenter .mobile:-webkit-full-screen, #bannerCenter .mobile:-moz-full-screen {
-	display: block;
-}
-#bannerCenter.mobile {
-	display: none;
-}
-#bannerRight > a {
-	margin: 0 2.5px;
-	text-decoration: none;
+	a {
+		margin: 0 2.5px;
+		text-decoration: none;
+	}
+	#sync {
+		position: relative;
+		top: -4px;
+	}
+	#options-panel, #identity, #FAQ, #volumeController {
+		position: fixed !important;
+		right: 3px !important;
+		top: 20px !important;
+		text-align: left !important;
+		margin: 0;
+		display: none;
+	}
 }
 #indentityContainer, #bannerFAQ, #volumeButton {
 	cursor: pointer;
-}
-#bannerRight > #sync {
-	position: relative;
-	top: -4px;
-}
-#bannerRight > #options-panel, #bannerRight > #identity, #bannerRight > #FAQ, #bannerRight > #volumeController {
-	position: fixed !important;
-	right: 3px !important;
-	top: 20px !important;
-	text-align: left !important;
-	margin: 0;
-	display: none;
 }
 .modal ul {
 	padding: 0;
@@ -282,32 +303,32 @@ body > #navTop {
 	display: inline;
 	-webkit-padding-start: 0px;
 	-moz-padding-start: 0px;
-}
-.option_tab_sel li{
-	list-style-type: none;
-	float:left;
-}
-.option_tab_sel a{
-	display: inline-block;
-	padding: 7px;
-	text-decoration: none;
-	border-bottom: 1px solid;
+	li {
+		list-style-type: none;
+		float:left;
+	}
+	a {
+		display: inline-block;
+		padding: 7px;
+		text-decoration: none;
+		border-bottom: 1px solid;
+	}
 }
 .option_tab_cont{
 	padding-top: 10px;
 	padding-left: 5px;
 	margin-bottom: 0px;
+	li {
+		display: none;
+		float: left;
+		&.tab_sel {
+			display: inline-block;
+			padding-top: 5px;
+		}
+	}
 }
-.option_tab_cont li{
-	display: none !important;
-	float: left;
-}
-.option_tab_cont li.tab_sel{
-	display: inline-block !important;
-	padding-top: 5px;
-}
-/* Proper fixed element rendering with dynamic animated backgrounds */
-#banner, .bmodal, .modal {
+// Proper fixed element rendering with dynamic animated backgrounds
+#bannerTop, .bmodal, .modal {
 	-webkit-backface-visibility: hidden;
 	-webkit-transform: translateZ(0);
 }
@@ -323,9 +344,32 @@ body > #navTop {
 	margin-left: auto;
 	width: 90%;
 }
-section #bannerBot, section #bannerTop {
-	margin-top: 1em;
-	text-align: left;
+section {
+	#bannerBot, #bannerTop {
+		margin-top: 1em;
+		text-align: left;
+	}
+}
+#FAQ > ul {
+	list-style-type:none;
+	-webkit-margin-before: 0em;
+	margin-top: 0em;
+	-webkit-margin-after: 0em;
+	margin-bottom: 0em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	-webkit-padding-start: 0px;
+	-moz-margin-start: 0em;
+	-moz-margin-end: 0px;
+	-moz-padding-start: 0px;
+}
+#bgvid{
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 100%;
+	height: auto;
+	z-index: -100;
 }
 #user_bg {
 	position: fixed;
@@ -351,11 +395,6 @@ figure {
 	display: block;
 	position: relative;
 }
-section > figure > a {
-	float: left;
-	position: relative;
-	z-index: 5;
-}
 .hat {
 	background: url('ui/hat.png') no-repeat;
 	position: absolute;
@@ -363,13 +402,6 @@ section > figure > a {
 	top: -75px;
 	width: 70px;
 	height: 141px;
-}
-article .hat {
-	width: 35px;
-	height: 70px;
-	left: 10px;
-	top: -28px;
-	background-size: 35px 70px;
 }
 #lock {
 	background: url('ui/lock.svg') no-repeat left;
@@ -400,10 +432,10 @@ article .hat {
 	display: inline-block;
 	padding: 2px 10px;
 	margin: 1px 0;
-}
-.pagination a, .pagination strong {
-	display: inline-block;
-	padding: 4px;
+	a, strong {
+		display: inline-block;
+		padding: 4px;
+	}
 }
 .preview {
 	padding: 4px 10px;
@@ -415,16 +447,17 @@ article .hat {
 	background-size: 1em 1em;
 	background-position: 0 0;
 }
-
-.multi-select article {
-	margin-left: 50px;
-}
-.multi-select section > header {
-	clear: both;
-	margin-left: 55px;
-}
-.multi-select section > header .select-handle {
-	margin-left: -65px;
+.multi-select {
+	article {
+		margin-left: 50px;
+	}
+	section > header {
+		clear: both;
+		margin-left: 55px;
+		.select-handle {
+			margin-left: -65px;
+		}
+	}
 }
 .select-handle {
 	width: 35px;
@@ -480,18 +513,18 @@ body > #options-panel {
 	position: fixed;
 	right: 10px;
 	bottom: 10px;
-}
-#report-panel #captcha, #report-panel .message {
-	margin: 1em 0;
-}
-#report-panel .error {
-	color: red;
-}
-#report-panel .close {
-	float: right;
-	font-weight: bold;
-	padding-left: 1em;
-	text-decoration: none;
+	#captcha, .message {
+		margin: 1em 0;
+	}
+	.error {
+		color: red;
+	}
+	.close {
+		float: right;
+		font-weight: bold;
+		padding-left: 1em;
+		text-decoration: none;
+	}
 }
 #shortcuts input {
 	border: none;
