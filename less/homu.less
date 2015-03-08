@@ -1,21 +1,17 @@
-a {
-	color: #433b8a;
-}
-blockquote a, a:hover, .email b:hover {
+@import "common";
+@link: #433b8a;
+@postBG: #E5E1E6;
+@border: 1px solid #b3b3b3;
+@bold: #5d4488;
+@admin: #c00000;
+@mod: #800080;
+
+a:hover, .email b:hover {
 	color: #ab3842;
-}
-#bannerRight svg {
-	fill: #433b8a;
 }
 a.directfl {
   text-decoration: none;
   color: #a49aa6;
-}
-blockquote a.referenced {
-	border-bottom: 1px dashed #ab3842;
-}
-a.referenced {
-	border-bottom: 1px dashed #433b8a;
 }
 article, aside, .pagination {
   background-color: #d9cedb;
@@ -29,18 +25,6 @@ article.highlight {
 article.editing {
 	background-color: #a391cc;
 	border-color: #9686bd;
-}
-b {
-	color: #5d4488;
-}
-b.admin {
-	color: #c00000;
-}
-b.moderator {
-	color: #800080;
-}
-#bannerTop {
-	background: rgba(229, 225, 230, 0.7);
 }
 body {
   color: #121314;
@@ -81,12 +65,6 @@ hr {
 }
 .popup-menu li:hover {
 	background-color: #faf7fc;
-}
-.act:before {
-	content: "[";
-}
-.act:after {
-	content: "]";
 }
 .email, .email b {
 	color: #433b8a;

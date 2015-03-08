@@ -1,12 +1,11 @@
-a, blockquote a:hover, b.moderator {
-	color: #81a2be;
-}
-#bannerRight svg {
-	fill: #81a2be;
-}
-a.referenced {
-	border-bottom: 1px dashed #81a2be;
-}
+@import "common";
+@link: #81a2be;
+@postBG: #37393B;
+@border: 1px solid #242526;
+@bold: #f00000;
+@admin: #f00000;
+@mod: #f00000;
+
 a:hover, blockquote a, .email b:hover, .editing a:hover {
 	color: #5f89ac;
 }
@@ -41,12 +40,6 @@ article.editing li {
 }
 article.editing .themed {
 	color: #333;
-}
-b.admin {
-	color: #f00000;
-}
-#bannerTop {
-	background: rgba(55, 57, 59, 0.7);
 }
 body {
 	background-color: #1d1f21;
@@ -99,12 +92,6 @@ hr {
 }
 .popup-menu li:hover {
 	background-color: #136;
-}
-.act:before {
-	content: "[";
-}
-.act:after {
-	content: "]";
 }
 .omit {
 	color: #707070;

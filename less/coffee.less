@@ -1,13 +1,11 @@
-a,
-blockquote a {
-  color: #584e29;
-}
-#bannerRight svg {
-  fill: #584e29;
-}
-a.referenced {
-  border-bottom: 1px dashed #584e29;
-}
+@import "common";
+@link: #584e29;
+@postBG: #F3EADC;
+@border: 1px solid #d6cfc7;
+@bold: #855e1a;
+@admin: #00a6d9;
+@mod: #00b484;
+
 a:hover,
 .email b:hover {
   color: #d36b43;
@@ -26,18 +24,6 @@ article.highlight {
 article.editing {
   background-color: #f0e5ba;
   border-color: #dbd1aa;
-}
-b {
-  color: #855e1a;
-}
-b.admin {
-  color: #00a6d9;
-}
-b.moderator {
-  color: #00b484;
-}
-#bannerTop {
-  background: rgba(243,234,220,0.7);
 }
 body {
   color: #0a0a0a;
@@ -77,12 +63,6 @@ hr {
 }
 .popup-menu li:hover {
   background-color: #fbe4c6;
-}
-.act:before {
-  content: "[";
-}
-.act:after {
-  content: "]";
 }
 .email,
 .email b {
