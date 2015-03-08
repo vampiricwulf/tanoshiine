@@ -355,12 +355,15 @@ function option_topbanner(bannertoggle) {
 		return;
 	}
 
+	if (hotConfig.CUSTOM_BANNER)
+		$('#bannerCenter').html('<b>' + hotConfig.CUSTOM_BANNER + '</b>');
+
 	if(!bannertoggle) {
 		$('#bannerTop').show();
 		_.each(['#feedback', '#sync'], function(el){$(el).prependTo('#bannerRight');});
 		_.each(['#identity', '#options', '#options-panel'], function(el){$(el).appendTo('#bannerRight');});
-		if(!$("#bannerscript").length)
-			$("body").prepend('\n<script id="bannerscript" src="' + document.location.origin + imagerConfig.MEDIA_URL + 'js/top-banner-v1.js"></script>\n');
+		if(!$("body").hasClass("top-banner"))
+			$("body").addClass('top-banner');
 		if (volumeConfig) {
 			if($("body > #volumeController"))
 				$("#volumeController").insertAfter('#FAQ');
@@ -377,7 +380,7 @@ function option_topbanner(bannertoggle) {
 		$("#sync").replaceWith($('<b id="sync">' + $("#sync").html() + '</b>'));
 	} else {
 		$('#bannerTop').hide();
-		if($("#bannerscript").length) {
+		if($("body").hasClass("top-banner")) {
 			$("#sync").insertAfter("body > h1");
 			_.each(['#identity', '#volumeText', '#options'], function(el){$(el).insertAfter('#sync');});
 			_.each(['#navTop', '#feedback'], function(el){$(el).prependTo('body');});
@@ -616,7 +619,7 @@ _.defer(function () {
 	$('<a id="options">Options</a>').click(function () {
 		var $opts = $('#options-panel');
 		if (!$opts.length)
-			if ($("#bannerscript").length) {
+			if ($("body").hasClass("top-banner")) {
 				$opts = make_options_panel().appendTo('#bannerRight');
 			} else {
 				$opts = make_options_panel().appendTo('body');
