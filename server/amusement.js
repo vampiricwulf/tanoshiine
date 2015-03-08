@@ -131,14 +131,16 @@ hooks.hook('clientSynced', function (info, cb) {
 		cb(null);
 });
 
-// Information banner
 hooks.hook('clientSynced', function (info, cb) {
 	var client = info.client;
-	client.db.get_banner(function (err, msg) {
+	client.db.get_banner(function (err, banner) {
 		if (err)
 			return cb(err);
+		if (!banner)
+			return cb(null);
+		var msg = banner.message;
 		if (msg)
-			client.send([0, common.UPDATE_BANNER, msg]);
+			client.send([banner.op, common.UPDATE_BANNER, msg]);
 		cb(null);
 	});
 });
