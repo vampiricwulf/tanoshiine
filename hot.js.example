@@ -20,7 +20,8 @@ this.hot = {
 	},
 
 	// Client-side custom site-wide banner.
-	CUSTOM_BANNER: false,
+	CUSTOM_BANNER_TOP: false,
+	CUSTOM_BANNER_BOTTOM: false,
 
 	THREADS_PER_PAGE: 10,
 	// Replies to display under each thread on the board's root page
