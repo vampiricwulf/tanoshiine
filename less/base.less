@@ -205,6 +205,14 @@ span.control .popup-menu {
 	-moz-user-select: none;
 	-ms-user-select: none;
 }
+.act:before {
+	&:before {
+		content: "[";
+	}
+	&:after {
+		content: "]";
+	}
+}
 .control {
 	cursor: pointer;
 	display: inline-block;
