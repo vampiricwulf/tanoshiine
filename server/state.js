@@ -201,7 +201,7 @@ function read_templates(cb) {
 
 function expand_templates(res) {
 	var templateVars = _.clone(HOT);
-	_.extend(templateVars, imagerConfig);
+	_.extend(templateVars, imager);
 	_.extend(templateVars, config);
 	_.extend(templateVars, make_navigation_html());
 
