@@ -55,7 +55,8 @@ function reload_hot_config(cb) {
 
 		// Pass some of the config variables to the client
 		var clientHot = _.pick(HOT,
-			'CUSTOM_BANNER',
+			'CUSTOM_BANNER_TOP',
+			'CUSTOM_BANNER_BOTTOM',
 			'EIGHT_BALL',
 			'THREADS_PER_PAGE',
 			'ABBREVIATED_REPLIES',
