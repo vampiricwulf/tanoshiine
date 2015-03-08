@@ -100,7 +100,7 @@ var Hidamari = {
 		if (!img || fit == 'none')
 			return;
 		// Don't autoexpand webm or PDF with Expand All enabled
-		if (expand !== undefined && (img.ext == '.webm' || img.ext == '.pdf'))
+		if (expand !== undefined && (/\.(webm|pdf|mp3|wav|ogg)/.test(img.ext)))
 			return;
 		if  (expand != false)
 			expand = expand || this.model.get('imageExpanded') != true;
