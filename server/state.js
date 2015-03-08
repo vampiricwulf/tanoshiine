@@ -56,7 +56,6 @@ function reload_hot_config(cb) {
 		// Pass some of the config variables to the client
 		var clientHot = _.pick(HOT,
 			'CUSTOM_BANNER_BOTTOM',
-			'ILLYA_DANCE',
 			'EIGHT_BALL',
 			'THREADS_PER_PAGE',
 			'ABBREVIATED_REPLIES',
@@ -94,6 +93,7 @@ function reload_hot_config(cb) {
 }
 
 var clientConfig = _.pick(config,
+	'GAME_BOARDS',
 	'IP_MNEMONIC',
 	'USE_WEBSOCKETS',
 	'SOCKET_PATH',
