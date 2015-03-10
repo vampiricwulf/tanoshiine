@@ -14,7 +14,7 @@
     "url": "https://github.com/bakape/meguca.git"
   },
   "scripts": {
-    "postinstall": "make clean; make",
+    "postinstall": "make",
     "start": "node server/server.js",
     "test": "node travis.js"
   },
