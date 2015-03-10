@@ -1,116 +1,131 @@
 @import "common";
 @link: #81a2be;
-@postBG: #37393B;
+@postBG: #37393b;
 @border: 1px solid #242526;
 @bold: #f00000;
 @admin: #f00000;
 @mod: #f00000;
-
-a:hover, blockquote a, .email b:hover, .editing a:hover {
-	color: #5f89ac;
+@base: #c5c8c6;
+a:hover,
+blockquote a,
+.email b:hover,
+.editing a:hover {
+ color: #5f89ac;
 }
-article, aside, .modal, .pagination {
-	background-color: rgba(255,240,225,0.75);
-	border: 5px ridge #282a2e;
-	-moz-box-shadow:    inset 0 0 7px #000000;
-    -webkit-box-shadow: inset 0 0 7px #000000;
-    box-shadow:         inset 0 0 7px #000000;
+article,
+aside,
+.modal,
+.pagination {
+ background-color: rgba(255,240,225,0.75);
+ border: 5px ridge #282a2e;
+ -moz-box-shadow: inset 0 0 7px #000;
+ -webkit-box-shadow: inset 0 0 7px #000;
+ box-shadow: inset 0 0 7px #000;
 }
-article.highlight, .preview, .popup-menu {
-	background-color: rgba(211,211,211,0.90);
-	border-color: purple;
-	border: 5px ridge #282a2e;
-	-moz-box-shadow:    inset 0 0 7px #000000;
-    -webkit-box-shadow: inset 0 0 7px #000000;
-    box-shadow:         inset 0 0 7px #000000;
+article.highlight,
+.preview,
+.popup-menu {
+ background-color: rgba(211,211,211,0.90);
+ border-color: purple;
+ border: 5px ridge #282a2e;
+ -moz-box-shadow: inset 0 0 7px #000;
+ -webkit-box-shadow: inset 0 0 7px #000;
+ box-shadow: inset 0 0 7px #000;
 }
 article.editing {
-	background-color: rgba(210,180,140,0.90);
-	border-color: purple;
-	color: black;
+ background-color: rgba(210,180,140,0.90);
+ border-color: purple;
+ color: black;
 }
-article.editing a, article.editing header {
-	color: #222;
+article.editing a,
+article.editing header {
+ color: #222;
 }
 article.editing em {
-	color: #656d28;
+ color: #656d28;
 }
 article.editing li {
-	color: #ddd;
+ color: #ddd;
 }
 article.editing .themed {
-	color: #333;
+ color: #333;
 }
 body {
-	background-color: #1d1f21;
-	color: #c5c8c6;
-	background-image: url(http://i.imgur.com/A6LP5MS.gif)
+ background-color: #1d1f21;
+ background-image: url("https://i.imgur.com/A6LP5MS.gif");
 }
-body, pre, .themed {
-	font-family: Comic Sans MS, Cursive, sans-serif;
-	font-size: 10pt;
-	color: black;
+body,
+pre,
+.themed {
+ font-family: Comic Sans MS, Cursive, sans-serif;
+ font-size: 10pt;
+ color: black;
 }
-code{
-    color: brown;
+code {
+ color: brown;
 }
-del, del em{
-    color: rgba(0,0,0,0);
-    /* For Safari */
-	background: -webkit-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
-	/* For Opera 11.1 to 12.0 */
-	background: -o-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
-	/* For Fx 3.6 to 15 */
-	background: -moz-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
-	/* Standard syntax */
-	background: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet);
+del,
+del em {
+ color: rgba(0,0,0,0);
+ /* For Safari */
+ background: -webkit-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+ /* For Opera 11.1 to 12.0 */
+ background: -o-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+ /* For Fx 3.6 to 15 */
+ background: -moz-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+ /* Standard syntax */
+ background: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet);
 }
-del:hover, del:hover em, del.reveal, del.reveal em {
-	color: black;
-	text-shadow: 1px 1px 1px white;
+del:hover,
+del:hover em,
+del.reveal,
+del.reveal em {
+ color: black;
+ text-shadow: 1px 1px 1px white;
 }
 .embed {
-	background-color: lightgrey;
+ background-color: lightgrey;
 }
 em {
-	color: green;
+ color: green;
 }
 h1 {
-	font: bolder 34px Comic Sans MS;
-	text-shadow: 2px 2px 5px pink;
-	letter-spacing: -2px;
-	background-color:rgba(0,0,0,0.3);
+ font: bolder 34px Comic Sans MS;
+ text-shadow: 2px 2px 5px pink;
+ letter-spacing: -2px;
+ background-color: rgba(0,0,0,0.3);
 }
 h2 {
-	font-family: Tahoma;
+ font-family: Tahoma;
 }
 h3 {
-	color: #ce52c9;
+ color: #ce52c9;
 }
 hr {
-	border-top: 1px ridge #282a2e;
+ border-top: 1px ridge #282a2e;
 }
 .popup-menu li:hover {
-	background-color: #136;
+ background-color: #136;
 }
 .omit {
-	color: #707070;
+ color: #707070;
 }
-#lock, .scroll-lock header {
-	background-image: url('ui/invlock.png');
+#lock,
+.scroll-lock header {
+ background-image: url("ui/invlock.png");
 }
 .themed {
-	color: #999;
+ color: #999;
 }
-
 @media screen and (-webkit-min-device-pixel-ratio: 1.5),
-	screen and (-o-device-pixel-ratio: 3/2),
-	screen and (min--moz-device-pixel-ratio: 1.5),
-	screen and (min-device-pixel-ratio: 1.5) {
-	#lock, .scroll-lock header {
-		background-image: url('ui/invlock2x.png');
-	}
+screen and (-o-device-pixel-ratio: 3/2),
+screen and (min--moz-device-pixel-ratio: 1.5),
+screen and (min-device-pixel-ratio: 1.5) {
+ #lock,
+ .scroll-lock header {
+  background-image: url("ui/invlock2x.png");
+ }
 }
-.option_tab_sel a.tab_sel{
-	color: #9D6D2E;
+.option_tab_sel a.tab_sel {
+ color: #9d6d2e;
 }

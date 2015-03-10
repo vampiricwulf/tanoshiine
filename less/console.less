@@ -5,181 +5,203 @@
 @bold: white;
 @admin: black;
 @mod: black;
-
+@base: #ccc;
 .act a {
-	color: white;
+ color: white;
 }
-a:hover, #sync.error {
-	color: #e50000;
+a:hover,
+#sync.error {
+ color: #e50000;
 }
-article, aside {
-	margin: 0;
-	padding: 10pt;
+article,
+aside {
+ margin: 0;
+ padding: 10pt;
 }
 article {
-	form {
-		margin-top: 10pt;
-	}
-	&.highlight {
-		background-color: #222;
-	}
+ form {
+  margin-top: 10pt;
+ }
+ &.highlight {
+  background-color: #222;
+ }
 }
 article.editing {
-	background-color: #0000b2;
+ background-color: #0000b2;
 }
-.editing header, .editing b {
-	color: white !important;
+.editing header,
+.editing b {
+ color: white !important;
 }
 b {
-	font-weight: normal;
+ font-weight: normal;
 }
 b.admin {
-	&, code {
-		background-color: #e50000;
-		color: black;
-	}
+ &,
+ code {
+  background-color: #e50000;
+  color: black;
+ }
 }
 b.moderator {
-	&, code {
-		background-color: #00e500;
-		color: black;
-	}
+ &,
+ code {
+  background-color: #00e500;
+  color: black;
+ }
 }
 blockquote {
-	margin: 10pt 0 0 0;
-	max-width: 80em;
-	a {
-		color: #00e5e5;
-	}
-	strong {
-		color: #00e500;
-		font-weight: normal;
-	}
+ margin: 10pt 0 0;
+ max-width: 80em;
+ a {
+  color: #00e5e5;
+ }
+ strong {
+  color: #00e500;
+  font-weight: normal;
+ }
 }
 header a {
-	color: #00a5b2;
+ color: #00a5b2;
 }
-article header b, article header time, article header nav {
-	position: relative;
-	top: -2px;
+article header b,
+article header time,
+article header nav {
+ position: relative;
+ top: -2px;
 }
 #bannerTop {
-	margin: 0 !important;
+ margin: 0 !important;
 }
 body {
-	background-color: #050505;
-	margin: 0;
-	padding: 0;
+ background-color: #050505;
+ margin: 0;
+ padding: 0;
 }
-body, pre, .themed, fieldset input {
-	font-family: Monaco, "Andale Mono", Courier, monospace;
-	font-size: 10pt;
-	color: #ccc;
+body,
+pre,
+.themed,
+fieldset input {
+ font-family: Monaco, "Andale Mono", Courier, monospace;
+ font-size: 10pt;
+ color: #ccc;
 }
-del, del em {
-	&, em {
-		background-color: white;
-		color: white;
-	}
-	&:hover, &.reveal {
-		&, em {
-			color: black;
-		}
-	}
+del,
+del em {
+ &,
+ em {
+  background-color: white;
+  color: white;
+ }
+ &:hover,
+ &.reveal {
+  &,
+  em {
+   color: black;
+  }
+ }
 }
 em {
-	color: #b200b2;
+ color: #b200b2;
 }
 fieldset {
-	input{
-		background-color: transparent;
-		border: solid 1px gray;
-	}
-	label {
-		color: gray;
-	}
+ input {
+  background-color: transparent;
+  border: solid 1px gray;
+ }
+ label {
+  color: gray;
+ }
 }
 .embed {
-	background-color: rgba(255, 255, 255, 0.25);
-	border-radius: 0;
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
-	margin: 0;
-	padding: 0;
+ background-color: rgba(255, 255, 255, 0.25);
+ border-radius: 0;
+ -moz-border-radius: 0;
+ -webkit-border-radius: 0;
+ margin: 0;
+ padding: 0;
 }
 code {
-	color: #5833fe;
+ color: #5833fe;
 }
-figcaption, figcaption a {
-	&, a {
-		color: #989800;
-		text-transform: lowercase;
-	}
+figcaption,
+figcaption a {
+ &,
+ a {
+  color: #989800;
+  text-transform: lowercase;
+ }
 }
 .pagination input {
-	display: none;
+ display: none;
 }
 header {
-	color: gray;
+ color: gray;
 }
-h1, h2 {
-	color: white;
-	font-size: inherit;
-	font-weight: bold;
+h1,
+h2 {
+ color: white;
+ font-size: inherit;
+ font-weight: bold;
 }
 h1:before {
-	content: "= ";
+ content: "= ";
 }
 h1:after {
-	content: " =";
+ content: " =";
 }
 h3 {
-	color: #0e0;
+ color: #0e0;
 }
 hr {
-	visibility: hidden;
+ visibility: hidden;
 }
 .popup-menu li:hover {
-	background-color: white;
+ background-color: white;
 }
 section {
-	margin: 30pt 10pt 10pt 10pt;
-	padding: 0;
+ margin: 30pt 10pt 10pt;
+ padding: 0;
 }
 small {
-	font-size: 10pt;
-	color: #444;
-	a {
-		color: #666;
-	}
+ font-size: 10pt;
+ color: #444;
+ a {
+  color: #666;
+ }
 }
-.act, .omit {
-	color: #444;
+.act,
+.omit {
+ color: #444;
 }
 .act:before {
-	content: ">";
+ content: ">";
 }
 .act:after {
-	content: "<";
+ content: "<";
 }
 .email {
-	&, b {
-		color: #2020ff;
-	}
+ &,
+ b {
+  color: #2020ff;
+ }
 }
-.modal, .preview, .popup-menu {
-	background-color: #111;
+.modal,
+.preview,
+.popup-menu {
+ background-color: #111;
 }
 #feedback {
-	right: 0;
-	top: 5pt;
+ right: 0;
+ top: 5pt;
 }
 #trans {
-	margin-bottom: -4px;
+ margin-bottom: -4px;
 }
-#lock, .scroll-lock header {
-	background-image: none;
+#lock,
+.scroll-lock header {
+ background-image: none;
 }
-.option_tab_sel a.tab_sel{
-	outline: double;
+.option_tab_sel a.tab_sel {
+ outline: double;
 }
