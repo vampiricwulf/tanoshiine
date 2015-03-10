@@ -22,6 +22,8 @@ function drop_shita(e) {
 		var attrs = postForm.model.attributes;
 		if (attrs.uploading || attrs.uploaded)
 			return;
+		var err = this.responseText;
+		postForm.upload_error(err)
 	}
 
 	if (files.length > 1) {
