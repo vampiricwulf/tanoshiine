@@ -44,6 +44,7 @@ var Hidamari = {
 		$fig.find('.imageSrc').text(img.src);
 		$img = $(flatten(oneeSama.gazou_img(img, this.$el.is('section')).html).join(''));
 		$a.remove();
+		$fig.children('audio').remove();
 		$img.appendTo($fig);
 		this.model.set({imageExpanded: false, thumbnailRevealed: !hide});
 	},
@@ -176,17 +177,17 @@ var Hidamari = {
 	},
 
 	renderAudio: function() {
-		$a = this.$el.children('figure').children('a');
+		$fig = this.$el.children('figure');
 		$('<audio/>', {
-			src: $a.attr('href'),
+			src: $fig.children('a').attr('href'),
 			width: 300,
 			height: '3em',
 			autoplay: true,
 			loop: false,
 			controls: true
-		}).appendTo($a);
+		}).insertAfter($fig.children('a'));
 		if (vol)
-			$a.find('audio')['0'].volume = vol;
+			$fig.find('audio')['0'].volume = vol;
 		this.model.set('imageExpanded', true);
 	},
 };
