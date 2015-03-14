@@ -189,8 +189,6 @@ option_theme.tab = tabs.Style;
 
 /* THUMBNAIL OPTIONS */
 
-var revealSetup = false;
-
 function option_thumbs(type) {
 	$.cookie('thumb', type);
 	oneeSama.thumbStyle = type;
