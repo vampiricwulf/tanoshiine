@@ -108,12 +108,14 @@ options.on('change', function () {
 	catch (e) {}
 });
 
-var tabs = Object.freeze({
+var tabs = {
 	General: "General",
 	Style: "Style",
-	Shortcuts: "Shortcuts",
 	Help: "Help"
-});
+};
+
+if (!isMobile)
+	tabs.Shortcuts = "Shortcuts";
 
 /* LAST N CONFIG */
 function option_last_n(n) {
