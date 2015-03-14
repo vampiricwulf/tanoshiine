@@ -45,7 +45,8 @@ optSpecs.push(option_inline_expansion);
 optSpecs.push(option_thumbs);
 optSpecs.push(option_theme);
 optSpecs.push(option_reply_at_right);
-optSpecs.push(option_notification);
+if (!isMobile)
+	optSpecs.push(option_notification);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
@@ -709,7 +710,7 @@ function make_options_panel() {
 			spec(val);
 		});
 	});
-	var tabCont= {}	//will contain the html for the content of each tab
+	var tabCont= {};	//will contain the html for the content of each tab
 	optSpecs.forEach(function (spec) {
 		var id = spec.id;
 		if (nashi.opts.indexOf(id) >= 0)

@@ -39,7 +39,7 @@ Backbone.on('repliedToMe', function (post) {
 	if (options.get('notification')) {
 		var body = post.get('body');
 		var image = post.get('image');
-		if((body || image) && Unread.get('hidden')){
+		if((body || image) && Unread.get('hidden') && !isMobile){
 			var n = new Notification('見て見て!',{
 				// if the post doesn't have a image we use a bigger favicon
 				icon: encodeURI(mediaURL+ (image ? 'thumb/'+image.thumb : 'css/ui/favbig.png')),
