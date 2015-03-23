@@ -231,7 +231,7 @@ StillJob.prototype.get_length = function () {
 StillJob.prototype.encode_thumb = function (length, total) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
-      '-ss', (total < 8 ? Math.floor(total/4) : 5 ),
+      '-ss', (total < 8 ? 0 : 5 ),
 			'-i', this.src,
 			'-f', 'image2', '-vframes', '1', '-vcodec', 'png',
 			'-y', dest];
