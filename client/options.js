@@ -172,7 +172,8 @@ var themes = [
 	'best',
 	'classic',
 	'homu',
-  'glass'
+	'chihiro',
+ 'glass'
 ];
 
 function option_theme(theme) {
