@@ -45,6 +45,7 @@ optSpecs.push(option_inline_expansion);
 optSpecs.push(option_thumbs);
 optSpecs.push(option_theme);
 optSpecs.push(option_reply_at_right);
+optSpecs.push(option_beep);
 if (!isMobile)
 	optSpecs.push(option_notification);
 optSpecs.push(option_sauce);
@@ -407,6 +408,15 @@ option_topbanner.type = 'revcheckbox';
 option_topbanner.tooltip = 'Toggle the banner at the top'
 option_topbanner.tab = tabs.General;
 
+/* BEEP */
+
+function option_beep(){}
+option_beep.id = 'beep';
+option_beep.label = 'Beep';
+option_beep.type = 'checkbox';
+option_beep.tooltip = 'Beep when someone replies to your post';
+option_beep.tab = tabs.Style;
+
 /* NOTIFICATIONS */
 
 function option_notification(notifToggle) {
@@ -419,7 +429,6 @@ option_notification.label = 'Desktop Notifications';
 option_notification.type = 'checkbox';
 option_notification.tooltip = 'Get desktop notifications when quoted or a syncwatch is about to start';
 option_notification.tab = tabs.Style;
-
 
 /* HORIZONTAL POSTING */
 
