@@ -1,7 +1,9 @@
 var optSpecs = [];
 var nashi = {opts: []}, inputMinSize = 300;
 var shortcutKeys = {};
-var volumeConfig = (imagerConfig.WEBM || imagerConfig.AUDIOFILES);
+var volumeConfig = (imagerConfig.WEBM
+	|| imagerConfig.AUDIOFILES
+	|| options.get('beep'));
 if (volumeConfig) {
 	$("#volumeController").appendTo('body').hide();
 	$("#volumeText").show();
