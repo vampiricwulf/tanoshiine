@@ -70,7 +70,7 @@ $(document).on('click', '.watch', function (e) {
             timeCall(m[1],m[2],youtube_short_time_re);
         }
         timeCall(m[2],m[4],youtube_time_re);
-    function timeCall(url, time, timeRex){    
+    function timeCall(url, time, timeRex){
             var start = 0;
             if (time){
                 var t = time.match(timeRex);
@@ -112,8 +112,8 @@ $(document).on('mouseenter', '.watch', function (event) {
             if(!m)
                 return;
             $.ajax({
-		url: '//gdata.youtube.com/feeds/api/videos/' + m[1],
-		data: {v: '2', alt: 'jsonc'},
+		url: 'https://www.googleapis.com/youtube/v3/videos',
+		data: {id: m[2], key: hotConfig.YOUTUBE_APIKEY, part: 'snippet,status', fields: 'items(snippet(title),status(embeddable))'},
 		dataType: 'json',
 		success: function (data) {
 			with_dom(gotInfo.bind(null, data));
@@ -128,8 +128,8 @@ $(document).on('mouseenter', '.watch', function (event) {
 
 
 	$.ajax({
-		url: '//gdata.youtube.com/feeds/api/videos/' + m[2],
-		data: {v: '2', alt: 'jsonc'},
+		url: 'https://www.googleapis.com/youtube/v3/videos',
+		data: {id: m[2], key: hotConfig.YOUTUBE_APIKEY, part: 'snippet,status', fields: 'items(snippet(title),status(embeddable))'},
 		dataType: 'json',
 		success: function (data) {
 			with_dom(gotInfo.bind(null, data));
@@ -143,7 +143,7 @@ $(document).on('mouseenter', '.watch', function (event) {
         //Creates the Titles upon hover
         //Note: Condense gotInfos into single function
 	function gotInfo(data) {
-		var title = data && data.data && data.data.title;
+		var title = data && data.items && data.items[0].snippet && data.items[0].snippet.title;
 		if (title) {
 			node.textContent = orig + ': ' + title;
 			$target.css({color: 'black'});
@@ -151,8 +151,8 @@ $(document).on('mouseenter', '.watch', function (event) {
 		else
 			node.textContent = orig + ' (gone?)';
 
-		if (data && data.data && data.data.accessControl &&
-				data.data.accessControl.embed == 'denied') {
+			if (data && data.items && data.items[0].status &&
+				data.items[0].status.embeddable == false) {
 			node.textContent += ' (EMBEDDING DISABLED)';
 			$target.data('noembed', true);
 		}
@@ -266,20 +266,20 @@ $(document).on('click', '.pastebin', function(event){
 		$target.css('width', 'auto');
 		return false;
 	}
-    
+
     var m = $target.attr('href').match(pastebin_re);
     if (!m)
         return;
     var width = Math.round($(window).innerWidth() * 0.65);
     var uri = 'https://pastebin.com/embed_iframe.php?i='+ m[1];
     var $obj = $('<iframe></iframe>', {
-		type: 'text/html', 
+		type: 'text/html',
                 src: uri,
 		frameborder: '0',
                 width: width
                 });
-                
-                
+
+
     with_dom(function () {
 		$target.css('width', width).append('<br>', $obj);
         });

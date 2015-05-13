@@ -23,6 +23,10 @@ this.hot = {
 	CUSTOM_BANNER_TOP: false,
 	CUSTOM_BANNER_BOTTOM: false,
 
+	// https://developers.google.com/youtube/registering_an_application
+	// REQUIRED FOR YOUTUBE EMBEDDING TO WORK
+	YOUTUBE_APIKEY: 'Get me from the link above',
+
 	THREADS_PER_PAGE: 10,
 	// Replies to display under each thread on the board's root page
 	ABBREVIATED_REPLIES: 5,

@@ -57,6 +57,7 @@ function reload_hot_config(cb) {
 		var clientHot = _.pick(HOT,
 			'CUSTOM_BANNER_TOP',
 			'CUSTOM_BANNER_BOTTOM',
+			'YOUTUBE_APIKEY',
 			'EIGHT_BALL',
 			'THREADS_PER_PAGE',
 			'ABBREVIATED_REPLIES',
