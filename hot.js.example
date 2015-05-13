@@ -25,6 +25,7 @@ this.hot = {
 
 	// https://developers.google.com/youtube/registering_an_application
 	// REQUIRED FOR YOUTUBE EMBEDDING TO WORK
+	// SERVER API
 	YOUTUBE_APIKEY: 'Get me from the link above',
 
 	THREADS_PER_PAGE: 10,
