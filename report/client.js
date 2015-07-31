@@ -1,6 +1,6 @@
 (function () {
 
-var pubKey = reportConfig.RECAPTCHA_PUBLIC_KEY;
+var pubKey = reportConfig.RECAPTCHA_SITE_KEY;
 var captchaTimeout = 5 * 60 * 1000;
 var REPORTS = {};
 var PANEL;

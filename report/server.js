@@ -135,8 +135,8 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 	if (data.challenge.length > 10000 || data.response.length > 10000)
 		return reply_error("tl;dr");
 
-	var checker = new recaptcha.Recaptcha(config.RECAPTCHA_PUBLIC_KEY,
-			config.RECAPTCHA_PRIVATE_KEY, data);
+	var checker = new recaptcha.Recaptcha(config.RECAPTCHA_SITE_KEY,
+			config.RECAPTCHA_SECRET_KEY, data);
 	checker.verify(function (ok, err) {
 		if (!ok) {
 			reply_error(ERRORS[err] || err);
