@@ -9,5 +9,5 @@ module.exports = {
 	// https://www.pushbullet.com/#settings
 	ACCESS_TOKEN: '',
 	// https://www.pushbullet.com/my-channel to make a channel
-	CHANNEL_TAG: '',
+	CHANNEL_TAG: {channel_tag: ''},
 };
