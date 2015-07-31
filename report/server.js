@@ -95,12 +95,12 @@ function image_preview(info) {
 	if (!tw || !th)
 		return;
 
-	mediaURL = require('../imager/config').MEDIA_URL;
+	mediaURL = require('../imager/config').MEDIA_URL.replace(/^\//,'');
 	var src;
 	if (info.mid)
-		src = mediaURL + '/mid/' + info.mid;
+		src = config.DOMAIN + mediaURL + '/mid/' + info.mid;
 	else if (info.thumb)
-		src = mediaURL + '/thumb/' + info.thumb;
+		src = config.DOMAIN + mediaURL + '/thumb/' + info.thumb;
 	else
 		return;
 
