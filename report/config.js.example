@@ -12,5 +12,5 @@ module.exports = {
 	// Then go to https://api.pushbullet.com/v2/channel-info?tag={INSERT TAG}
 	// Username is your ACCESS_TOKEN, password is empty
 	// Place the iden
-	CHANNEL_IDEN: '',
+	CHANNEL_TAG: '',
 };

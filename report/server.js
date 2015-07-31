@@ -73,7 +73,7 @@ function send_report(reporter, board, op, num, body, cb) {
 	body = body ? (body + '\n\n' + url) : url;
 
 	var title = noun + ' #' + num + ' reported by ' + reporter;
-	PB.note(config.CHANNEL_IDEN, title, body, function (err, resp) {
+	PB.note(config.CHANNEL_TAG, title, body, function (err, resp) {
 		if (err)
 			return cb(err);
 		cb(null);
