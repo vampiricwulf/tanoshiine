@@ -1,16 +1,16 @@
-module.exports = { //no idea how to use this
-	MAIL_FROM: "Reports <reports@doushio.com>",
-	MAIL_TO: ['lalc@doushio.com'],
-	MAIL_THREAD_URL_BASE: 'http://your.board.index/',
+module.exports = {
 
-	SMTP: {
-		service: 'Gmail',
-		auth: {
-			user: "reports@doushio.com",
-			pass: "",
-		},
-	},
+	DOMAIN: 'http://your.board.index/',
 
-	RECAPTCHA_PUBLIC_KEY: '',
-	RECAPTCHA_PRIVATE_KEY: '',
+	// https://www.google.com/recaptcha/
+	RECAPTCHA_SITE_KEY: '',
+	RECAPTCHA_SECRET_KEY: '',
+
+	// https://www.pushbullet.com/#settings
+	ACCESS_TOKEN: '',
+	// https://www.pushbullet.com/my-channel to make a channel
+	// Then go to https://api.pushbullet.com/v2/channel-info?tag={INSERT TAG}
+	// Username is your ACCESS_TOKEN, password is empty
+	// Place the iden
+	CHANNEL_IDEN: '',
 };

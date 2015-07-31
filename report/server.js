@@ -6,9 +6,10 @@ var caps = require('../server/caps'),
     msgcheck = require('../server/msgcheck'),
     okyaku = require('../server/okyaku'),
     recaptcha = require('recaptcha'),
-    winston = require('winston');
+    winston = require('winston'),
+    PushBullet = require('pushbullet');
 
-var SMTP = require('nodemailer').createTransport('SMTP', config.SMTP);
+var PB = new PushBullet(config.ACCESS_TOKEN);
 
 const ERRORS = {
 	'invalid-site-private-key': "Sorry, the server isn't set up with reCAPTCHA properly.",
@@ -46,26 +47,21 @@ function report(reporter_ident, op, num, cb) {
 		if (post.ip)
 			name += ' # ' + maybe_mnemonic(post.ip);
 		var body = 'Offender: ' + name;
-		var html = ['Offender: ', safe('<b>'), name, safe('</b>')];
 
 		var img;
 		if (post.image && !post.hideimg)
 			img = image_preview(post.image);
 		if (img) {
 			body += '\nThumbnail: ' + img.src;
-			html.push(safe('<br><br><img src="'), img.src,
-				safe('" width="'), img.width,
-				safe('" height="'), img.height,
-				safe('" title="'), img.title, safe('">'));
 		}
 
-		send_report(reporter, board, op, num, body, html, cb);
+		send_report(reporter, board, op, num, body, cb);
 	});
 }
 
-function send_report(reporter, board, op, num, body, html, cb) {
+function send_report(reporter, board, op, num, body, cb) {
 	var noun;
-	var url = config.MAIL_THREAD_URL_BASE + board + '/' + op + '?reported';
+	var url = config.DOMAIN + board + '/' + op + '?reported';
 	if (op == num) {
 		noun = 'Thread';
 	}
@@ -75,18 +71,9 @@ function send_report(reporter, board, op, num, body, html, cb) {
 	}
 
 	body = body ? (body + '\n\n' + url) : url;
-	if (html.length)
-		html.push(safe('<br><br>'));
-	html.push(safe('<a href="'), url, safe('">'), '>>'+num, safe('</a>'));
 
-	var opts = {
-		from: config.MAIL_FROM,
-		to: config.MAIL_TO.join(', '),
-		subject: noun + ' #' + num + ' reported by ' + reporter,
-		text: body,
-		html: common.flatten(html).join(''),
-	};
-	SMTP.sendMail(opts, function (err, resp) {
+	var title = noun + ' #' + num + ' reported by ' + reporter;
+	PB.note(config.CHANNEL_IDEN, title, body, function (err, resp) {
 		if (err)
 			return cb(err);
 		cb(null);
@@ -108,9 +95,7 @@ function image_preview(info) {
 	if (!tw || !th)
 		return;
 
-	var mediaURL = config.MAIL_MEDIA_URL;
-	if (!mediaURL)
-		mediaURL = require('../imager/config').MEDIA_URL;
+	mediaURL = require('../imager/config').MEDIA_URL;
 	var src;
 	if (info.mid)
 		src = mediaURL + '/mid/' + info.mid;
@@ -181,4 +166,3 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 		return true;
 	}
 };
-
