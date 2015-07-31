@@ -95,7 +95,8 @@ function image_preview(info) {
 	if (!tw || !th)
 		return;
 
-	mediaURL = require('../imager/config').MEDIA_URL.replace(/^\//,'');
+	mediaURL = require('../imager/config').MEDIA_URL;
+ mediaURL = mediaURL.replace(/^\//, "");
 	var src;
 	if (info.mid)
 		src = config.DOMAIN + mediaURL + '/mid/' + info.mid;
