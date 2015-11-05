@@ -168,6 +168,7 @@ var themes = [
 	'mawaru',
 	'moon',
 	'ashita',
+	'spooki',
 	'console',
 	'tea',
 	'coffee',
