@@ -11,8 +11,8 @@ var _ = require('underscore'),
 
 var RADIO_IDENT = {auth: 'Radio', ip: '127.0.0.1'};
 var RADIO_MOUNT = '/radio';
-var ICECAST_POLL_URL = 'http://localhost:5555/poll.xsl';
-var M3U_URL = 'http://doushio.com/radio.m3u';
+var ICECAST_POLL_URL = 'http://localhost:8000/poll.xsl';
+var M3U_URL = 'http://radio.tanoshiine.info/radio.m3u';
 var SHORT_INTERVAL = 3 * 1000;
 var LONG_INTERVAL = 30 * 1000;
 
@@ -83,10 +83,12 @@ function format_icecast(mounts) {
 		return null;
 	var count = parseInt(radio.listeners, 10);
 	count = count + ' listener' + (count == 1 ? '' : 's');
-	var msg = [{text: count, href: M3U_URL}];
+	var msg = [{extra: radio, text: count, href: M3U_URL}];
 	if (radio.title) {
 		radio.artist = radio.artist ? radio.artist : 'Unknown Artist';
 		msg.push(': ' + radio.artist + ' - ' + radio.title);
+	} else if (radio.genre) {
+		msg.push(': ' + radio.genre);
 	}
 	info.msg = msg;
 	return info;
