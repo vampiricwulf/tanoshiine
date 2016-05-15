@@ -210,5 +210,10 @@ $NAV
 			}
 		}
 	};
+	$(document).ready(function() {
+		StreamStatus.loadingA = false;
+		StreamStatus.loadingV = false;
+		$('#StreamButton')[0].text = "Stream";
+	});
 </script>
 <script src="{{MEDIA_URL}}js/{{CLIENT_JS}}"></script>
