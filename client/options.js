@@ -46,6 +46,7 @@ optSpecs.push(option_backlinks);
 optSpecs.push(option_inline_expansion);
 optSpecs.push(option_thumbs);
 optSpecs.push(option_theme);
+optSpecs.push(option_StreamSize);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_beep);
 if (!isMobile)
@@ -170,6 +171,7 @@ var themes = [
 	'ashita',
 	'spooki',
 	'console',
+	'terminal',
 	'tea',
 	'coffee',
 	'higan',
@@ -177,7 +179,7 @@ var themes = [
 	'classic',
 	'homu',
 	'chihiro',
- 'glass'
+	'glass'
 ];
 
 function option_theme(theme) {
@@ -193,6 +195,42 @@ option_theme.label = 'Theme';
 option_theme.type = themes;
 option_theme.tooltip = 'Select CSS theme';
 option_theme.tab = tabs.Style;
+
+/* STREAM VIDEO PLAYER SIZE */
+
+var StreamSizes = [
+	'1/2 Window',
+	'1/3 Window',
+	'1/4 Window',
+	'720p',
+	'480p',
+	'320p'
+];
+
+
+function option_StreamSize(size) {
+        if (size) {
+                var s = {
+			'1/2 Window' : parseInt($(window).width()/2,10),
+			'1/3 Window' : parseInt($(window).width()/3,10),
+			'1/4 Window' : parseInt($(window).width()/4,10),
+			'720p' : 720,
+			'480p' : 480,
+			'320p' : 320
+		}
+		if (size != '720p' || size != '480p' || size != '320p') {
+                	$('#StreamPlayer video').width(s[size]);
+		} else {
+			$('#StreamPlayer video').height(s[size]);
+		}
+        }
+}
+
+option_StreamSize.id = 'streamsize';
+option_StreamSize.label = 'Stream Video Size';
+option_StreamSize.type = StreamSizes;
+option_StreamSize.tooltip = "Select the stream's video size";
+option_StreamSize.tab = tabs.Style;
 
 /* THUMBNAIL OPTIONS */
 

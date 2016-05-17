@@ -40,12 +40,12 @@ exports.SERVER_DEPS = [
 /* Changes to the below only require a state.js reload */
 
 exports.VENDOR_DEPS = [
-	'./node_modules/jquery/dist/jquery.js',
+	'./www/js/jquery-2.2.3.min.js',
 	'./lib/yepnope.js',
 	'./node_modules/underscore/underscore.js',
 	'./node_modules/backbone/backbone.js',
 	'./lib/oninput.js',
-	'./node_modules/jquery.cookie/jquery.cookie.js',
+	'./www/js/jquery.cookie.js',
 	'./node_modules/velocity-animate/velocity.min.js',
 	'./node_modules/velocity-animate/velocity.ui.js',
 	'./lib/pixastic.blurfast.min.js',
