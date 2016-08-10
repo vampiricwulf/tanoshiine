@@ -1,74 +1,106 @@
 (function () {
-	var standalone = !!window.ExitURL;
-	var $button1 = $('<a></a>', {
-		href: '/auth/openid',
-		id: 'login-button',
-		class: 'persona-button dark',
-		css: {'margin-top': '0.5em'}
-	});
-	var $button2 = $('<a></a>', {
+	var standalone = !!window.personaExitURL;
+	var apiPath = standalone ? '' : '../';
+
+	var $button = $('<a></a>', {
 		href: '#',
-		id: 'logout-button',
-		class: 'persona-button dark',
-		css: {'margin-top': '0.5em'}
+		id: 'login-button',
+		'class': 'persona-button dark',
+		css: {'margin-top': '0.5em'},
 	});
-	var $caption1 = $('<span>Loading...</span>').appendTo($button1);
-	var $caption2 = $('<span>Loading...</span>').appendTo($button2);
-	$button1.appendTo(standalone ? 'body' : 'fieldset');
-	$button2.appendTo(standalone ? 'body' : 'fieldset');
-	$(document).ready(setup_button());
-	function inform1(msg, color) {
-		$caption1.text(msg);
-		$button1.toggleClass('orange', color == 'orange');
-		$button1.toggleClass('dark', color == 'dark');
-	}
-	function inform2(msg, color) {
-		$caption2.text(msg);
-		$button2.toggleClass('orange', color == 'orange');
-		$button2.toggleClass('dark', color == 'dark');
+	var $caption = $('<span>Loading...</span>').appendTo($button);
+	$button.appendTo(standalone ? 'body' : 'fieldset');
+
+	function inform(msg, color) {
+		$caption.text(msg);
+		$button.toggleClass('orange', color == 'orange');
+		$button.toggleClass('dark', color == 'dark');
 	}
 
 	function setup_button() {
-		inform1('Login', 'orange');
-		$button1.click(function (event) {
+		if (!window.loggedInUser) {
+			inform('Invoke your Persona', 'orange');
+			$button.click(function (event) {
+				navigator.id.request();
+				event.preventDefault();
+			});
+		}
+		else {
+			inform('Logout', 'blue');
+			$button.click(function (event) {
+				navigator.id.logout();
+				event.preventDefault();
+			});
+		}
+		$button.focus();
+	}
 
+	function on_login(assertion) {
+		inform('Invoking...', 'dark');
+		$.ajax({
+			type: 'POST',
+			url: apiPath+'login',
+			data: {assertion: assertion},
+			dataType: 'json',
+			success: function (res) {
+				if (res && res.status == 'okay') {
+					inform('Success!', 'blue');
+					setTimeout(return_to_site, 500);
+				}
+				else
+					inform(res.message||'Unknown error.', 'dark');
+			},
+			error: function (res) {
+				inform('Network error.', 'dark');
+				console.error(res);
+			},
 		});
-		inform2('Logout', 'blue');
-		$button2.click(function (event) {
-			on_logout();
-			event.preventDefault();
-		});
-		$button1.focus();
 	}
 
 	function on_logout() {
-		inform2('Logging out...', 'dark');
+		inform('Logging out...', 'dark');
 		$.ajax({
 			type: 'POST',
-			url: '../logout',
+			url: apiPath+'logout',
 			data: {csrf: window.x_csrf},
 			dataType: 'json',
-			headers: {
-				"Access-Control-Allow-Credentials" : true
-			},
-			error: function (res) {
-				inform2('Network error.', 'dark');
-				console.error(res);
-			},
-			success: function(res){
+			success: function (res) {
 				if (res && res.status == 'okay') {
-					inform2('Logged out.', 'orange');
-					window.location.reload(true);
+					inform('Logged out.', 'orange');
+					setTimeout(return_to_site, 1000);
 				}
 				else
-					inform2(res.message||'Unknown error.', 'dark');
-			}
+					inform(res.message||'Unknown error.', 'dark');
+			},
+			error: function (res) {
+				inform('Network error.', 'dark');
+				console.error(res);
+			},
 		});
 	}
+
+	function return_to_site() {
+		if (standalone)
+			window.location.href = window.personaExitURL;
+		else
+			window.location.reload();
+	}
+
+	yepnope({
+		load: 'https://login.persona.org/include.js',
+		complete: function () {
+			setup_button();
+			navigator.id.watch({
+				loggedInUser: window.loggedInUser || null,
+				onlogin: on_login,
+				onlogout: on_logout,
+			});
+		},
+	});
 
 	$('<link/>', {
 		rel: 'stylesheet',
 		href: mediaURL + 'css/' + hotConfig.css['persona-buttons.css'],
 	})
-	.appendTo('head');
+		.appendTo('head');
 })();

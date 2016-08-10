@@ -60,10 +60,10 @@ var config = {
 // Doushio uses Mozilla's Persona system for moderator authentication.
 // Set login emails here. Loging in can be done by either going to the /login/
 //  board or typing "misaki" into the email field.
-	ADMIN_STEAMS: ['lalc@doushio.com'],
-	MODERATOR_STEAMS: ['mod@doushio.com'],
+	ADMIN_PERSONAS: ['lalc@doushio.com'],
+	MODERATOR_PERSONAS: ['mod@doushio.com'],
 	// URL to pass to Mozilla's servers.
-	STEAM_AUDIENCE: 'http://example.com:80',
+	PERSONA_AUDIENCE: 'http://example.com:80',
 	LOGIN_COOKIE_DOMAIN: 'example.com',
 	LOGIN_SESSION_TIME: 60*60*24*14,
 	// Translate IP's into more human-readable mnemonics

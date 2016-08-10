@@ -1,7 +1,7 @@
 <!doctype html>
 <head>
 	<meta charset="utf-8">
-	<title>Steam Login</title>
+	<title>Persona</title>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 	<script>
 		var hotConfig = {{CLIENT_HOT}};
@@ -13,7 +13,7 @@
 var state = $STATE;
 for (var k in state)
 	window[k] = state[k];
-window.ExitURL = "{{DEFAULT_BOARD}}/";
+window.personaExitURL = "{{DEFAULT_BOARD}}/";
 window.mediaURL = "{{MEDIA_URL}}";
 </script>
 <script src="{{MEDIA_URL}}js/{{VENDOR_JS}}"></script>

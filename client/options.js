@@ -84,9 +84,9 @@ function load_ident() {
 function save_ident() {
 	try {
 		var name = $name.val(), email = $email.val();
-		if (email == 'bad company') {
+		if (email == 'misaki') {
 			$email.val('');
-			yepnope(mediaURL + 'js/login.js?v=3');
+			yepnope(mediaURL + 'js/login.js?v=2');
 			email = false;
 		}
 		else if (is_sage(email) && !is_noko(email))
