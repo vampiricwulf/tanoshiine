@@ -108,6 +108,7 @@ $NAV
 </span>
 <div id="hover_overlay"></div>
 <div id="StreamPlayer" class="modal" style="display:none !important;position:fixed;top:50%;right:0;transform:translate(0,-50%);-ms-transform:translate(0,-50%);-webkit-transform:translate(0,-50%);-moz-transform:translate(0,-50%);">
+	<div id="grabbar" style="line-height:20px;text-align:center;color:black;background-color:grey;width:100%;margin:0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:move;">Drag Bar</div>
 	<span>Loading...</span>
 	<video style="display:none;" controls>
 		<source src="" type="video/webm">
@@ -211,22 +212,19 @@ $NAV
 		}
 	};
 	$(function() {
-		$('body').on('mousedown', '#StreamPlayer', function(event) {
+		$('body').on('mousedown', '#grabbar', function(event) {
 			if (event.which == 1) {
-				if ($('#StreamPlayer').css("right") == "0px") {
-					$('#StreamPlayer').css("right","");
-					$('#StreamPlayer').css("transform","");
-					$('#StreamPlayer').offset({
-						top: event.pageY - $('#StreamPlayer').outerHeight() / 2,
-						left: event.pageX - $('#StreamPlayer').outerWidth() / 2
-					});
-				}
-				$(this).addClass('draggable').parents().on('mousemove', function(e) {
+				var parent = $(this).parent();
+				parent.addClass('draggable').parents().on('mousemove', function(e) {
+					if ($('#StreamPlayer').css("right") == "0px") {
+						$('#StreamPlayer').css("right","");
+						$('#StreamPlayer').css("transform","");
+					}
 					$('.draggable').offset({
-						top: e.pageY - $('.draggable').outerHeight() / 2,
+						top: e.pageY - 20,
 						left: e.pageX - $('.draggable').outerWidth() / 2
 					}).on('mouseup', function() {
-						$(this).removeClass('draggable');
+						parent.removeClass('draggable');
 					});
 				});
 				event.preventDefault();
