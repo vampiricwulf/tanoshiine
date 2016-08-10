@@ -3,7 +3,7 @@ var _ = require('underscore'),
     config = require('../config'),
     formidable = require('formidable'),
     hooks = require('../hooks'),
-    persona = require('./persona'),
+    openid = require('./openid'),
     Stream = require('stream'),
     url_parse = require('url').parse,
     util = require('util'),
@@ -83,9 +83,9 @@ function handle_resource(req, resp, resource) {
 		args.push(m);
 	args.push(resource_second_handler.bind(null, req, resp, resource));
 
-	var cookie = persona.extract_login_cookie(req.cookies);
+	var cookie = openid.extract_login_cookie(req.cookies);
 	if (cookie) {
-		persona.check_cookie(cookie, function (err, ident) {
+		openid.check_cookie(cookie, function (err, ident) {
 			if (err && !resource.authPassthrough)
 				return forbidden(resp, 'No cookie.');
 			else if (!err)
@@ -199,13 +199,13 @@ function parse_forwarded_for(ff) {
 exports.parse_forwarded_for = parse_forwarded_for;
 
 function auth_passthrough(handler, req, resp, params) {
-	var cookie = persona.extract_login_cookie(req.cookies);
+	var cookie = openid.extract_login_cookie(req.cookies);
 	if (!cookie) {
 		handler(req, resp, params);
 		return;
 	}
 
-	persona.check_cookie(cookie, function (err, ident) {
+	openid.check_cookie(cookie, function (err, ident) {
 		if (!err)
 			_.extend(req.ident, ident);
 		handler(req, resp, params);
@@ -242,10 +242,10 @@ function auth_checker(handler, is_post, req, resp, params) {
 		check_it();
 
 	function check_it() {
-		cookie = persona.extract_login_cookie(req.cookies);
+		cookie = openid.extract_login_cookie(req.cookies);
 		if (!cookie)
 			return forbidden(resp, 'No cookie.');
-		persona.check_cookie(cookie, ack);
+		openid.check_cookie(cookie, ack);
 	}
 
 	function ack(err, session) {

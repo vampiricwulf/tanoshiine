@@ -15,7 +15,8 @@ var _ = require('underscore'),
     imager = require('../imager'),
     Muggle = require('../etc').Muggle,
     okyaku = require('./okyaku'),
-    persona = require('./persona'),
+    openid = require('./openid'),
+    passport = require('passport'),
     suggest = require('./issuetracker');
     render = require('./render'),
     STATE = require('./state'),
@@ -54,9 +55,9 @@ dispatcher[common.SYNCHRONIZE] = function (msg, client) {
 			client.kotowaru(Muggle("Bad protocol."));
 	}
 	var chunks = web.parse_cookie(msg.pop());
-	var cookie = persona.extract_login_cookie(chunks);
+	var cookie = openid.extract_login_cookie(chunks);
 	if (cookie) {
-		persona.check_cookie(cookie, checked);
+		openid.check_cookie(cookie, checked);
 		return true;
 	}
 	else
@@ -226,19 +227,19 @@ if(config.SUGGESTIONBOX){
   web.route_post(/^\/suggestionbox$/, suggest.newIssue);
 }
 
-web.route_post(/^\/login$/, persona.login);
-web.route_post_auth(/^\/logout$/, persona.logout);
+web.route_post(/^\/login$/, openid.login);
+web.route_post_auth(/^\/logout$/, openid.logout);
 if (config.DEBUG) {
 	/* Shortcuts for convenience */
 	winston.warn("Running in (insecure) debug mode.");
 	winston.warn("Do not use on the public internet.");
 	web.route_get(/^\/login$/, function (req, resp) {
-		persona.set_cookie(resp, {auth: 'Admin'});
+		openid.set_cookie(resp, {auth: 'Admin'});
 	});
 	web.route_get(/^\/mod$/, function (req, resp) {
-		persona.set_cookie(resp, {auth: 'Moderator'});
+		openid.set_cookie(resp, {auth: 'Moderator'});
 	});
-	web.route_get(/^\/logout$/, persona.logout);
+	web.route_get(/^\/logout$/, openid.logout);
 }
 else {
 	/* Production login/out endpoint */
@@ -263,6 +264,12 @@ else {
 			x_csrf: req.ident.csrf,
 		}));
 		resp.end(RES.loginTmpl[1]);
+	});
+	web.resource(/^\/auth\/openid$/, function (_req, cb) {
+		passport.authenticate("openid",{failureRedirect:config.DEFAULT_BOARD+'/'}),function(req,res){res.redirect(config.DEFAULT_BOARD+'/');
+	});
+	web.resource(/^\/auth\/openid\/return$/, function (_req, cb) {
+		passport.authenticate("openid",{failureRedirect:config.DEFAULT_BOARD+'/'}),function(req,res){res.redirect(config.DEFAULT_BOARD+'/');
 	});
 }
 web.resource(/^\/(login|logout)\/$/, function (req, params, cb) {

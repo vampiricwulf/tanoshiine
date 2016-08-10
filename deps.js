@@ -27,7 +27,7 @@ exports.SERVER_DEPS = [
 	'server/okyaku.js',
 	'server/opts.js',
 	'server/perceptual.c',
-	'server/persona.js',
+	'server/openid.js',
 	'server/render.js',
 	'server/server.js',
 	'server/state.js',
