@@ -226,45 +226,13 @@ if(config.SUGGESTIONBOX){
   web.route_post(/^\/suggestionbox$/, suggest.newIssue);
 }
 
-web.route_post(/^\/login$/, persona.login);
-web.route_post_auth(/^\/logout$/, persona.logout);
-if (config.DEBUG) {
-	/* Shortcuts for convenience */
-	winston.warn("Running in (insecure) debug mode.");
-	winston.warn("Do not use on the public internet.");
-	web.route_get(/^\/login$/, function (req, resp) {
-		persona.set_cookie(resp, {auth: 'Admin'});
-	});
-	web.route_get(/^\/mod$/, function (req, resp) {
-		persona.set_cookie(resp, {auth: 'Moderator'});
-	});
-	web.route_get(/^\/logout$/, persona.logout);
-}
-else {
-	/* Production login/out endpoint */
-	web.resource(/^\/login$/, true, function (req, resp) {
-		resp.writeHead(200, web.noCacheHeaders);
-		resp.write(RES.loginTmpl[0]);
-		resp.write('{}');
-		resp.end(RES.loginTmpl[1]);
-	});
-
-	web.resource(/^\/logout$/, function (req, cb) {
-		if (req.ident.auth)
-			cb(null, 'ok');
-		else
-			cb(null, 'redirect', config.DEFAULT_BOARD+'/');
-	},
-	function (req, resp) {
-		resp.writeHead(200, web.noCacheHeaders);
-		resp.write(RES.loginTmpl[0]);
-		resp.write(JSON.stringify({
-			loggedInUser: req.ident.email,
-			x_csrf: req.ident.csrf,
-		}));
-		resp.end(RES.loginTmpl[1]);
-	});
-}
+web.route_get(/^\/login$/, function (req, resp) {
+	persona.set_cookie(resp, {auth: 'Admin'});
+});
+web.route_get(/^\/mod$/, function (req, resp) {
+	persona.set_cookie(resp, {auth: 'Moderator'});
+});
+web.route_get(/^\/logout$/, persona.logout);
 web.resource(/^\/(login|logout)\/$/, function (req, params, cb) {
 	cb(null, 'redirect', '../' + params[1]);
 });

@@ -1,3 +1,22 @@
+# EVERYTHING ABOUT THIS CONFIG IS WRONG EXCEPT THIS SECTION ABOUT LOGINS:
+# These logins are created by: htpasswd -c /etc/nginx/.<ROLE>passwd <USERNAME>
+
+                location /login {
+                        auth_basic "Admin Login";
+                        auth_basic_user_file /etc/nginx/.adminpasswd;
+                        try_files $uri $uri/ @boards;
+                }
+
+                location /mod {
+                        auth_basic "Moderator Login";
+                        auth_basic_user_file /etc/nginx/.modpasswd;
+                        try_files $uri $uri/ @boards;
+                }
+
+
+
+
+
 # Requires nginx >=1.4.
 # Based on bakape and bakaonto's example configurations.
 

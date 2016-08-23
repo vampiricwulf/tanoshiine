@@ -57,13 +57,8 @@ var config = {
 // Note: upkeep/clean.js is not needed with this option enabled
 	VOLATILE: false,
 
-// Doushio uses Mozilla's Persona system for moderator authentication.
-// Set login emails here. Loging in can be done by either going to the /login/
-//  board or typing "misaki" into the email field.
-	ADMIN_PERSONAS: ['lalc@doushio.com'],
-	MODERATOR_PERSONAS: ['mod@doushio.com'],
-	// URL to pass to Mozilla's servers.
-	PERSONA_AUDIENCE: 'http://example.com:80',
+// RIP PERSONA
+// Using default nginx htpasswd login on login/mod/logout pages to set cookies, look at nginx example for how to set those up
 	LOGIN_COOKIE_DOMAIN: 'example.com',
 	LOGIN_SESSION_TIME: 60*60*24*14,
 	// Translate IP's into more human-readable mnemonics
