@@ -1,5 +1,6 @@
 # EVERYTHING ABOUT THIS CONFIG IS WRONG EXCEPT THIS SECTION ABOUT LOGINS:
 # These logins are created by: htpasswd -c /etc/nginx/.<ROLE>passwd <USERNAME>
+# Do without the -c flag after making the first user in the file
 
                 location /login {
                         auth_basic "Admin Login";
