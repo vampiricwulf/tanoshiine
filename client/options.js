@@ -49,8 +49,7 @@ optSpecs.push(option_theme);
 optSpecs.push(option_StreamSize);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_beep);
-if (!isMobile)
-	optSpecs.push(option_notification);
+optSpecs.push(option_notification);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
