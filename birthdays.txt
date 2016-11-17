@@ -1,8 +1,11 @@
 MM DD NAME
 3 20 Wulf
 4 2 NotSo
+7 28 Rene
+8 4 Arisu
 8 25 Rin
 9 12 Tano
+9 14 Windows ME
 9 23 Maria
 11 16 LV
 12 10 sp0rk
