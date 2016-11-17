@@ -3,7 +3,12 @@ import fileinput
 import datetime
 
 today = datetime.date.today()
-start = [(3,20),(4,2),(9,12),(11,16)]
+with open("/root/birthdays.txt") as file:
+	next(file)
+	raw = []
+	for line in file:
+		raw.append(tuple(line.split()))
+start = [(int(i[0]),int(i[1])) for i in raw]
 end = start[:]
 for t in range(len(end)):
 	end[t] = (end[t][0],end[t][1]+1)
