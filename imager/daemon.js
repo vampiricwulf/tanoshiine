@@ -472,12 +472,11 @@ IU.verify_image = function () {
 		stat: fs.stat.bind(fs, image.video || image.path),
 		dims: identify.bind(null, this.tagged_path),
 	};
-	if (image.ext == '.png'){
+	if (image.ext == '.png' && !image.video){
 		checks.apng = function(callback){
 			callback(null, findapng(image.path));
 		};
 	}
-
 	var self = this;
 	async.parallel(checks, function (err, rs) {
 		if (err)
