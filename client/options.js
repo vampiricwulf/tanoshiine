@@ -56,6 +56,7 @@ optSpecs.push(option_spoiler);
 optSpecs.push(option_image_hover);
 optSpecs.push(option_webm_hover);
 optSpecs.push(option_relative_time);
+optSpecs.push(option_youcounter);
 optSpecs.push(option_horizontal);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
@@ -446,7 +447,7 @@ option_topbanner.tab = tabs.General;
 /* BEEP */
 
 function option_beep(){}
-option_beep.id = 'beep';
+option_beep.id = 'beepbox';
 option_beep.label = 'Beep';
 option_beep.type = 'checkbox';
 option_beep.tooltip = 'Beep when someone replies to your post';
@@ -481,6 +482,60 @@ option_horizontal.type = 'checkbox';
 option_horizontal.tooltip = '38chan nostalgia';
 option_horizontal.tab = tabs.Style;
 
+/* YOU COUNTER */
+
+function option_youcounter(toggle){
+	if(localStorage.youCounter)
+		var p = JSON.parse(localStorage.youCounter);
+	else
+		var p = {'youC' : true};
+	p.youC = toggle;
+	p.lastran = new Date().getTime();
+	localStorage.youCounter = JSON.stringify(p);
+	if (toggle) {
+		youloader();
+		$('#Ycount').show();
+	} else {
+		$('#Ycount').hide();
+	}
+}
+
+function youloader(){
+	var p = JSON.parse(localStorage.youCounter);
+	var d = new Date().getTime();
+	if (p.lastran+100 > d || d > p.lastran+59900) {
+		p.lastran = new Date().getTime();
+		if(p.total){
+			if (THREAD) {
+				var t = $('a:contains("You")').length;
+				if (!p[THREAD])
+					p.total += t;
+				else
+					p.total += (t >= p[THREAD] ? t - p[THREAD] : t);
+				p[THREAD] = t;
+			}
+		} else {
+			if (THREAD) {
+				var p = {'total': $('a:contains("You")').length};
+				p[THREAD] = p.total;
+			} else {
+				var p = {'total': 0};
+			}
+		}
+		if (THREAD)
+			$('#Ycount').html("Session (You)s: " + p[THREAD] + "<br>Total (You)s: " + p.total);
+		else
+			$('#Ycount').html("Total (You)s: " + p.total);
+		localStorage.youCounter = JSON.stringify(p);
+		if (p.youC)
+			setTimeout(function(){youloader();},60000);
+	}
+}
+option_youcounter.id = 'youCounter';
+option_youcounter.label = '(You) Counter';
+option_youcounter.type = 'checkbox';
+option_youcounter.tooltip = 'For shitposters (only counts if in thread).';
+option_youcounter.tab = tabs.Style;
 
 /* CUSTOM USER-SET BACKGROUND */
 
