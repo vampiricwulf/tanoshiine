@@ -200,7 +200,10 @@ var break_re = new RegExp("(\\S{" + DEF.WORD_LENGTH_LIMIT + "})");
 var ref_re = '>>(\\d+';
 ref_re += '|>\\/watch\\?v=[\\w-]{11}(?:#t=[\\dhms]{1,9})?';
 ref_re += '|>\\/soundcloud\\/[\\w-]{1,40}\\/[\\w-]{1,80}';
+ref_re += '|>\\/onsen\\/(?:\\/|)\\d{0,10}';
 ref_re += '|>\\/meguca\\/(?:\\w+|)(?:\\/|)\\d{0,10}';
+ref_re += '|>\\/korbo\\/';
+ref_re += '|>\\/cumzone\\/';
 ref_re += '|>\\/pastebin\\/\\w+';
 
 for (var i = 0; i < config.BOARDS.length; i++) {
@@ -254,9 +257,23 @@ OS.red_string = function (ref) {
 			mExtra += num;
 		dest = '../outbound/meguca/' + mExtra;
 	}
+	else if (/^>\/onsen/.test(ref)){
+		var mArray = ref.split('/');
+		var num = (/\d+/.test(mArray[2]) ? parseInt(mArray[2], 10) : false);
+		var mExtra = '';
+		if (num)
+			mExtra += num;
+		dest = '../outbound/onsen/' + mExtra;
+	}
 	else if (/^>\/pastebin/.test(ref)){
 		dest = dest = 'https://pastebin.com/' + ref.slice(11);
 		linkClass = 'embed pastebin';
+	}
+	else if (/>\/korbo/.test(ref)){
+		dest = '../korbo/';
+	}
+	else if (/>\/cumzone/.test(ref)){
+		dest = '../cumzone/';
 	}
 
 	// Linkify >>>/board/ URLs
@@ -369,22 +386,28 @@ OS.karada = function (body) {
 };
 
 
-var dice_re = /(#flip|#8ball|#bully|#bullcount|#bulltotal|#sw(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
+var dice_re = /(#flip|#awoo|#1ball|#8ball|#9ball|bully|#bcount|#btotal|#sw(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 
 
 function parse_dice(frag) {
 	if (frag == '#flip')
 		return {n: 1, faces: 2};
-  if (frag == '#8ball')
-	  return {n: 1, faces: hotConfig.EIGHT_BALL.length};
+	if (frag == '#awoo')
+		return {n: 1, faces: hotConfig.AWOO.length};
+	if (frag == '#8ball')
+	 	return {n: 1, faces: hotConfig.EIGHT_BALL.length};
+        if (frag == '#1ball')
+         	return {n: 1, faces: hotConfig.ONE_BALL.length};
+        if (frag == '#9ball')
+         	return {n: 1, faces: hotConfig.NINE_BALL.length};
 	// Increment counter
-	if (frag == '#bully')
+	if (frag.toLowerCase() == 'bully')
 		return {bully: 'increment'};
 	// Print current thread count
-	if (frag == '#bullcount')
+	if (frag == '#bcount')
 		return {bully: 'print'};
 	// Print total count
-	if (frag == '#bulltotal')
+	if (frag == '#btotal')
 		return {bully: 'total'};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
 	// Regular dice
@@ -426,14 +449,20 @@ function serverTime() {
 function readable_dice(bit, d) {
 	if (bit == '#flip')
 		return '#flip (' + (d[1] == 2) + ')';
+	if (bit == '#awoo')
+		return hotConfig.AWOO[d[1]- 1];
 	if (bit == '#8ball')
-    return '#8ball (' + hotConfig.EIGHT_BALL[d[1]- 1] + ')';
-	if (bit == '#bully')
-		return '#bully(' + d + ')';
-	if (bit == '#bullcount')
-		return '#bullcount(' + d + ')';
-	if (bit == '#bulltotal')
-		return '#bulltotal(' + d + ')';
+		return '#8ball (' + hotConfig.EIGHT_BALL[d[1]- 1] + ')';
+        if (bit == '#1ball')
+                return '#1ball (' + hotConfig.ONE_BALL[d[1]- 1] + ')';
+        if (bit == '#9ball')
+                return '#9ball (' + hotConfig.NINE_BALL[d[1]- 1] + ')';
+	if (bit.toLowerCase() == 'bully')
+		return bit;
+	if (bit == '#bcount')
+		return '(' + d + ' people called a bully in this thread.)';
+	if (bit == '#btotal')
+		return '(' + d + ' people called a bully.)';
 	if(/^#sw/.test(bit)){
 		return safe('<syncwatch class="embed" start='+d[0].start+
 				" end="+d[0].end+
