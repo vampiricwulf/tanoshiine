@@ -90,6 +90,12 @@ var ReportPanel = Backbone.View.extend({
 			$hideLabel.remove();
 		}
 
+		if ($(window).width() < 470) {
+			this.$el
+			.css('transform','scale('+$(window).width()/500+')')
+			.css('transform-origin','bottom right');
+		}
+
 		this.listenTo(this.model, {
 			'change:error': this.error_changed,
 			'change:status': this.status_changed,
