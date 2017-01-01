@@ -485,52 +485,14 @@ option_horizontal.tab = tabs.Style;
 /* YOU COUNTER */
 
 function option_youcounter(toggle){
-	if(localStorage.youCounter)
-		var p = JSON.parse(localStorage.youCounter);
-	else
-		var p = {'youC' : true};
-	p.youC = toggle;
-	p.lastran = new Date().getTime();
-	localStorage.youCounter = JSON.stringify(p);
 	if (toggle) {
-		youloader();
 		$('#Ycount').show();
+		$('#Ycount').html((THREAD?"Thread ":"Front Page ") + "(You)s: " + yC[THREAD] + "<br>Total (You)s: " + yC.total);
 	} else {
 		$('#Ycount').hide();
 	}
 }
 
-function youloader(){
-	var p = JSON.parse(localStorage.youCounter);
-	var d = new Date().getTime();
-	if (p.lastran+100 > d || d > p.lastran+59900) {
-		p.lastran = new Date().getTime();
-		if(p.total){
-			if (THREAD) {
-				var t = $('a:contains("You")').length;
-				if (!p[THREAD])
-					p.total += t;
-				else
-					p.total += (t >= p[THREAD] ? t - p[THREAD] : t);
-				p[THREAD] = t;
-			}
-		} else {
-			if (THREAD) {
-				var p = {'total': $('a:contains("You")').length};
-				p[THREAD] = p.total;
-			} else {
-				var p = {'total': 0};
-			}
-		}
-		if (THREAD)
-			$('#Ycount').html("Session (You)s: " + p[THREAD] + "<br>Total (You)s: " + p.total);
-		else
-			$('#Ycount').html("Total (You)s: " + p.total);
-		localStorage.youCounter = JSON.stringify(p);
-		if (p.youC)
-			setTimeout(function(){youloader();},60000);
-	}
-}
 option_youcounter.id = 'youCounter';
 option_youcounter.label = '(You) Counter';
 option_youcounter.type = 'checkbox';

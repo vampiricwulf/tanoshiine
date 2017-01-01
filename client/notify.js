@@ -65,6 +65,12 @@ Backbone.on('repliedToMe', function (post) {
 			};
 		}
 	}
+	if (options.get('youCounter')) {
+		yC[THREAD]+=1;
+		yC.total+=1;
+		localStorage.youCounter = JSON.stringify(yC);
+		$('#Ycount')[0].html((THREAD?"Thread ":"Front Page ") + "(You)s: " + yC[THREAD] + "<br>Total (You)s: " + yC.total);
+	}
 
 	Unread.set({reply: true});
 	// Record as already read

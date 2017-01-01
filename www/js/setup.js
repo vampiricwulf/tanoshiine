@@ -1,4 +1,4 @@
-var BOARD, THREAD, BUMP, PAGE, mediaURL, options, themeVersion;
+var BOARD, THREAD, BUMP, PAGE, mediaURL, options, themeVersion, yC;
 // NOTE: options gets turned into a backbone model later
 
 (function () {
@@ -6,6 +6,14 @@ var BOARD, THREAD, BUMP, PAGE, mediaURL, options, themeVersion;
 	BOARD = p.match(/^\/(.+?)\//)[1];
 	var t = p.match(/\/(\d+)$/);
 	THREAD = t ? parseInt(t[1], 10) : 0;
+	if(localStorage.youCounter)
+		yC = JSON.parse(localStorage.youCounter);
+	else
+		yC = {};
+	if (!yC[THREAD])
+		yC[THREAD] = 0;
+	if (!yC.total)
+		yC.total = 0;
 	BUMP = /\/$/.test(p);
 	t = p.match(/\/page(\d+)$/);
 	PAGE = t ? parseInt(t[1], 10) : -1;
