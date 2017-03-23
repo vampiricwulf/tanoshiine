@@ -20,7 +20,7 @@ const ERRORS = {
 
 var safe = common.safe;
 
-function report(reporter_ident, op, num, cb) {
+function report(reporter_ident, op, num, description, cb) {
 
 	var board = caps.can_access_thread(reporter_ident, op);
 	if (!board)
@@ -43,10 +43,12 @@ function report(reporter_ident, op, num, cb) {
 		if (name.length > 23)
 			name = name.slice(0, 20) + '...';
 		if (post.trip)
-			name += ' # ' + post.trip;
+			name += ' # ' + post.trip.replace(/<(\\|).+?>/g,"");
 		if (post.ip)
 			name += ' # ' + maybe_mnemonic(post.ip);
 		var body = 'Offender: ' + name;
+		if(description)
+			body += '\nDescription: ' + description;
 
 		var img;
 		if (post.image && !post.hideimg)
@@ -117,10 +119,11 @@ function maybe_mnemonic(ip) {
 }
 
 okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
-	if (!msgcheck.check(['id', 'string', 'string'], msg))
+	if (!msgcheck.check(['id', 'string', 'string', 'string'], msg))
 		return false;
 
 	var num = msg[0];
+	var description = msg[3];
 	var op = db.OPs[num];
 	if (!op || !caps.can_access_thread(client.ident, op))
 		return reply_error("Post does not exist.");
@@ -146,7 +149,7 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 		var op = db.OPs[num];
 		if (!op)
 			return reply_error("Post does not exist.");
-		report(client.ident, op, num, function (err) {
+		report(client.ident, op, num, description, function (err) {
 			if (err) {
 				winston.error(err);
 				return reply_error("Couldn't send report.");

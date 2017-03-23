@@ -588,7 +588,7 @@ web.resource(/^\/(\w+)\/(\d+)\/$/, function (req, params, cb) {
 		cb(null, 'redirect', '../' + params[2]);
 });
 
-web.resource(/^\/outbound\/(sn|iq)\/(.*)$/,
+web.resource(/^\/outbound\/(sn|iq|io)\/(.*)$/,
 function (req, params, cb) {
   var src = '//' + config.LOGIN_COOKIE_DOMAIN + imager.config.MEDIA_URL + 'src/' + params[2];
   var u = urlParse(src, false, true);
@@ -597,7 +597,7 @@ function (req, params, cb) {
     src = u.format();
   }
   var service = params[1] == 'sn' ? 'http://saucenao.com/search.php?url='
-  : 'http://iqdb.org/?url=';
+  : 'iq' ? 'http://iqdb.org/?url=' : 'http://imgops.com/';
   var dest = service + encodeURIComponent(src);
   cb(null, 303.1, dest);
 });

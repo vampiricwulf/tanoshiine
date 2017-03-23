@@ -72,7 +72,7 @@ var ReportPanel = Backbone.View.extend({
 		});
 		var $hideLabel = $('<label>and hide</label>')
 			.append($hideAfter);
-
+		this.$description = $('<input type="text" class="reportDescription" placeholder="Description (Optional)"/>');
 		var num = this.model.id;
 
 		this.$el
@@ -80,6 +80,8 @@ var ReportPanel = Backbone.View.extend({
 		.append($('<a/>', {href: '#'+num, text: '>>'+num}))
 		.append('<a class="close" href="#">x</a>')
 		.append(this.$message)
+		.append('</br>')
+		.append(this.$description)
 		.append(this.$captcha)
 		.append(this.$submit)
 		.append(' ', $hideLabel);
@@ -113,7 +115,7 @@ var ReportPanel = Backbone.View.extend({
 		if (this.model.get('status') != 'ready')
 			return false;
 		send([DEF.REPORT_POST, this.model.id, Recaptcha.get_challenge(),
-				Recaptcha.get_response()]);
+				Recaptcha.get_response(), this.$description.val()]);
 		this.model.set('status', 'reporting');
 		return false;
 	},

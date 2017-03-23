@@ -585,7 +585,9 @@ function image_sauce_id(src) {
 	return [safe('<a href="/outbound/sn/' + src + '" target="_blank" rel="nofollow">'),
 	'SN', safe('</a>'), ' ',
 	safe('<a href="/outbound/iq/' + src + '" target="_blank" rel="nofollow">'),
-	'IQ', safe('</a>')];
+	'IQ', safe('</a>'), ' ',
+	safe('<a href="/outbound/io/' + src + '" target="_blank" rel="nofollow">'),
+	'iOps', safe('</a>')];
 }
 
 OS.image_paths = function () {
