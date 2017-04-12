@@ -409,24 +409,13 @@ var ComposerView = Backbone.View.extend({
 		/* Turn YouTube links into proper refs */
 		var changed = false;
 		while (true) {
-			var m = val.match(youtube_url_re);
+			var m = val.match(yt_re);
 			if (!m)
 				break;
 			/* Substitute */
-			var t = m[4] || '';
-			t = this.find_time_arg(m[3]) || this.find_time_arg(m[1]) || t;
-			var v = '>>>/watch?v=' + m[2] + t;
-			val = embedRewrite(m,v);
-		}
-		//Youtu.be links
-		while(true){
-		    var m = val.match(youtube_short_re);
-			if (!m)
-				break;
-			// Substitute
-			var t = this.find_time_arg(m[2]) || '';
+			var t = m[2] ? "#t="+m[2] : '';
 			var v = '>>>/watch?v=' + m[1] + t;
-			val = embedRewrite(m, v);
+			val = embedRewrite(m,v);
 		}
 
 		/* and SoundCloud links */
@@ -519,18 +508,6 @@ var ComposerView = Backbone.View.extend({
 		$input[0].selectionStart = $input.val().length;
 		this.on_input();
 		$input.focus();
-	},
-
-	find_time_arg: function (params) {
-		if (!params || params.indexOf('t=') < 0)
-			return false;
-		params = params.split('&');
-		for (var i = 0; i < params.length; i++) {
-			var pair = '#' + params[i];
-			if (youtube_time_re.test(pair))
-							return pair;
-		}
-		return false;
 	},
 
 	resize_input: function (val) {

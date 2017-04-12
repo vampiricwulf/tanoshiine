@@ -1,9 +1,7 @@
 /* YOUTUBE */
-var youtube_url_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m.)?youtube\.com\/watch\/?\?((?:[^\s#&=]+=[^\s#&]*&)*)?v=([\w-]{11})((?:&[^\s#&=]+=[^\s#&]*)*)&?(#t=[\dhms]{1,9})?/;
-var youtube_short_re =/(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m.)?youtu.be\/([\w-]{11})\??(t=[\dhms]{1,9})?/;
-var youtube_time_re = /^#t=(?:(\d\d?)h)?(?:(\d{1,3})m)?(?:(\d{1,3})s)?(?:(\d*))?$/;
-var youtube_short_time_re = /^t=(?:(\d\d?)h)?(?:(\d{1,3})m)?(?:(\d{1,3})s)?(?:(\d*))?$/
 var danbooru_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?danbooru\.donmai\.us\/posts\/?\?(?:utf8=%E2%9C%93&)?tags=(.*)/;
+var yt_re = /(?:https?:\/\/)?(?:www\.|m\.)?youtu\.?be(?:\.com\/watch\?v=|\/)?([\w-]{11})(?:.*t=(\d+(?:h)?(?:\d+)?(?:m)?(?:\d+)?(?:s)?))?/;
+var yt_time_re = /(?:(\d+h)?(\d+m)?(\d+s)?)?(\d+)?/;
 
 function make_video(id, params, start) {
 	if (!params)
@@ -60,33 +58,25 @@ $(document).on('click', '.watch', function (e) {
 	}
 	if ($target.data('noembed'))
 		return;
-        //check if longURL, if that fails, check if shortURL
-        var m = $target.attr('href').match(youtube_url_re);
-        if (!m) {
-            m = $target.attr('href').match(youtube_short_re);
-            if (!m)
-		/* Shouldn't happen, but degrade to normal click action */
+    var m = $target.attr('href').match(yt_re);
+    if (!m)
 		return;
-            timeCall(m[1],m[2],youtube_short_time_re);
-        }
-        timeCall(m[2],m[4],youtube_time_re);
+    timeCall(m[1],m[2],yt_time_re);
     function timeCall(url, time, timeRex){
-            var start = 0;
-            if (time){
-                var t = time.match(timeRex);
-		if (t) {
-			if (t[1])
-				start += parseInt(t[1], 10) * 3600;
-			if (t[2])
-				start += parseInt(t[2], 10) * 60;
-			if (t[3])
-				start += parseInt(t[3], 10);
-		}
-            }
-            var $obj = make_video(url, null, start);
-            with_dom(function () {
+        var start = 0;
+        if (time){
+            var t = time.match(timeRex);
+			for (var i = 1; i < 4; i++) {
+				if (t[i])
+					start += parseInt(t[i], 10) * Math.pow(60,(3 - i));
+			}
+			if (start == 0)
+				start = parseInt(t[4],10);
+        }
+        var $obj = make_video(url, null, start);
+        with_dom(function () {
 		$target.css('width', video_dims().width).append('<br>', $obj);
-	});
+		});
     }
     return false;
 });
@@ -106,30 +96,12 @@ $(document).on('mouseenter', '.watch', function (event) {
 	with_dom(function () {
 		node.textContent = orig + '...';
 	});
-	var m = $target.attr('href').match(youtube_url_re);
-	if (!m){
-            m = $target.attr('href').match(youtube_short_re);
-            if(!m)
-                return;
-            $.ajax({
-		url: 'https://www.googleapis.com/youtube/v3/videos',
-		data: {id: m[2], key: hotConfig.YOUTUBE_APIKEY, part: 'snippet,status', fields: 'items(snippet(title),status(embeddable))'},
-		dataType: 'json',
-		success: function (data) {
-			with_dom(gotInfo.bind(null, data));
-		},
-		error: function () {
-			with_dom(function () {
-				node.textContent = orig + '???';
-			});
-		},
-	});
-        }
-
-
+	var m = $target.attr('href').match(yt_re);
+	if (!m)
+		return;
 	$.ajax({
 		url: 'https://www.googleapis.com/youtube/v3/videos',
-		data: {id: m[2], key: hotConfig.YOUTUBE_APIKEY, part: 'snippet,status', fields: 'items(snippet(title),status(embeddable))'},
+		data: {id: m[1], key: hotConfig.YOUTUBE_APIKEY, part: 'snippet,status', fields: 'items(snippet(title),status(embeddable))'},
 		dataType: 'json',
 		success: function (data) {
 			with_dom(gotInfo.bind(null, data));
