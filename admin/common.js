@@ -62,7 +62,7 @@ var kanji_dict = [0x4E00, 0x4E03, 0x4E09, 0x4E0A, 0x4E0B, 0x4E2D, 0x4E5D,
 				0x9996, 0x99AC, 0x9AD8, 0x9B5A, 0x9CE5, 0x9CF4, 0x9EA6, 
 				0x9EC4, 0x9ED2, 0x4E01, 0x4E16, 0x4E21, 0x4E3B, 0x4E57, 
 				0x4E88, 0x4E8B, 0x4ED5, 0x4ED6, 0x4EE3, 0x4F4F, 0x4F7F, 
-				0x4FC2, 0x500D, 0x5168];
+				0x4FC2, 0x500D, 0x5168, 0x5177];
 
 function ip_mnemonic(ip) {
 	if (/^[a-fA-F0-9:]{3,45}$/.test(ip))
@@ -85,7 +85,7 @@ function ipv6_mnemonic(ip) {
 		return null;
 	var mnemonic = '';
 	for (var i = 0; i < 4; i++) {
-		var n = (parseInt(groups[i], 16) ^ parseInt(groups[i+4], 16)) % 255;
+		var n = (parseInt(groups[i], 16) ^ parseInt(groups[i+4], 16)) % 256;
 		var s = String.fromCharCode(kanji_dict[n]);
 		mnemonic += s;
 	}
