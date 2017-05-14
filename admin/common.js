@@ -85,7 +85,7 @@ function ipv6_mnemonic(ip) {
 		return null;
 	var mnemonic = '';
 	for (var i = 0; i < 4; i++) {
-		var n = (parseInt(groups[i], 16) ^ parseInt(groups[i+4], 16)) % 256;
+		var n = (parseInt(groups[i], 16) ^ parseInt(groups[i+4], 16)) % 255;
 		var s = String.fromCharCode(kanji_dict[n]);
 		mnemonic += s;
 	}
