@@ -62,12 +62,15 @@ function respond_error(resp, message) {
 }
 
 function respond_ok(resp, cookie) {
+	/*
 	var headers = {
 		'Content-Type': 'application/json',
 		'Set-Cookie': cookie,
 	};
 	resp.writeHead(200, headers);
 	resp.end(JSON.stringify({status: 'okay'}));
+	*/
+	resp.end("<script>(function() {document.cookie = '" + cookie + "';window.location.replace('/radio');})();</script>");
 }
 
 function make_expiry() {
