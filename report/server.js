@@ -5,7 +5,7 @@ var caps = require('../server/caps'),
     mainConfig = require('../config'),
     msgcheck = require('../server/msgcheck'),
     okyaku = require('../server/okyaku'),
-    recaptcha = require('recaptcha'),
+    recaptcha = require('recaptcha-v2').Recaptcha,
     winston = require('winston'),
     PushBullet = require('pushbullet');
 
@@ -119,45 +119,44 @@ function maybe_mnemonic(ip) {
 }
 
 okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
-	if (!msgcheck.check(['id', 'string', 'string', 'string'], msg))
+	if (!msgcheck.check(['id', 'string', 'string'], msg))
 		return false;
 
 	var num = msg[0];
-	var description = msg[3];
+	data = {
+		remoteip: client.ident.ip,
+		response: msg[1],
+		secret: config.RECAPTCHA_SECRET_KEY
+	};
+	var description = msg[2];
 	var op = db.OPs[num];
 	if (!op || !caps.can_access_thread(client.ident, op))
 		return reply_error("Post does not exist.");
 
-	var data = {
-		remoteip: client.ident.ip,
-		challenge: msg[1],
-		response: msg[2].trim(),
-	};
-	if (!data.challenge || !data.response)
+	if (!data.response)
 		return reply_error("Pretty please?");
-	if (data.challenge.length > 10000 || data.response.length > 10000)
+	if (data.response.length > 10000)
 		return reply_error("tl;dr");
 
-	var checker = new recaptcha.Recaptcha(config.RECAPTCHA_SITE_KEY,
-			config.RECAPTCHA_SECRET_KEY, data);
+	var checker = new recaptcha(config.RECAPTCHA_SITE_KEY, config.RECAPTCHA_SECRET_KEY, data);
 	checker.verify(function (ok, err) {
-		if (!ok) {
-			reply_error(ERRORS[err] || err);
-			return;
-		}
-
-		var op = db.OPs[num];
-		if (!op)
-			return reply_error("Post does not exist.");
-		report(client.ident, op, num, description, function (err) {
-			if (err) {
-				winston.error(err);
-				return reply_error("Couldn't send report.");
+			if (!ok) {
+				reply_error(ERRORS[err] || err);
+				return;
 			}
-			// success!
-			client.send([op, common.REPORT_POST, num]);
+
+			var op = db.OPs[num];
+			if (!op)
+				return reply_error("Post does not exist.");
+			report(client.ident, op, num, description, function (err) {
+				if (err) {
+					winston.error(err);
+					return reply_error("Couldn't send report.");
+				}
+				// success!
+				client.send([op, common.REPORT_POST, num]);
+			});
 		});
-	});
 	return true;
 
 	function reply_error(err) {

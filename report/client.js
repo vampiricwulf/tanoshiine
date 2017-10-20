@@ -16,20 +16,19 @@ var Report = Backbone.Model.extend({
 
 	request_new: function () {
 		var self = this;
-
-		Recaptcha.create(pubKey, 'captcha', {
-			theme: 'clean',
-			callback: function () {
-				self.set('status', 'ready');
-			}
+		grecaptcha.render('captcha', {
+			sitekey : pubKey,
+			theme: 'dark',
+			callback: function(){self.set('status', 'ready');}
 		});
+		self.set('status', 'ready');
 
 		if (this.get('timeout'))
 			clearTimeout(this.get('timeout'));
 
 		this.set('timeout', setTimeout(function () {
 			self.set('timeout', 0);
-			self.request_new();
+			grecaptcha.reset();
 		}, captchaTimeout));
 	},
 
@@ -62,7 +61,7 @@ var ReportPanel = Backbone.View.extend({
 	},
 
 	initialize: function () {
-		this.$captcha = $('<div id="captcha"/>');
+		this.$captcha = $('<div id="captcha" class="g-recaptcha" data-sitekey="'+pubKey+'"/>');
 		this.$message = $('<div class="message"/>');
 		this.$submit = $('<input>', {type: 'submit', val: 'Report'});
 		var $hideAfter = $('<input>', {
@@ -114,8 +113,8 @@ var ReportPanel = Backbone.View.extend({
 	submit: function () {
 		if (this.model.get('status') != 'ready')
 			return false;
-		send([DEF.REPORT_POST, this.model.id, Recaptcha.get_challenge(),
-				Recaptcha.get_response(), this.$description.val()]);
+		send([DEF.REPORT_POST, this.model.id,
+				grecaptcha.getResponse(), this.$description.val()]);
 		this.model.set('status', 'reporting');
 		return false;
 	},
@@ -150,9 +149,7 @@ var ReportPanel = Backbone.View.extend({
 			.toggleClass('error', msg == 'E');
 
 		// not strictly view logic, but only relevant when visible
-		if (status == 'ready')
-			this.focus();
-		else if (status == 'done')
+		if (status == 'done')
 			this.model.did_report();
 		else if (status == 'error')
 			this.model.request_new();
@@ -162,21 +159,17 @@ var ReportPanel = Backbone.View.extend({
 		this.model.set('hideAfter', e.target.checked);
 	},
 
-	focus: function () {
-		Recaptcha.focus_response_field();
-	},
-
 	remove: function () {
 		Backbone.View.prototype.remove.call(this);
 		if (PANEL == this) {
 			PANEL = null;
-			Recaptcha.destroy();
+			grecaptcha.reset();
 		}
 		return false;
 	},
 });
 
-var ajaxJs = 'https://www.google.com/recaptcha/api/js/recaptcha_ajax.js';
+var ajaxJs = 'https://www.google.com/recaptcha/api.js?render=explicit';
 
 menuHandlers.Report = function (post) {
 	var num = post.id;
@@ -194,13 +187,15 @@ menuHandlers.Report = function (post) {
 	PANEL = new ReportPanel({model: model});
 	PANEL.render().$el.appendTo('body');
 	yepnope({load: ajaxJs, callback: function () {
-		if (window.Recaptcha)
-			model.request_new();
-		else
-			model.set({
-				status: 'error',
-				error: "Couldn't load reCATPCHA.",
-			});
+		setTimeout(function(){
+			if (window.grecaptcha)
+				model.request_new();
+			else
+				model.set({
+					status: 'error',
+					error: "Couldn't load reCATPCHA.",
+				});
+		}, 500)
 	}});
 };
 
