@@ -619,7 +619,7 @@ OS.gazou = function (info, toppu) {
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
 		caption = [
-			(/\.webm/.test(info.src)?'Video':
+			(/\.(webm|mp4)/.test(info.src)?'Video':
 			(/\.(mp3|ogg|wav)/.test(info.src)?'Audio':
 			(this.sauceToggle?image_sauce_id(info.src):'Image'))), ' ',
 			new_tab_link(src, (this.thumbStyle == 'hide') ? '[Show]' : info.src, 'imageSrc')

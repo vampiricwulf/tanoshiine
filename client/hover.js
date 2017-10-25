@@ -157,7 +157,7 @@ var ImageHoverView = Backbone.View.extend({
 		if (!$target.is('img') || $target.hasClass('expanded'))
 			return this.fadeOut();
 		var src = $target.closest('a').attr('href'),
-			isWebm = /\.webm$/i.test(src);
+			isWebm = /\.(webm|mp4)$/i.test(src);
 		// Nothing to preview for PDF
 		if (/\.(pdf|mp3|ogg|wav)$/.test(src) || (isWebm && !options.get('webmHover')))
 			return this.fadeOut();

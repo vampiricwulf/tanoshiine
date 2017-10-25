@@ -735,7 +735,7 @@ var ComposerView = Backbone.View.extend({
 		});
 		this.$imageInput = $('<input>', {
 			type: 'file', id: 'image', name: 'image',
-			accept: imagerConfig.WEBM ? 'imager/*;.webm' : 'image/*',
+			accept: imagerConfig.WEBM ? 'imager/*;.webm;.mp4' : 'image/*',
 			change: $.proxy(this, 'on_image_chosen'),
 		});
 		this.$toggle = $('<input>', {

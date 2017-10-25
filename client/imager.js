@@ -101,7 +101,7 @@ var Hidamari = {
 		if (!img || fit == 'none')
 			return;
 		// Don't autoexpand webm or PDF with Expand All enabled
-		if (expand !== undefined && (/\.(webm|pdf|mp3|wav|ogg)/.test(img.ext)))
+		if (expand !== undefined && (/\.(mp4|webm|pdf|mp3|wav|ogg)/.test(img.ext)))
 			return;
 		if  (expand != false)
 			expand = expand || this.model.get('imageExpanded') != true;
@@ -158,7 +158,7 @@ var Hidamari = {
 
 	expandImage: function(width, height, ext, fullWidth){
 		var $fig = this.$el.children('figure'), tag;
-		if (ext == '.webm')
+		if (ext == '.webm' || ext == '.mp4')
 			tag = 'video';
 		else
 			tag = 'img';
@@ -171,7 +171,7 @@ var Hidamari = {
 			// Even wider
 			'class': 'expanded'+ (fullWidth ? ' fullWidth' : ''),
 		}));
-		if (vol && ext == '.webm')
+		if (vol && (ext == '.webm' || ext == '.mp4'))
 			$fig.find('video')['0'].volume = vol;
 		this.model.set('imageExpanded', true);
 	},

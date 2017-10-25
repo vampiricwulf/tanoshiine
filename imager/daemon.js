@@ -18,6 +18,7 @@ var async = require('async'),
 var IMAGE_EXTS = ['.png', '.jpg', '.gif'];
 if (config.WEBM) {
 	IMAGE_EXTS.push('.webm');
+	IMAGE_EXTS.push('.mp4');
 	// Daemon currently broken
 	/*if (!config.DAEMON) {
 		console.warn("Please enable imager.config.DAEMON security.");
@@ -187,8 +188,8 @@ IU.process = function () {
 	image.imgnm = filename.substr(0, 256);
 
 	this.status('Verifying...');
-	if (image.ext == '.webm')
-		video_still(image.path, this.verify_webm.bind(this));
+	if (image.ext == '.webm' || image.ext == '.mp4')
+		video_still(image.path, this.verify_video.bind(this));
 	else if (/\.(mp3|ogg|wav)/.test(image.ext))
     audio_still(image.path, this.verify_audio.bind(this));
   else
@@ -259,7 +260,8 @@ StillJob.prototype.encode_thumb = function (length, total) {
 			return;
 		}
 		var is_webm = /matroska,webm/i.test(first);
-		if (!is_webm) {
+		var is_mp4 = /mov,mp4,m4a,3gp,3g2,mj2/i.test(first);
+		if (!is_webm && !is_mp4) {
 			fs.unlink(dest, function (err) {
 				self.finish_job(Muggle(
 						'Video stream is not WebM.'));
@@ -268,12 +270,13 @@ StillJob.prototype.encode_thumb = function (length, total) {
 		}
 
 		/* Could have false positives due to chapter titles. Bah. */
-		var has_audio = /audio:\s*vorbis/i.test(stderr);
+		var has_audio = /audio:\s*(vorbis|aac)/i.test(stderr);
 
 		self.finish_job(null, {
 			still_path: dest,
 			has_audio: has_audio,
 			length: length,
+			type: (is_webm ? 'webm' : 'mp4'),
 		});
 	});
 };
@@ -441,7 +444,7 @@ IU.verify_audio = function (err, info) {
   });
 };
 
-IU.verify_webm = function (err, info) {
+IU.verify_video = function (err, info) {
 	if (err)
 		return this.failure(err);
 	var self = this;
@@ -459,6 +462,8 @@ IU.verify_webm = function (err, info) {
 			image.audio = true;
 		if (info.length)
 			image.length = info.length;
+		if (info.type)
+			image.videofile = info.type;
 
 		self.verify_image();
 	});
@@ -610,7 +615,7 @@ IU.got_nails = function () {
 	if (image.video) {
 		// stop pretending this is just a still image
 		image.path = image.video;
-		image.ext = image.audiofile ? '.'+image.audiofile : '.webm';
+		image.ext = image.audiofile ? '.'+image.audiofile : '.'+image.videofile;
 		delete image.video;
 	}
 
