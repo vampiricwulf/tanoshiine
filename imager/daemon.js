@@ -270,7 +270,7 @@ StillJob.prototype.encode_thumb = function (length, total) {
 		}
 
 		/* Could have false positives due to chapter titles. Bah. */
-		var has_audio = /audio:\s*(vorbis|aac)/i.test(stderr);
+		var has_audio = /audio:\s*(vorbis|aac|opus)/i.test(stderr);
 
 		self.finish_job(null, {
 			still_path: dest,
