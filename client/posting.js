@@ -67,6 +67,8 @@ function handle_shortcut(event) {
 	var used = false;
 	switch (event.which) {
 		case shortcutKeys['new']:
+			if (!shortcutKeys.newc)
+				return;
 			var $aside = THREAD ? $('aside') : $ceiling.next();
 			if ($aside.is('aside') && $aside.length == 1) {
 				with_dom(function () {
@@ -76,12 +78,16 @@ function handle_shortcut(event) {
 			}
 			break;
 		case shortcutKeys.togglespoiler:
+			if (!shortcutKeys.togglespoilerc)
+				return;
 			if (postForm) {
 				postForm.on_toggle(event);
 				used = true;
 			}
 			break;
 		case shortcutKeys.done:
+			if (!shortcutKeys.donec)
+				return;
 			if (postForm) {
 				if (!postForm.submit.attr('disabled')) {
 					postForm.finish_wrapped();
@@ -91,6 +97,8 @@ function handle_shortcut(event) {
 			break;
 		// Insert text spoiler
 		case shortcutKeys.textSpoiler:
+			if (!shortcutKeys.textSpoilerc)
+				return;
 			if (postForm) {
 				var $input = this.$input;
 				var state = this.imouto.state2.spoiler;
@@ -102,6 +110,8 @@ function handle_shortcut(event) {
 			}
 			break;
 		case shortcutKeys.expandAll:
+			if (!shortcutKeys.expandAllc)
+				return;
 			massExpander.set('expand', !massExpander.get('expand'));
 			used = true;
 			break;

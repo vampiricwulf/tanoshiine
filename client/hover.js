@@ -175,7 +175,7 @@ var ImageHoverView = Backbone.View.extend({
 			display: 'flex',
 			begin: function() {
 				$el.empty().append($img);
-				if ($img.is('video'))
+				if ($img.is('video') && vol)
 					$el.children()[0].volume = vol;
 			}
 		});

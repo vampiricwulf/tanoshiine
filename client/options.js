@@ -633,8 +633,23 @@ var shortcuts = [
 ];
 
 function select_shortcut(event) {
-	if ($(event.target).is('input'))
+	if ($(event.target).is('input:not([type="checkbox"])'))
 		$(event.target).val('');
+	else {
+		var $input = $(event.target);
+		var name = $input.attr('id');
+		shortcutKeys[name] = $input.prop('checked');
+		var shorts = options.get('shortcuts');
+		if (!_.isObject(shorts)) {
+			shorts = {};
+			shorts[name] = $input.prop('checked');
+			options.set('shortcuts', shorts);
+		}
+		else {
+			shorts[name] = $input.prop('checked');
+			options.trigger('change'); // force save
+		}
+	}
 }
 
 function change_shortcut(event) {
@@ -699,6 +714,7 @@ _.defer(function () {
 	var prefs = options.get('shortcuts') || {};
 	shortcuts.forEach(function (s) {
 		shortcutKeys[s.name] = prefs[s.name] || s.which;
+		shortcutKeys[s.name+'c'] = prefs[s.name+'c'];
 	});
 });
 
@@ -826,11 +842,15 @@ function make_options_panel() {
 		});
 		shortcuts.forEach(function (s) {
 			var value = String.fromCharCode(shortcutKeys[s.name]);
+			var active = shortcutKeys[s.name+'c'];
 			var $label = $('<label>', {text: s.label});
 			$('<input>', {
 				id: s.name, maxlength: 1, val: value,
 			}).prependTo($label);
 			$label.prepend(document.createTextNode('Alt+'));
+			$('<input>', {
+				id: s.name+'c', type: 'checkbox',
+			}).prop('checked', active).prependTo($label);
 			$shortcuts.append($label, '<br>');
 		});
 		tabCont[tabs.Shortcuts] = $shortcuts;
