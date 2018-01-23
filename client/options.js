@@ -714,7 +714,7 @@ _.defer(function () {
 	var prefs = options.get('shortcuts') || {};
 	shortcuts.forEach(function (s) {
 		shortcutKeys[s.name] = prefs[s.name] || s.which;
-		shortcutKeys[s.name+'c'] = prefs[s.name+'c'];
+		shortcutKeys[s.name+'c'] = prefs[s.name+'c'] || true;
 	});
 });
 
