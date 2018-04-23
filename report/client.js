@@ -163,7 +163,6 @@ var ReportPanel = Backbone.View.extend({
 		Backbone.View.prototype.remove.call(this);
 		if (PANEL == this) {
 			PANEL = null;
-			grecaptcha.reset();
 		}
 		return false;
 	},
