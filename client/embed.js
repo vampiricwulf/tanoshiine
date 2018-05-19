@@ -220,7 +220,7 @@ $(document).on('mouseenter', '.soundcloud', function (event) {
 });
 
 // PASTEBIN
-var pastebin_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m.)?pastebin\.com\/(.*)/;
+var pastebin_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m.)?pastebin\.com\/(raw\/)?(.*)/;
 //Pastebin's API seems built for MAKING pastebins but not sharing them.
 
 $(document).on('click', '.pastebin', function(event){
@@ -239,7 +239,7 @@ $(document).on('click', '.pastebin', function(event){
     if (!m)
         return;
     var width = Math.round($(window).innerWidth() * 0.65);
-    var uri = 'https://pastebin.com/embed_iframe.php?i='+ m[1];
+    var uri = 'https://pastebin.com/embed_iframe.php?i='+ m[2];
     var $obj = $('<iframe></iframe>', {
 		type: 'text/html',
                 src: uri,

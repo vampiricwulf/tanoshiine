@@ -451,7 +451,7 @@ var ComposerView = Backbone.View.extend({
 		    var m = val.match(pastebin_re);
 		    if (!m)
 		        break;
-		    var pbin = '>>>/pastebin/' +m[1];
+		    var pbin = '>>>/pastebin/' +m[2];
 		    val = embedRewrite(m, pbin);
 		}
 		if (changed)
