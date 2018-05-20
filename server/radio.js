@@ -3,9 +3,9 @@
  */
 
 var _ = require('underscore'),
-    caps = require('../server/caps'),
+    caps = require('./caps'),
     common = require('../common'),
-    okyaku = require('../server/okyaku'),
+    okyaku = require('./okyaku'),
     expat = require('node-expat'),
     request = require('request'),
     winston = require('winston');
