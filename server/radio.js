@@ -50,10 +50,6 @@ function monitor(last) {
 		}
 		else {
 			update_banner(info, function () {
-				if (err) {
-					winston.error(err);
-					interval = LONG_INTERVAL;
-				}
 				if (clear)
 					info = null;
 				setTimeout(monitor.bind(null, info), interval);
