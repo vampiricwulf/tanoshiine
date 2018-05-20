@@ -1760,32 +1760,6 @@ Y.toggle_fun_thread = function (op, callback) {
 	});
 };
 
-Y.get_banner = function (cb) {
-	var key = 'tag:' + tag_key(this.tag) + ':banner';
-	this.connect().hgetall(key, cb);
-};
-
-Y.set_banner = function (op, message, cb) {
-	var r = this.connect();
-
-	var key = 'tag:' + tag_key(this.tag) + ':banner';
-	var self = this;
-	r.hgetall(key, function (err, old) {
-		if (err)
-			return cb(err);
-		var m = r.multi();
-		if (old && old.op != op) {
-			// clear previous thread's banner
-			self._log(m, old.op, common.UPDATE_BANNER, [null]);
-		}
-
-		// write new banner
-		m.hmset(key, {op: op, msg: message});
-		self._log(m, op, common.UPDATE_BANNER, [message]);
-		m.exec(cb);
-	});
-};
-
 Y.teardown = function (board, cb) {
 	var m = this.connect().multi();
 	var filter = new Filter(board);

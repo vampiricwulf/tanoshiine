@@ -49,19 +49,10 @@ if (!$banner && bannerExtra) {
 	}
 }
 
-dispatcher[DEF.UPDATE_BANNER] = function (msg, op) {
+dispatcher[DEF.UPDATE_BANNER] = function (msg) {
 	msg = msg[0];
 	if (!$banner) {
-		var dest;
-		if (THREAD == op)
-			dest = '#lock';
-		else {
-			var $s = $('#' + op);
-			if ($s.is('section'))
-				dest = $s.children('header');
-		}
-		if (dest)
-			$banner = $('<span id="bannerBot"/>').insertAfter(dest);
+		$banner = $('<span id="bannerBot"/>').insertAfter($('#lock'));
 	}
 	if ($banner) {
 		if (Array.isArray(msg)) {

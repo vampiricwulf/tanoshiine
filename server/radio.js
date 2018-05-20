@@ -4,24 +4,29 @@
 
 var _ = require('underscore'),
     caps = require('../server/caps'),
-    db = require('../db'),
+    common = require('../common'),
+    okyaku = require('../server/okyaku'),
     expat = require('node-expat'),
     request = require('request'),
     winston = require('winston');
 
 var RADIO_IDENT = {auth: 'Radio', ip: '127.0.0.1'};
-var RADIO_MOUNT = '/radio';
+var RADIO_MOUNT = '/testasfuck';
 var ICECAST_POLL_URL = 'http://localhost:8000/poll.xsl';
-var M3U_URL = 'http://radio.tanoshiine.info/radio.m3u';
+var M3U_URL = 'http://radio.tanoshiine.info/testasfuck.m3u';
 var SHORT_INTERVAL = 3 * 1000;
 var LONG_INTERVAL = 30 * 1000;
+var cachedSong = "";
+
+exports.getSong = function () {
+	return cachedSong;
+}
 
 function update_banner(info, cb) {
-	var yaku = new db.Yakusoku(info.board, RADIO_IDENT);
-	yaku.set_banner(info.op, info.msg, function (err, res) {
-		yaku.disconnect();
-		cb(err, res);
-	});
+	cachedSong = info.msg;
+	winston.info(info.msg);
+	okyaku.push([0, common.UPDATE_BANNER, info.msg]);
+	cb();
 }
 
 function make_monitor(poll) {
@@ -44,7 +49,7 @@ function monitor(last) {
 			setTimeout(monitor.bind(null, last), interval);
 		}
 		else {
-			update_banner(info, function (err, cb) {
+			update_banner(info, function () {
 				if (err) {
 					winston.error(err);
 					interval = LONG_INTERVAL;
@@ -76,10 +81,7 @@ function poll_icecast(cb) {
 
 function format_icecast(mounts) {
 	var radio = mounts[RADIO_MOUNT];
-	if (!radio || !radio.url)
-		return null;
-	var info = extract_thread(radio.url);
-	if (!info)
+	if (!radio)
 		return null;
 	var count = parseInt(radio.listeners, 10);
 	count = count + ' listener' + (count == 1 ? '' : 's');
@@ -90,21 +92,7 @@ function format_icecast(mounts) {
 	} else if (radio.genre) {
 		msg.push(': ' + radio.genre);
 	}
-	info.msg = msg;
-	return info;
-}
-
-function extract_thread(url) {
-	var m = /\/(\w+)\/(\d+)/.exec(url);
-	if (!m)
-		return;
-	var board = m[1];
-	if (!db.is_board(board) || !caps.can_access_board(RADIO_IDENT, board))
-		return;
-	var op = parseInt(m[2], 10);
-	if (!op)
-		return;
-	return {board: board, op: op};
+	return {msg: msg};
 }
 
 function parse_icecast(input, cb) {
@@ -147,41 +135,6 @@ function parse_icecast(input, cb) {
 	parser.parse(input);
 }
 
-var R_A_D_IO_POLL_URL = 'http://r-a-d.io/api';
-
-function poll_r_a_d_io(cb) {
-	var opts = {
-		url: R_A_D_IO_POLL_URL,
-		json: true,
-	};
-	request.get(opts, function (err, resp, body) {
-		if (err)
-			return cb(err);
-		if (resp.statusCode != 200)
-			return cb("Got " + resp.statusCode);
-		cb(null, format_r_a_d_io(body));
-	});
-}
-
-function format_r_a_d_io(json) {
-	if (!json || !json.main)
-		return null;
-	var station = json.main;
-	var info = extract_thread(station.thread);
-	if (!info)
-		return null;
-	var count = station.listeners || '???';
-	count = count + ' listener' + (count == 1 ? '' : 's');
-	var msg = [{text: count, href: 'http://r-a-d.io/'}];
-
-	var np = station.np;
-	if (typeof np == 'string' && np) {
-		msg.push(': ' + np.slice(0, 100));
-	}
-	info.msg = msg;
-	return info;
-}
-
 var reduce_regexp = /&(?:amp|lt|gt|quot);/g;
 var reductions = {'&amp;' : '&', '&lt;': '<', '&gt;': '>', '&quot;': '"'};
 function reduce_entities(html) {
@@ -190,23 +143,5 @@ function reduce_entities(html) {
 	});
 }
 
-if (require.main === module) {
-	var args = process.argv;
-	if (args.length == 2) {
-		winston.info('Polling ' + ICECAST_POLL_URL + '.');
-		make_monitor(poll_icecast)();
-	}
-	else if (args.length == 5) {
-		var op = parseInt(args[3], 10);
-		var info = {board: args[2], op: op, msg: args[4]};
-		update_banner(info, function (err) {
-			if (err)
-				winston.error(err);
-			process.exit(err ? -1 : 0);
-		});
-	}
-	else if (args[2] == '--r-a-d-io') {
-		winston.info('Polling ' + R_A_D_IO_POLL_URL + '.');
-		make_monitor(poll_r_a_d_io)();
-	}
-}
+winston.info('Polling ' + ICECAST_POLL_URL + '.');
+make_monitor(poll_icecast)();

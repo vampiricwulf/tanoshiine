@@ -1,6 +1,7 @@
 var common = require('../common'),
 	db = require('../db'),
-    hooks = require('../hooks');
+    hooks = require('../hooks'),
+    radio = require('./radio');
 
 var rollLimit = 10;
 var bully_counter;
@@ -133,14 +134,10 @@ hooks.hook('clientSynced', function (info, cb) {
 
 hooks.hook('clientSynced', function (info, cb) {
 	var client = info.client;
-	client.db.get_banner(function (err, banner) {
-		if (err)
-			return cb(err);
-		if (!banner)
-			return cb(null);
-		var msg = banner.message;
-		if (msg)
-			client.send([banner.op, common.UPDATE_BANNER, msg]);
-		cb(null);
-	});
+	var song = radio.getSong();
+	if (!song)
+		return cb(null);
+	else
+		client.send([0, common.UPDATE_BANNER, song]);
+	cb(null);
 });

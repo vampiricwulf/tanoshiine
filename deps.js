@@ -28,6 +28,7 @@ exports.SERVER_DEPS = [
 	'server/opts.js',
 	'server/perceptual.c',
 	'server/persona.js',
+	'server/radio.js',
 	'server/render.js',
 	'server/server.js',
 	'server/state.js',
