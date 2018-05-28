@@ -596,8 +596,12 @@ function (req, params, cb) {
     u.protocol = 'http:';
     src = u.format();
   }
-  var service = params[1] == 'sn' ? 'http://saucenao.com/search.php?url='
-  : 'iq' ? 'http://iqdb.org/?url=' : 'http://imgops.com/';
+  if (params[1] == 'sn')
+    var service = 'http://saucenao.com/search.php?url=';
+  else if (params[1] == 'iq')
+    var service = 'http://iqdb.org/?url=';
+  else
+    var service = 'http://imgops.com/';
   var dest = service + encodeURIComponent(src);
   cb(null, 303.1, dest);
 });
