@@ -534,7 +534,8 @@ dispatcher[DEF.DELETE_POSTS] = function (msg, op) {
 	var $section = $('#' + op);
 	var ownNum = saku && saku.get('num');
 	msg.forEach(function (num) {
-	    dispatcher[DEF.UPDATE_POST]([num, '\n\n\n[[[THIS POST HAS BEEN DELETED]]]'], op); //Adds a text at the bottom of the post to mark it
+		var oldPost = $("#"+num+" > blockquote").html();
+		$("#"+num+" > blockquote").html(oldPost+"\n\n<b><font size='5' color='red'>THIS POST HAS BEEN DELETED</font></b>");
 	    dispatcher[DEF.FINISH_POST]([num], op); //Closes the post so it's no longer yellow.
 	});
 };
