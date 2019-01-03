@@ -341,38 +341,40 @@ dispatcher[DEF.FINISH_POST] = function (msg, op) {
 		post.set('editing', false);
 };
 
-dispatcher[DEF.DELETE_POSTS] = function (msg, op) {
-	var replies = Threads.lookup(op, op).get('replies');
-	var $section = $('#' + op);
-	var ownNum = saku && saku.get('num');
-	msg.forEach(function (num) {
-		var postVisible = $('#' + num).is('article');
-		delete ownPosts[num];
-		var post = replies.get(num);
-		clear_post_links(post, replies);
-		if (num === ownNum)
-			return postSM.feed('done');
-		if (num == lockTarget)
-			set_lock_target(null);
-		if (post)
-			replies.remove(post);
+if(typeof dispatcher[DEF.DELETE_POSTS] == 'undefined') {
+	dispatcher[DEF.DELETE_POSTS] = function (msg, op) {
+		var replies = Threads.lookup(op, op).get('replies');
+		var $section = $('#' + op);
+		var ownNum = saku && saku.get('num');
+		msg.forEach(function (num) {
+			var postVisible = $('#' + num).is('article');
+			delete ownPosts[num];
+			var post = replies.get(num);
+			clear_post_links(post, replies);
+			if (num === ownNum)
+				return postSM.feed('done');
+			if (num == lockTarget)
+				set_lock_target(null);
+			if (post)
+				replies.remove(post);
 
-		if (!THREAD && !postVisible) {
-			/* post not visible; decrease omit count */
-			var info = section_abbrev($section);
-			if (info && info.omit > 0) {
-				/* No way to know if there was an image. Doh */
-				var omit = info.omit - 1;
-				if (omit > 0)
-					info.stat.text(abbrev_msg(omit,
-							info.img));
-				else
-					info.stat.remove();
+			if (!THREAD && !postVisible) {
+				/* post not visible; decrease omit count */
+				var info = section_abbrev($section);
+				if (info && info.omit > 0) {
+					/* No way to know if there was an image. Doh */
+					var omit = info.omit - 1;
+					if (omit > 0)
+						info.stat.text(abbrev_msg(omit,
+								info.img));
+					else
+						info.stat.remove();
+				}
 			}
-		}
 
-	});
-};
+		});
+	};
+}
 
 dispatcher[DEF.DELETE_THREAD] = function (msg, op) {
 	delete syncs[op];

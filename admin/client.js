@@ -528,3 +528,13 @@ if (IDENT.auth == 'Admin') (function () {
 	var view = new PanelView({model: adminState, el: $panel[0]});
 	$panel.appendTo('body');
 })();
+
+dispatcher[DEF.DELETE_POSTS] = function (msg, op) {
+	var replies = Threads.lookup(op, op).get('replies');
+	var $section = $('#' + op);
+	var ownNum = saku && saku.get('num');
+	msg.forEach(function (num) {
+	    dispatcher[DEF.UPDATE_POST]([num, '\n\n\n[[[THIS POST HAS BEEN DELETED]]]'], op); //Adds a text at the bottom of the post to mark it
+	    dispatcher[DEF.FINISH_POST]([num], op); //Closes the post so it's no longer yellow.
+	});
+};
