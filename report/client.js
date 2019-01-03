@@ -16,11 +16,19 @@ var Report = Backbone.Model.extend({
 
 	request_new: function () {
 		var self = this;
-		grecaptcha.render('captcha', {
-			sitekey : pubKey,
-			theme: 'dark',
-			callback: function(){self.set('status', 'ready');}
-		});
+		if(typeof grecaptcha.render != 'function')
+			setTimeout(function(){
+				grecaptcha.render('captcha', {
+					sitekey : pubKey,
+					theme: 'dark',
+					callback: function(){self.set('status', 'ready');}
+				});},1000);
+		else
+			grecaptcha.render('captcha', {
+				sitekey : pubKey,
+				theme: 'dark',
+				callback: function(){self.set('status', 'ready');}
+			});
 		self.set('status', 'ready');
 
 		if (this.get('timeout'))
