@@ -602,7 +602,7 @@ function (req, params, cb) {
     var service = 'http://iqdb.org/?url=';
   else
     var service = 'http://imgops.com/';
-  var dest = service + encodeURIComponent(src);
+  var dest = service + src;
   cb(null, 303.1, dest);
 });
 
