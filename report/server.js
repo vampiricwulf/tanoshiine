@@ -7,7 +7,8 @@ var caps = require('../server/caps'),
     okyaku = require('../server/okyaku'),
     recaptcha = require('recaptcha-v2').Recaptcha,
     winston = require('winston'),
-    PushBullet = require('pushbullet');
+    PushBullet = require('pushbullet'),
+	geo = require('geoip-country');
 
 var PB = new PushBullet(config.ACCESS_TOKEN);
 
@@ -44,9 +45,13 @@ function report(reporter_ident, op, num, description, cb) {
 			name = name.slice(0, 20) + '...';
 		if (post.trip)
 			name += ' # ' + post.trip.replace(/<(\\|).+?>/g,"");
-		if (post.ip)
-			name += ' # ' + maybe_mnemonic(post.ip);
-		var body = 'Offender: ' + name;
+		if (post.ip) {
+			var offender = maybe_mnemonic(post.ip);
+			name += ' # ' + offender.mnemonic + (offender.tag ? ' "' + offender.tag + '"' : '');
+		}
+		var body = 'Reporter Country: ' + geo.lookup(reporter_ident.ip).country;
+		body += '\nOffender: ' + name;
+		body += '\nOffender Country: ' + geo.lookup(post.ip).country;
 		if(description)
 			body += '\nDescription: ' + description;
 
@@ -74,11 +79,23 @@ function send_report(reporter, board, op, num, body, cb) {
 
 	body = body ? (body + '\n\n' + url) : url;
 
-	var title = noun + ' #' + num + ' reported by ' + reporter;
+	var title = noun + ' #' + num + ' reported by ' + reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '');
 	PB.note(config.CHANNEL_TAG, title, body, function (err, resp) {
 		if (err)
 			return cb(err);
 		cb(null);
+	});
+	var details = title + "\n" + body;
+	request({
+		url: config.WEBHOOK_URL+"/slack",
+		method: 'POST',
+		json: {
+			"content":details
+		}
+	}, function (err, res, msg){
+		if(err)
+			return cb(err);
+		cb(null)
 	});
 }
 
@@ -113,10 +130,12 @@ function image_preview(info) {
 function maybe_mnemonic(ip) {
 	if (ip && mainConfig.IP_MNEMONIC) {
 		var authcommon = require('../admin/common');
-		ip = authcommon.ip_mnemonic(ip);
+		var mnem = authcommon.ip_mnemonic(ip);
+		var tag = authcommon.mnemonic_tag(ip);
 	}
-	return ip;
+	return {'mnemonic': mnem, 'tag': tag};
 }
+
 
 okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 	if (!msgcheck.check(['id', 'string', 'string'], msg))

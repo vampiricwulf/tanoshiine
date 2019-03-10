@@ -79,6 +79,13 @@ function ip_mnemonic(ip) {
 	return mnemonic;
 }
 
+function mnemonic_tag(ip) {
+	if(modCache.addresses && config.IP_TAGGING)
+		if (modCache.addresses[ip_key(ip)])
+			return modCache.addresses[ip_key(ip)].name;
+	return "";
+}
+
 function ipv6_mnemonic(ip) {
 	var groups = explode_IPv6_ip(ip);
 	if (!groups || groups.length != 8)
@@ -197,6 +204,7 @@ if (typeof IDENT != 'undefined') {
 }
 else if (isNode) {
 	exports.ip_mnemonic = ip_mnemonic;
+	exports.mnemonic_tag = mnemonic_tag;
 	exports.append_mnemonic = append_mnemonic;
 	exports.append_mnemonic_no_ip = append_mnemonic_no_ip;
 }
