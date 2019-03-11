@@ -55,11 +55,12 @@ function report(reporter_ident, op, num, description, cb) {
 			var offender = maybe_mnemonic(post.ip);
 			name += ' # ' + offender.mnemonic + (offender.tag ? ' "' + offender.tag + '"' : '');
 		}
-		var body = {'rcountry': geo.lookup(reporter_ident.ip).country,
+		var body = {'rcountry': geo.lookup(reporter_ident.ip) ? geo.lookup(reporter_ident.ip).country : "Unknown " + reporter_ident.ip,
 			'offender': name,
-			'ocountry': geo.lookup(post.ip).country,
+			'ocountry': geo.lookup(post.ip) ? geo.lookup(post.ip).country : "Unknown " + post.ip,
 			'desc': description,
-			'thumb': (post.image && !post.hideimg ? image_preview(post.image).src : '')
+			'thumb': (post.image && !post.hideimg ? image_preview(post.image).src : ''),
+			'img': (post.image && !post.hideimg ? image_preview(post.image).full : '')
 		}
 
 		send_report(reporter, board, op, num, body, cb);
@@ -86,7 +87,6 @@ function send_report(reporter, board, op, num, body, cb) {
 		cb(null);
 	});
 	var json = {
-			"content":title+"\n"+message,
 			"embeds":[
 				{
 					"title": noun + ' #' + num,
@@ -101,16 +101,23 @@ function send_report(reporter, board, op, num, body, cb) {
 							"name": "Offender",
 							"value": body.offender+"\nCountry: "+body.ocountry,
 							"inline": true
-						},
-						{
-							"name": "Description",
-							"value": body.desc ? body.desc : "None."
 						}
-					],
-					"image": {"url": body.thumb ? body.thumb : ""}
+					]
 				}
 			]
 		};
+	if(body.desc)
+		json.embeds[0].fields.push({
+			"name": "Description",
+			"value": body.desc
+		});
+	if(body.thumb)
+		json.embeds[0].image = {"url": body.thumb};
+	if(body.img)
+		json.embeds[0].fields.push({
+			"name": "Image Source",
+			"value": body.img
+		});
 	var args = ['-X', 'POST', '--data', JSON.stringify(json),'-H','"Content-Type: application/json"',config.WEBHOOK_URL];
 	child_process.execFile(curlBin, args,{},function (err, stdout, stderr) {if(err){winston.warn(err);}});
 }
@@ -138,9 +145,10 @@ function image_preview(info) {
 		src = config.DOMAIN + tempMediaURL + 'thumb/' + info.thumb;
 	else
 		return;
-
+	
+	var full = config.DOMAIN + tempMediaURL + 'src/' + info.src;
 	var title = common.readable_filesize(info.size);
-	return {src: src, width: tw, height: th, title: title};
+	return {src: src, width: tw, height: th, title: title, full: full};
 }
 
 function maybe_mnemonic(ip) {
