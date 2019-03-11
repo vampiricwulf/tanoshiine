@@ -1,7 +1,9 @@
 var caps = require('../server/caps'),
+	child_process = require('child_process'),
     config = require('./config'),
     common = require('../common'),
     db = require('../db'),
+	etc = require('../etc'),
     mainConfig = require('../config'),
     msgcheck = require('../server/msgcheck'),
     okyaku = require('../server/okyaku'),
@@ -11,6 +13,10 @@ var caps = require('../server/caps'),
 	geo = require('geoip-country');
 
 var PB = new PushBullet(config.ACCESS_TOKEN);
+
+var curlBin;
+
+etc.which('curl', function (bin) { curlBin = bin; });
 
 const ERRORS = {
 	'invalid-site-private-key': "Sorry, the server isn't set up with reCAPTCHA properly.",
@@ -49,17 +55,11 @@ function report(reporter_ident, op, num, description, cb) {
 			var offender = maybe_mnemonic(post.ip);
 			name += ' # ' + offender.mnemonic + (offender.tag ? ' "' + offender.tag + '"' : '');
 		}
-		var body = 'Reporter Country: ' + geo.lookup(reporter_ident.ip).country;
-		body += '\nOffender: ' + name;
-		body += '\nOffender Country: ' + geo.lookup(post.ip).country;
-		if(description)
-			body += '\nDescription: ' + description;
-
-		var img;
-		if (post.image && !post.hideimg)
-			img = image_preview(post.image);
-		if (img) {
-			body += '\nThumbnail: ' + img.src;
+		var body = {'rcountry': geo.lookup(reporter_ident.ip).country,
+			'offender': name,
+			'ocountry': geo.lookup(post.ip).country,
+			'desc': description,
+			'thumb': (post.image && !post.hideimg ? image_preview(post.image).src : '')
 		}
 
 		send_report(reporter, board, op, num, body, cb);
@@ -77,26 +77,42 @@ function send_report(reporter, board, op, num, body, cb) {
 		url += '#' + num;
 	}
 
-	body = body ? (body + '\n\n' + url) : url;
-
 	var title = noun + ' #' + num + ' reported by ' + reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '');
-	PB.note(config.CHANNEL_TAG, title, body, function (err, resp) {
+	var message = "Reporter Country: "+body.rcountry+"\nOffender: "+body.offender+"\nOffender Country: "+body.ocountry+(body.desc?"\nDescription: "+body.desc:'')+(body.thumb?"\nThumbnail: "+body.thumb:'')+"\n\n"+url;
+	message = message ? message : url;
+	PB.note(config.CHANNEL_TAG, title, message, function (err, resp) {
 		if (err)
 			return cb(err);
 		cb(null);
 	});
-	var details = title + "\n" + body;
-	request({
-		url: config.WEBHOOK_URL+"/slack",
-		method: 'POST',
-		json: {
-			"content":details
-		}
-	}, function (err, res, msg){
-		if(err)
-			return cb(err);
-		cb(null)
-	});
+	var json = {
+			"content":title+"\n"+message,
+			"embeds":[
+				{
+					"title": noun + ' #' + num,
+					"url": url,
+					"fields": [
+						{
+							"name": "Reporter",
+							"value": reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '')+"\nCountry: "+body.rcountry,
+							"inline": true
+						},
+						{
+							"name": "Offender",
+							"value": body.offender+"\nCountry: "+body.ocountry,
+							"inline": true
+						},
+						{
+							"name": "Description",
+							"value": body.desc ? body.desc : "None."
+						}
+					],
+					"image": {"url": body.thumb ? body.thumb : ""}
+				}
+			]
+		};
+	var args = ['-X', 'POST', '--data', JSON.stringify(json),'-H','"Content-Type: application/json"',config.WEBHOOK_URL];
+	child_process.execFile(curlBin, args,{},function (err, stdout, stderr) {if(err){winston.warn(err);}});
 }
 
 function image_preview(info) {
