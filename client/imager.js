@@ -77,6 +77,8 @@ var Hidamari = {
 			return;
 		e.preventDefault();
 		var revealed = this.model.get('thumbnailRevealed');
+		if (revealed === undefined)
+			revealed = false;
 		this.renderThumbnail(revealed);
 		this.$el.children('figure').find('.imageSrc').text(revealed ? '[Show]' : '[Hide]');
 	},
