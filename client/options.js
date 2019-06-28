@@ -317,6 +317,7 @@ var load_thread_backlinks = function ($section) {
 
 function option_linkify(toggle){
 	$.cookie('linkify', toggle, {path: '/'});
+	oneeSama.eLinkify = toggle;
 }
 
 option_linkify.id = 'linkify';
