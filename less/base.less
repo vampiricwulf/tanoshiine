@@ -589,8 +589,15 @@ pre,
  margin: 0 0 -3px;
  overflow-y: hidden;
  resize: none;
- max-width: 93vw;
+ max-width: inherit;
  vertical-align: baseline;
+}
+blockquote {
+ max-width: 93vw;
+ word-break: break-word;
+}
+.fileInput {
+ display: none;
 }
 @media screen and (max-device-width: 480px) {
  article {

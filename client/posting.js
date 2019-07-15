@@ -585,6 +585,7 @@ var ComposerView = Backbone.View.extend({
 		this.blockquote.css({
 			'margin-left': $img.css('margin-right'),
 			'padding-left': $img.width(),
+			'max-width': 'calc(93vw - '+$img.width()+'px - 25px)',
 		});
 
 		this.resize_input();
@@ -685,7 +686,7 @@ var ComposerView = Backbone.View.extend({
 			this.imouto.fragment(this.line_buffer.text());
 			this.buffer.replaceWith(this.buffer.contents());
 			this.line_buffer.remove();
-			this.blockquote.css({'margin-left': '', 'padding-left': ''});
+			this.blockquote.css({'margin-left': '', 'padding-left': '', 'max-width': ''});
 			send([DEF.FINISH_POST]);
 			this.preserve = true;
 		}
