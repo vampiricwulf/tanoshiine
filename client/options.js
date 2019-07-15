@@ -3,7 +3,7 @@ var nashi = {opts: []}, inputMinSize = 300;
 var shortcutKeys = {};
 var volumeConfig = (imagerConfig.WEBM
 	|| imagerConfig.AUDIOFILES
-	|| options.get('beep'));
+	|| options.get('beepbox'));
 if (volumeConfig) {
 	$("#volumeController").appendTo('body').hide();
 	$("#volumeText").show();
