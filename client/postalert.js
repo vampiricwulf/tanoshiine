@@ -47,7 +47,7 @@
     config.BOARDS.forEach(function(board) {
       if (board !== "archive" && board !== "staff") {
         $.ajax({
-          url: config.API_URL + "board/" + board + "/size",
+          url: config.API_URL + "size/" + board,
           success: function(json) {
             var cached = getItem(board + "threads");
             var threads = {};

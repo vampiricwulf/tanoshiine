@@ -74,15 +74,15 @@ app.get(/\/api\/(catalog|board)\/([a-z0-9]+)\/?/, function(req, res){
 	});
 });
 
-app.get(/\/api\/(catalog|board)\/([a-z0-9]+)\/size\/?/, function(req, res){
+app.get(/\/api\/size\/([a-z0-9]+)\/?/, function(req, res){
 	res.set(JSONHeaders);
 	var par = req.params;
 
-	if (invalid(req, par[1]))
+	if (invalid(req, par[0]))
 		return res.sendStatus(404);
 
 	// Read threads in reverse order from redis
-	r.zrange(`tag:${db.tag_key(par[1])}:threads`, 0, -1, function(err, nums) {
+	r.zrange(`tag:${db.tag_key(par[0])}:threads`, 0, -1, function(err, nums) {
 		if (err)
 			return res.send(err);
 		if (!nums || nums.length === 0)
@@ -93,9 +93,6 @@ app.get(/\/api\/(catalog|board)\/([a-z0-9]+)\/size\/?/, function(req, res){
 				res.send(err);
 			if (!threads || threads.length === 0)
 				return res.sendStatus(404);
-			// Arrays of arrays with only one element is uneeded complexity
-			if (par[0] == 'catalog')
-				threads = _.flatten(threads);
 			res.json(threads);
 		});
 	});
@@ -201,7 +198,7 @@ function getThreads(nums, replyLimit, cb) {
 				return cb(null, threads);
 			// Ditribute replies among threads
 			for (var i = 0; i < threads.length; i++) {
-				var limitedReplies = _.last(threads[i][0].replies, replyLimit);
+				var limitedReplies = Math.min(threads[i][0].replies, replyLimit);
 				for (var o = 0; o < limitedReplies; o++) {
 					threads[i].push(replies.shift());
 				}
