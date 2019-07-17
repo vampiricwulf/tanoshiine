@@ -174,7 +174,8 @@ function getThreads(nums, replyLimit, cb) {
 				return cb(null, threads);
 			// Ditribute replies among threads
 			for (var i = 0; i < threads.length; i++) {
-				for (var o = 0; o < threads[i][0].replies; o++) {
+				var limitedReplies = _.last(threads[i][0].replies, replyLimit);
+				for (var o = 0; o < limitedReplies; o++) {
 					threads[i].push(replies.shift());
 				}
 			}
