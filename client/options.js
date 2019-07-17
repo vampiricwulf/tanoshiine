@@ -64,6 +64,7 @@ optSpecs.push(option_alwaysLock);
 optSpecs.push(option_postUnloading);
 optSpecs.push(option_last_n);
 optSpecs.push(option_clean_ls);
+optSpecs.push(option_post_alert);
 
 nashi.upload = !!$('<input type="file"/>').prop('disabled');
 
@@ -499,6 +500,16 @@ option_youcounter.label = '(You) Counter';
 option_youcounter.type = 'checkbox';
 option_youcounter.tooltip = 'For shitposters (only counts if in thread).';
 option_youcounter.tab = tabs.Style;
+
+/* POST ALERT */
+
+function option_post_alert(){}
+
+option_post_alert.id = 'postAlert';
+option_post_alert.label = 'Post Alerter';
+option_post_alert.type = 'checkbox';
+option_post_alert.tooltip = 'See activity from other threads.';
+option_post_alert.tab = tabs.Style;
 
 /* CUSTOM USER-SET BACKGROUND */
 
