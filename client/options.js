@@ -50,6 +50,7 @@ optSpecs.push(option_StreamSize);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_beep);
 optSpecs.push(option_notification);
+optSpecs.push(option_post_alert);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
@@ -64,7 +65,6 @@ optSpecs.push(option_alwaysLock);
 optSpecs.push(option_postUnloading);
 optSpecs.push(option_last_n);
 optSpecs.push(option_clean_ls);
-optSpecs.push(option_post_alert);
 
 nashi.upload = !!$('<input type="file"/>').prop('disabled');
 
