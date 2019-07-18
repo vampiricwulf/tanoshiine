@@ -503,7 +503,13 @@ option_youcounter.tab = tabs.Style;
 
 /* POST ALERT */
 
-function option_post_alert(){}
+function option_post_alert(toggle){
+	if(toggle && dispatcher[DEF.POST_ALERT_SYNC]){
+		dispatcher[DEF.POST_ALERT_SYNC]();
+	} else if (!toggle) {
+		$("#navTop > a").get().forEach(function (a) {a.setAttribute('data-value', '')})
+	}
+}
 
 option_post_alert.id = 'postAlert';
 option_post_alert.label = 'Post Alerter';

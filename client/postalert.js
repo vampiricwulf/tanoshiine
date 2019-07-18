@@ -60,7 +60,7 @@
             }
             if (cached) {
               var cThreads = Object.keys(cached);
-              let jThreads = Object.keys(threads);
+              var jThreads = Object.keys(threads);
               var j = 0;
               for (var k = 0; k < cThreads.length; k++) {
                 if (cThreads[k] == jThreads[j]) {
