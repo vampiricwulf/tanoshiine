@@ -15,7 +15,8 @@ var _ = require('underscore'),
     imager = require('../imager'),
     Muggle = require('../etc').Muggle,
     okyaku = require('./okyaku'),
-    persona = require('./persona'),
+		persona = require('./persona'),
+		postalert = require('./postalert'),
     suggest = require('./issuetracker'),
     render = require('./render'),
     STATE = require('./state'),
@@ -716,6 +717,12 @@ dispatcher[common.INSERT_POST] = function (msg, client) {
 	allocate_post(msg, client, function (err) {
 		if (err)
 			client.kotowaru(Muggle("Allocation failure.", err));
+		else 
+			try{
+				okyaku.push([client.post.op, common.POST_ALERT, client.board])
+			} catch (err) {
+
+			}
 	});
 	return true;
 };

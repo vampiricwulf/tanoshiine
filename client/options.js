@@ -50,6 +50,7 @@ optSpecs.push(option_StreamSize);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_beep);
 optSpecs.push(option_notification);
+optSpecs.push(option_post_alert);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
@@ -499,6 +500,22 @@ option_youcounter.label = '(You) Counter';
 option_youcounter.type = 'checkbox';
 option_youcounter.tooltip = 'For shitposters (only counts if in thread).';
 option_youcounter.tab = tabs.Style;
+
+/* POST ALERT */
+
+function option_post_alert(toggle){
+	if(toggle && dispatcher[DEF.POST_ALERT_SYNC]){
+		dispatcher[DEF.POST_ALERT_SYNC]();
+	} else if (!toggle) {
+		$("#navTop > a").get().forEach(function (a) {a.setAttribute('data-value', '')})
+	}
+}
+
+option_post_alert.id = 'postAlert';
+option_post_alert.label = 'Post Alerter';
+option_post_alert.type = 'checkbox';
+option_post_alert.tooltip = 'See activity from other threads.';
+option_post_alert.tab = tabs.Style;
 
 /* CUSTOM USER-SET BACKGROUND */
 

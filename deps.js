@@ -28,6 +28,7 @@ exports.SERVER_DEPS = [
 	'server/opts.js',
 	'server/perceptual.c',
 	'server/persona.js',
+	'server/postalert.js',
 	'server/radio.js',
 	'server/render.js',
 	'server/server.js',
@@ -78,6 +79,7 @@ exports.CLIENT_DEPS = [
 	'client/banner.js',
 	'client/catalog.js',
 	'client/mobile.js',
+	'client/postalert.js',
 ];
 
 exports.SERVER_STATE = [

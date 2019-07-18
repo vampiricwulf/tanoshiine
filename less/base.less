@@ -240,6 +240,14 @@ body > #navTop {
  position: relative;
  z-index: 101;
 }
+#navTop > a::after{
+  content: attr(data-value);
+  position: relative;
+  left: 2px;
+  top: 7px;
+  color: red;
+  text-decoration: inherit;
+}
 #bannerTop {
  display: block;
  position: fixed;
