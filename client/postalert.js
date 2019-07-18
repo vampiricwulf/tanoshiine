@@ -73,7 +73,7 @@
             } else {
               updateInfo(cumSum, 0, board);
             }
-            if (cumSum != cachedCumSum) setItem(board + "threads", threads);
+            setItem(board + "threads", threads);
           }
         });
       }
