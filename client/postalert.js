@@ -85,6 +85,7 @@
     var board = msg[0];
     var cached = getItem(board + "threads");
     var newValues = $.extend(true, {}, cached);
+    if (!newValues[op]) newValues[op] = 0;
     newValues[op] += 1;
     setItem(board + "threads", newValues);
     if (op !== THREAD) updateInfo(2, 1, board);
