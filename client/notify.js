@@ -36,7 +36,7 @@ Backbone.on('repliedToMe', function (post) {
 	// Already read reply || catalog view
 	if (readReplies[num]|| CATALOG)
 		return;
-	if (options.get('beep')) {
+	if (options.get('beepbox')) {
 		//http://freesound.org/people/pierrecartoons1979/sounds/90112/
 		//cc-by-nc-3.0
 		if (!$('#beep').length) {

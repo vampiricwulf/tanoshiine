@@ -141,7 +141,7 @@ function image_preview(info) {
 	else if (info.thumb)
 		src = config.DOMAIN + tempMediaURL + 'thumb/' + info.thumb;
 	else
-		return;
+		src = config.DOMAIN + tempMediaURL + 'src/' + info.src;
 	
 	var full = config.DOMAIN + tempMediaURL + 'src/' + info.src;
 	var title = common.readable_filesize(info.size);

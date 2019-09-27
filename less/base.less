@@ -240,6 +240,14 @@ body > #navTop {
  position: relative;
  z-index: 101;
 }
+#navTop > a::after{
+  content: attr(data-value);
+  position: relative;
+  left: 2px;
+  top: 7px;
+  color: red;
+  text-decoration: inherit;
+}
 #bannerTop {
  display: block;
  position: fixed;
@@ -589,8 +597,15 @@ pre,
  margin: 0 0 -3px;
  overflow-y: hidden;
  resize: none;
- text-wrap: none;
+ max-width: inherit;
  vertical-align: baseline;
+}
+blockquote {
+ max-width: 93vw;
+ word-break: break-word;
+}
+.fileInput {
+ display: none;
 }
 @media screen and (max-device-width: 480px) {
  article {

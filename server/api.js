@@ -74,6 +74,30 @@ app.get(/\/api\/(catalog|board)\/([a-z0-9]+)\/?/, function(req, res){
 	});
 });
 
+app.get(/\/api\/size\/([a-z0-9]+)\/?/, function(req, res){
+	res.set(JSONHeaders);
+	var par = req.params;
+
+	if (invalid(req, par[0]))
+		return res.sendStatus(404);
+
+	// Read threads in reverse order from redis
+	r.zrange(`tag:${db.tag_key(par[0])}:threads`, 0, -1, function(err, nums) {
+		if (err)
+			return res.send(err);
+		if (!nums || nums.length === 0)
+			return res.sendStatus(404);
+
+		getThreadSizes(nums.reverse(), function(err, threads) {
+			if (err)
+				res.send(err);
+			if (!threads || threads.length === 0)
+				return res.sendStatus(404);
+			res.json(threads);
+		});
+	});
+});
+
 // Check board existanace and access rights
 function invalid(req, board){
 	var forward = req.headers['x-forwarded-for'],
@@ -174,11 +198,42 @@ function getThreads(nums, replyLimit, cb) {
 				return cb(null, threads);
 			// Ditribute replies among threads
 			for (var i = 0; i < threads.length; i++) {
-				for (var o = 0; o < threads[i][0].replies; o++) {
+				var limitedReplies = Math.min(threads[i][0].replies, replyLimit);
+				for (var o = 0; o < limitedReplies; o++) {
 					threads[i].push(replies.shift());
 				}
 			}
 			cb(null, threads);
 		});
+	});
+}
+
+function getThreadSizes(nums, cb) {
+	var threads = [], m = r.multi(), key;
+	for (var num of nums) {
+		key = 'thread:' + num;
+		m.hget(key, 'num');
+		// Deleted posts are still present in the replies list
+		// Don't need them to show up in the JSON
+		m.lrange(key + ':dels', 0, -1);
+		m.lrange(key + ':posts', 0, -1);
+	}
+	m.exec(function(err, data){
+		if (err)
+			return cb(err);
+		var num, dels, replies = [];
+		for (var i = 0; i < data.length; i += 3) {
+			num = data[i];
+			dels = data[i + 1];
+			replies = data[i + 2];
+			if (!num)
+				continue;
+			if (dels.length > 0)
+				// Substract dels from replies
+				replies = _.difference(replies, dels);
+			threads.push([{num: num, replies: replies.length}]);
+		}
+
+		cb(null, threads);
 	});
 }
