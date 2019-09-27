@@ -9,10 +9,7 @@ var caps = require('../server/caps'),
     okyaku = require('../server/okyaku'),
     recaptcha = require('recaptcha-v2').Recaptcha,
     winston = require('winston'),
-    PushBullet = require('pushbullet'),
 	geo = require('geoip-country');
-
-var PB = new PushBullet(config.ACCESS_TOKEN);
 
 var curlBin;
 
@@ -81,11 +78,6 @@ function send_report(reporter, board, op, num, body, cb) {
 	var title = noun + ' #' + num + ' reported by ' + reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '');
 	var message = "Reporter Country: "+body.rcountry+"\nOffender: "+body.offender+"\nOffender Country: "+body.ocountry+(body.desc?"\nDescription: "+body.desc:'')+(body.thumb?"\nThumbnail: "+body.thumb:'')+"\n\n"+url;
 	message = message ? message : url;
-	PB.note(config.CHANNEL_TAG, title, message, function (err, resp) {
-		if (err)
-			return cb(err);
-		cb(null);
-	});
 	var json = {
 			"embeds":[
 				{
@@ -119,7 +111,12 @@ function send_report(reporter, board, op, num, body, cb) {
 			"value": body.img
 		});
 	var args = ['-X', 'POST', '--data', JSON.stringify(json),'-H','"Content-Type: application/json"',config.WEBHOOK_URL];
-	child_process.execFile(curlBin, args,{},function (err, stdout, stderr) {if(err){winston.warn(err);}});
+	child_process.execFile(curlBin, args,{},function (err, stdout, stderr) {
+		if(err){
+			return cb(err);
+			}
+			cb(null);
+		});
 }
 
 function image_preview(info) {

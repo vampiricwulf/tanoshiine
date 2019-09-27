@@ -47,7 +47,6 @@
 		"github": "0.2.3",
 		"hiredis": "^0.2.0",
 		"node-expat": "^2.3.4",
-		"pushbullet": "^1.4.3",
 		"send": "^0.11.0"
 	}
 }

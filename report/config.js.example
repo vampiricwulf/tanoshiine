@@ -5,11 +5,6 @@ module.exports = {
 	// https://www.google.com/recaptcha/
 	RECAPTCHA_SITE_KEY: '',
 	RECAPTCHA_SECRET_KEY: '',
-
-	// https://www.pushbullet.com/#settings
-	ACCESS_TOKEN: '',
-	// https://www.pushbullet.com/my-channel to make a channel
-	CHANNEL_TAG: {channel_tag: ''},
 	
 	// Discord Webhook https://discordapp.com/developers/docs/resources/webhook
 	WEBHOOK_URL: '',
