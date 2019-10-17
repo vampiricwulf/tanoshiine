@@ -85,13 +85,13 @@ function send_report(reporter, board, op, num, body, cb) {
 					"url": url,
 					"fields": [
 						{
-							"name": "Reporter",
-							"value": reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '')+"\nCountry: "+body.rcountry,
+							"name": "Offender",
+							"value": body.offender+"\nCountry: "+body.ocountry,
 							"inline": true
 						},
 						{
-							"name": "Offender",
-							"value": body.offender+"\nCountry: "+body.ocountry,
+							"name": "Reporter",
+							"value": reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '')+"\nCountry: "+body.rcountry,
 							"inline": true
 						}
 					]
