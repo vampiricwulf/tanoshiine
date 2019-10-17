@@ -86,7 +86,7 @@ function send_report(reporter, board, op, num, body, cb) {
 					"fields": [
 						{
 							"name": "Offender",
-							"value": body.offender+"\nCountry: "+body.ocountry,
+							"value": body.offender+"\u2000\nCountry: "+body.ocountry,
 							"inline": true
 						},
 						{
