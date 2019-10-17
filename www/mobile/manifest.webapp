@@ -1,9 +1,9 @@
 {
-    "name": "Meguca.org",
+    "name": "Tanoshiine.info",
     "description": "Realtime imageboard",
     "developer": {
-        "name": "bakape",
-        "url": "https://github.com/bakape/meguca"
+        "name": "vampiricwulf",
+        "url": "https://github.com/vampiricwulf/ex-tanoshiine"
     },
     "launch_path": "/",
     "icons": {

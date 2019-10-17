@@ -1,6 +1,6 @@
 #!/bin/sh
 # Removes all bans
-# Run from the meguca root directory
+# Run from the root directory
 NODE=`which node`
 
 tmp=/tmp/purge_bans_list

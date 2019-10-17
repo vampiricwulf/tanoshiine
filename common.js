@@ -203,7 +203,6 @@ var ref_re = '>>(\\d+';
 ref_re += '|>\\/watch\\?v=[\\w-]{11}(?:#t=[\\dhms]{1,9})?';
 ref_re += '|>\\/soundcloud\\/[\\w-]{1,40}\\/[\\w-]{1,80}';
 ref_re += '|>\\/onsen\\/(?:\\/|)\\d{0,10}';
-ref_re += '|>\\/meguca\\/(?:\\w+|)(?:\\/|)\\d{0,10}';
 ref_re += '|>\\/korbo\\/';
 ref_re += '|>\\/cumzone\\/';
 ref_re += '|>\\/pastebin\\/\\w+';
@@ -248,16 +247,6 @@ OS.red_string = function (ref) {
 	else if (/^>\/soundcloud/.test(ref)) {
 		dest = 'https://soundcloud.com/' + ref.slice(13);
 		linkClass = 'embed soundcloud';
-	}
-	else if (/^>\/meguca/.test(ref)){
-		var mArray = ref.split('/');
-		var mBoard = (mArray[2].match(/(^a$|^c$|^do$|^erp$|^g$|^sb$)/) ? mArray[2] : 'a');
-		var num = (mArray[2].match(/\d+/) ? parseInt(mArray[2], 10) : (mArray[3] ? parseInt(mArray[3], 10) : null));
-		var mExtra = '';
-		mExtra += mBoard+'/';
-		if (num)
-			mExtra += num;
-		dest = '../outbound/meguca/' + mExtra;
 	}
 	else if (/^>\/onsen/.test(ref)){
 		var mArray = ref.split('/');

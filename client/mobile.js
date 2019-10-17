@@ -10,7 +10,7 @@
 	// User refused the first time
 	if (localStorage.homescreenRefused)
 		return;
-	var msg ='To install meguca as a fullscreen webapp, tap the menu button and select ';
+	var msg ='To install as a fullscreen webapp, tap the menu button and select ';
 	if (isChrome)
 		msg += '"Add to home screen"';
 	else if (isFF)
