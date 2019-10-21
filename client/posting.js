@@ -738,6 +738,15 @@ var ComposerView = Backbone.View.extend({
 	},
 
 	make_upload_form: function () {
+		var accepted = 'image/*';
+		if (imagerConfig.WEBM)
+			accepted += ",.webm,.mp4";
+		if (imagerConfig.AUDIOFILES)
+			accepted += ",.mp3,.ogg,.wav";
+		if (imagerConfig.SVG)
+			accepted += ",.svg";
+		if (imagerConfig.PDF)
+			accepted += ",.pdf";
 		var form = $('<form method="post" enctype="multipart/form-data" '
 			+ 'target="upload"></form>');
 		this.$cancel = $('<input>', {
@@ -746,7 +755,7 @@ var ComposerView = Backbone.View.extend({
 		});
 		this.$imageInput = $('<input>', {
 			type: 'file', id: 'image', name: 'image',
-			accept: imagerConfig.WEBM ? 'imager/*;.webm;.mp4' : 'image/*',
+			accept: accepted,
 			change: $.proxy(this, 'on_image_chosen'),
 		});
 		this.$toggle = $('<input>', {
