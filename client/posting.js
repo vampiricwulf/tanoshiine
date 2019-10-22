@@ -738,7 +738,7 @@ var ComposerView = Backbone.View.extend({
 	},
 
 	make_upload_form: function () {
-		var accepted = 'image/*';
+		var accepted = '.png,.jpg,.gif';
 		if (imagerConfig.WEBM)
 			accepted += ",.webm,.mp4";
 		if (imagerConfig.AUDIOFILES)
