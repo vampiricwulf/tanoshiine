@@ -39,6 +39,7 @@ var Report = Backbone.Model.extend({
 
 
 		function renderCaptcha(captcha) {
+			var captchaDiv = document.getElementById('captcha');
 			var form = document.createElement('form');
 			form.method = 'post';
 			form.class = 'captchouli-width captchouli-form';
@@ -46,7 +47,8 @@ var Report = Backbone.Model.extend({
 			form.innerHTML = captcha;
 			self.set('captchaID', form['captchouli-id'].value)
 			form.addEventListener('submit', handleSubmit);
-			document.getElementById('captcha').appendChild(form);
+			captchaDiv.innerHTML = '';
+			captchaDiv.appendChild(form);
 		}
 		function handleLoadError() {
 			self.set({
@@ -79,7 +81,6 @@ var Report = Backbone.Model.extend({
 				captchaDiv.innerText = 'Captcha success';
 				self.set('status', 'ready');
 			} else {
-				captchaDiv.innerHTML = '';
 				renderCaptcha(resp);
 			}
 		}
