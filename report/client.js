@@ -168,7 +168,7 @@ var ReportPanel = Backbone.View.extend({
 		if (this.model.get('status') != 'ready')
 			return false;
 		send([DEF.REPORT_POST, this.model.id,
-				this.model.captchaID, this.$description.val()]);
+				this.model.get('captchaID'), this.$description.val()]);
 		this.model.set('status', 'reporting');
 		return false;
 	},
