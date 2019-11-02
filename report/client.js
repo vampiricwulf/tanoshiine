@@ -1,43 +1,89 @@
 (function () {
 
-var pubKey = reportConfig.RECAPTCHA_SITE_KEY;
+var enabled = reportConfig.REPORTS;
 var captchaTimeout = 5 * 60 * 1000;
 var REPORTS = {};
 var PANEL;
 
-if (pubKey)
+if (enabled)
 	menuOptions.push('Report');
+
+var captchaURL = '/captcha/';
 
 var Report = Backbone.Model.extend({
 	defaults: {
 		status: 'setup',
 		hideAfter: true,
+		captchaID: '',
 	},
 
 	request_new: function () {
 		var self = this;
-		if(typeof grecaptcha.render != 'function')
-			setTimeout(function(){
-				grecaptcha.render('captcha', {
-					sitekey : pubKey,
-					theme: 'dark',
-					callback: function(){self.set('status', 'ready');}
-				});},1000);
-		else
-			grecaptcha.render('captcha', {
-				sitekey : pubKey,
-				theme: 'dark',
-				callback: function(){self.set('status', 'ready');}
-			});
+		$.ajax({
+			url: captchaURL,
+			success: renderCaptcha,
+			error: handleLoadError,
+		});
 		self.set('status', 'ready');
 
 		if (this.get('timeout'))
 			clearTimeout(this.get('timeout'));
 
 		this.set('timeout', setTimeout(function () {
-			self.set('timeout', 0);
-			grecaptcha.reset();
+			self.set({
+				timeout: 0,
+				status: 'error',
+				error: 'Captcha timed out',
+			});
 		}, captchaTimeout));
+
+
+		function renderCaptcha(captcha) {
+			var form = document.createElement('form');
+			form.method = 'post';
+			form.class = 'captchouli-width captchouli-form';
+			form.style = 'font-family: Sans-Serif';
+			form.innerHTML = captcha;
+			self.set('captchaID', form['captchouli-id'].value)
+			form.addEventListener('submit', handleSubmit);
+			document.getElementById('captcha').appendChild(form);
+		}
+		function handleLoadError() {
+			self.set({
+				status: 'error',
+				error: 'Couldn\'t load captcha.',
+			})
+		}
+		function handleSubmitError() {
+			self.set({
+				status: 'error',
+				error: 'Couldn\'t submit solution.',
+			})
+		}
+		function handleSubmit(event) {
+			event.preventDefault();
+			var formData = $(event.target).serialize();
+			$.ajax({
+				url: captchaURL,
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: 'application/x-www-form-urlencoded',
+				success: handleResponse,
+				error: handleSubmitError
+			});
+		}
+		function handleResponse(resp) {
+			var captchaDiv = document.getElementById('captcha');
+			if (resp === self.get('captchaID')) {
+				captchaDiv.innerText = 'Captcha success';
+				self.set('status', 'ready');
+			} else {
+				captchaDiv.innerHTML = '';
+				renderCaptcha(resp);
+			}
+		}
+
 	},
 
 	did_report: function () {
@@ -69,7 +115,7 @@ var ReportPanel = Backbone.View.extend({
 	},
 
 	initialize: function () {
-		this.$captcha = $('<div id="captcha" class="g-recaptcha" data-sitekey="'+pubKey+'"/>');
+		this.$captcha = $('<div id="captcha" style="white-space: initial; max-width: 80vw;"/>');
 		this.$message = $('<div class="message"/>');
 		this.$submit = $('<input>', {type: 'submit', val: 'Report'});
 		var $hideAfter = $('<input>', {
@@ -122,7 +168,7 @@ var ReportPanel = Backbone.View.extend({
 		if (this.model.get('status') != 'ready')
 			return false;
 		send([DEF.REPORT_POST, this.model.id,
-				grecaptcha.getResponse(), this.$description.val()]);
+				this.model.get('captchaID'), this.$description.val()]);
 		this.model.set('status', 'reporting');
 		return false;
 	},
@@ -146,7 +192,7 @@ var ReportPanel = Backbone.View.extend({
 		if (status == 'done')
 			msg = 'Report submitted!';
 		else if (status == 'setup')
-			msg = 'Obtaining reCAPTCHA...';
+			msg = 'Obtaining captcha...';
 		else if (status == 'error')
 			msg = 'E';
 		else if (status == 'ready' && this.model.get('error'))
@@ -176,8 +222,6 @@ var ReportPanel = Backbone.View.extend({
 	},
 });
 
-var ajaxJs = 'https://www.google.com/recaptcha/api.js?render=explicit';
-
 menuHandlers.Report = function (post) {
 	var num = post.id;
 	var model = REPORTS[num];
@@ -193,17 +237,7 @@ menuHandlers.Report = function (post) {
 	}
 	PANEL = new ReportPanel({model: model});
 	PANEL.render().$el.appendTo('body');
-	yepnope({load: ajaxJs, callback: function () {
-		setTimeout(function(){
-			if (window.grecaptcha)
-				model.request_new();
-			else
-				model.set({
-					status: 'error',
-					error: "Couldn't load reCATPCHA.",
-				});
-		}, 500)
-	}});
+	model.request_new();
 };
 
 dispatcher[DEF.REPORT_POST] = function (msg, op) {
