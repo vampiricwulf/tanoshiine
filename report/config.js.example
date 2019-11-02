@@ -2,9 +2,9 @@ module.exports = {
 
 	DOMAIN: 'http://your.board.index/',
 
-	// https://www.google.com/recaptcha/
-	RECAPTCHA_SITE_KEY: '',
-	RECAPTCHA_SECRET_KEY: '',
+	// captchouli
+	REPORTS: false,
+	CAPTCHASERVER_PORT: 8512,
 	
 	// Discord Webhook https://discordapp.com/developers/docs/resources/webhook
 	WEBHOOK_URL: '',

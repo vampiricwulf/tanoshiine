@@ -32,7 +32,7 @@ if (config.CURFEW_BOARDS)
 	require('../curfew/server');
 try {
 	var reportConfig = require('../report/config');
-	if (reportConfig.RECAPTCHA_SITE_KEY)
+	if (reportConfig.REPORTS)
 		require('../report/server');
 } catch (e) {}
 require('../time/server');

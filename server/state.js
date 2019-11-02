@@ -117,7 +117,7 @@ var clientImager = _.pick(imager,
 	'SPOILER_IMAGES',
 	'IMAGE_HATS'
 );
-var clientReport = _.pick(report, 'RECAPTCHA_SITE_KEY');
+var clientReport = _.pick(report, 'REPORTS');
 
 function reload_scripts(cb) {
 	async.mapSeries(['client', 'vendor', 'mod'], getRevision,

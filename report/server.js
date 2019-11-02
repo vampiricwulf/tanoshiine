@@ -1,28 +1,20 @@
 var caps = require('../server/caps'),
 	child_process = require('child_process'),
-    config = require('./config'),
-    common = require('../common'),
-    db = require('../db'),
+	config = require('./config'),
+	common = require('../common'),
+	db = require('../db'),
 	etc = require('../etc'),
-    mainConfig = require('../config'),
-    msgcheck = require('../server/msgcheck'),
-    okyaku = require('../server/okyaku'),
-    recaptcha = require('recaptcha-v2').Recaptcha,
-    winston = require('winston'),
+	http = require('http'),
+	mainConfig = require('../config'),
+	msgcheck = require('../server/msgcheck'),
+	okyaku = require('../server/okyaku'),
+	querystring = require('querystring'),
+	winston = require('winston'),
 	geo = require('geoip-country');
 
 var curlBin;
 
 etc.which('curl', function (bin) { curlBin = bin; });
-
-const ERRORS = {
-	'invalid-site-private-key': "Sorry, the server isn't set up with reCAPTCHA properly.",
-	'invalid-request-cookie': "Something went wrong with our reCAPTCHA token. Please try again.",
-	'incorrect-captcha-sol': "Incorrect.",
-	'captcha-timeout': "Sorry, you took too long. Please try again.",
-};
-
-var safe = common.safe;
 
 function report(reporter_ident, op, num, description, cb) {
 
@@ -75,9 +67,6 @@ function send_report(reporter, board, op, num, body, cb) {
 		url += '#' + num;
 	}
 
-	var title = noun + ' #' + num + ' reported by ' + reporter.mnemonic + (reporter.tag ? ' "' + reporter.tag + '"' : '');
-	var message = "Reporter Country: "+body.rcountry+"\nOffender: "+body.offender+"\nOffender Country: "+body.ocountry+(body.desc?"\nDescription: "+body.desc:'')+(body.thumb?"\nThumbnail: "+body.thumb:'')+"\n\n"+url;
-	message = message ? message : url;
 	var json = {
 			"embeds":[
 				{
@@ -163,27 +152,37 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 		return false;
 
 	var num = msg[0];
-	data = {
-		remoteip: client.ident.ip,
-		response: msg[1],
-		secret: config.RECAPTCHA_SECRET_KEY
-	};
+	var captchouliID = msg[1];
 	var description = msg[2];
 	var op = db.OPs[num];
 	if (!op || !caps.can_access_thread(client.ident, op))
 		return reply_error("Post does not exist.");
 
-	if (!data.response)
+	if (!captchouliID)
 		return reply_error("Pretty please?");
-	if (data.response.length > 10000)
-		return reply_error("tl;dr");
 
-	var checker = new recaptcha(config.RECAPTCHA_SITE_KEY, config.RECAPTCHA_SECRET_KEY, data);
-	checker.verify(function (ok, err) {
-			if (!ok) {
-				reply_error(ERRORS[err] || err);
-				return;
-			}
+	var postData = querystring.stringify({
+		'captchouli-id' : captchouliID
+	});
+
+	var options = {
+		port: config.CAPTCHASERVER_PORT,
+		method: 'POST',
+		path: '/status',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'Content-Length': postData.length
+		}
+	};
+
+	var req = http.request(options, function(res) {
+		res.setEncoding('utf8');
+		res.on('data', function (chunk) {
+			if (res.statusCode !== 200)
+				return reply_error("Captcha-server unreachable");
+			
+			if (chunk !== 'true') 
+				return reply_error("Captcha was not solved.");
 
 			var op = db.OPs[num];
 			if (!op)
@@ -197,6 +196,18 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 				client.send([op, common.REPORT_POST, num]);
 			});
 		});
+		res.on('end', function() {
+		})
+	});
+	
+	req.on('error', function(e) {
+		winston.error(e);
+		return reply_error("Captcha-server unreachable");
+	});
+	
+	// write data to request body
+	req.write(postData);
+	req.end();
 	return true;
 
 	function reply_error(err) {

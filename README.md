@@ -9,7 +9,6 @@ Note: The git master branch contains the development version of the board. For m
 ##Setup
 
 * Install dependencies listed below
-* Sign up for reCAPTCHA
 * Run `npm install` to install npm deps and compile C++ addons
 * Configure config.js, hot.js, imager/config.js and report/config.js
 * Run `node builder.js` to run an auto-reloading development server
@@ -28,6 +27,7 @@ Note: The git master branch contains the development version of the board. For m
 * libpng with development headers
 * [io.js](https://iojs.org) (Latest tested version is 1.4.3. At the moement of writing still compatible with node.js v0.12.0+, when run with the `--harmony` flag)
 * redis
+* captchouli
 
 ###Optional dependencies for various features
 
