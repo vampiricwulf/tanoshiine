@@ -176,11 +176,11 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 	};
 
 	var req = http.request(options, function(res) {
+		if (res.statusCode !== 200)
+			return reply_error("Captcha-server unreachable");
+		
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
-			if (res.statusCode !== 200)
-				return reply_error("Captcha-server unreachable");
-			
 			if (chunk !== 'true') 
 				return reply_error("Captcha was not solved.");
 
