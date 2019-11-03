@@ -26,20 +26,8 @@ var Report = Backbone.Model.extend({
 		});
 		self.set('status', 'ready');
 
-		if (this.get('timeout'))
-			clearTimeout(this.get('timeout'));
-
-		this.set('timeout', setTimeout(function () {
-			self.set({
-				timeout: 0,
-				status: 'error',
-				error: 'Captcha timed out',
-			});
-		}, captchaTimeout));
-
 
 		function renderCaptcha(captcha) {
-			var captchaDiv = document.getElementById('captcha');
 			var form = document.createElement('form');
 			form.method = 'post';
 			form.class = 'captchouli-width captchouli-form';
@@ -47,12 +35,25 @@ var Report = Backbone.Model.extend({
 			form.innerHTML = captcha;
 			self.set('captchaID', form['captchouli-id'].value)
 			form.addEventListener('submit', handleSubmit);
-			captchaDiv.innerHTML = '';
-			captchaDiv.appendChild(form);
+			resetCaptcha();
+			document.getElementById('captcha').appendChild(form);
 			setTimeout(function(){
 				$('.captchouli-width').width($('.captchouli-img').width()*3.2);
 				$('input.captchouli-width').width($('.captchouli-img').width()*3);
 			},100);
+		}
+		function resetCaptcha() {
+			document.getElementById('captcha').innerHTML = '';
+			if (self.get('timeout'))
+				clearTimeout(self.get('timeout'));
+
+			self.set('timeout', setTimeout(function () {
+				self.set({
+					timeout: 0,
+					status: 'error',
+					error: 'Captcha timed out',
+				});
+			}, captchaTimeout));
 		}
 		function handleLoadError() {
 			self.set({
