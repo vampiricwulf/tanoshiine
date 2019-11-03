@@ -49,8 +49,10 @@ var Report = Backbone.Model.extend({
 			form.addEventListener('submit', handleSubmit);
 			captchaDiv.innerHTML = '';
 			captchaDiv.appendChild(form);
-			$('captchouli-width').width($('.captchouli-img').width()*3+12) // must happen first
-			$('input.captchouli-width').width($('.captchouli-img').width()*3-12)
+			setTimeout(function(){
+				$('.captchouli-width').width($('.captchouli-img').width()*3.2);
+				$('input.captchouli-width').width($('.captchouli-img').width()*3);
+			},100);
 		}
 		function handleLoadError() {
 			self.set({

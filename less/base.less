@@ -549,10 +549,20 @@ body > #options-panel {
  top: 70px;
  z-index: 101;
 }
+header.captchouli-width {
+ background: none;
+ padding-left: 0;
+}
+.captchouli-img {
+ max-width: calc((60vw - 12px) / 3) !important;
+ max-height: calc((60vh - 12px) / 3) !important;
+}
 #report-panel {
  position: fixed;
  right: 10px;
  bottom: 10px;
+ max-height: 80vh;
+ overflow-y: auto;
  #captcha,
  .message {
   margin: 1em 0;
