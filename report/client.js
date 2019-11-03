@@ -49,6 +49,8 @@ var Report = Backbone.Model.extend({
 			form.addEventListener('submit', handleSubmit);
 			captchaDiv.innerHTML = '';
 			captchaDiv.appendChild(form);
+			$('captchouli-width').width($('.captchouli-img').width()*3+12) // must happen first
+			$('input.captchouli-width').width($('.captchouli-img').width()*3-12)
 		}
 		function handleLoadError() {
 			self.set({
