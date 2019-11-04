@@ -68,7 +68,6 @@
 	* __curfew.html__		Is served, when board is closed due to curfew
 	* __filter.html__		No clue
 	* __index.html__		Primary template for boards and threads
-	* __login.html__		Template for the /login/ Persona login path
 	* __redirect.html__		Hash URL redirecion
 	* __suspension.html__	Ban notice template. Currently disfunctional and redundant
 * __tripcode/__

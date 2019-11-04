@@ -234,7 +234,7 @@ web.route_get(/^\/mod$/, function (req, resp) {
 	persona.set_cookie(resp, {auth: 'Moderator'});
 });
 web.route_get(/^\/logout$/, persona.logout);
-web.resource(/^\/(login|logout)\/$/, function (req, params, cb) {
+web.resource(/^\/(login|mod|logout)\/$/, function (req, params, cb) {
 	cb(null, 'redirect', '../' + params[1]);
 });
 
