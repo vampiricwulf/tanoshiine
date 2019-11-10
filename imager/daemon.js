@@ -221,10 +221,7 @@ StillJob.prototype.get_length = function () {
 	var is_webm = /matroska,webm/i.test(first);
 	var is_mp4 = /mov,mp4,m4a,3gp,3g2,mj2/i.test(first);
 	if (!is_webm && !is_mp4) {
-		fs.unlink(dest, function (err) {
-			self.finish_job(Muggle(
-					'Video stream is not WebM/MP4.'));
-		});
+		self.finish_job(Muggle('Video stream is not WebM/MP4.'));
 		return;
 	}
     var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
