@@ -216,10 +216,8 @@ StillJob.prototype.get_length = function () {
   var length, total = 0;
   child_process.execFile(ffprobeBin, ['-hide_banner', '-loglevel', 'info', this.src],
   function(err, stdout, stderr){
-	var lines = stderr ? stderr.split('\n') : [];
-	var first = lines[0];
-	var is_webm = /matroska,webm/i.test(first);
-	var is_mp4 = /mov,mp4,m4a,3gp,3g2,mj2/i.test(first);
+	var is_webm = /matroska,webm, from/i.test(stderr);
+	var is_mp4 = /mov,mp4,m4a,3gp,3g2,mj2, from/i.test(stderr);
 	if (!is_webm && !is_mp4) {
 		self.finish_job(Muggle('Video stream is not WebM/MP4.'));
 		return;
