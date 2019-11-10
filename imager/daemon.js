@@ -214,8 +214,19 @@ StillJob.prototype.perform_job = function () {
 StillJob.prototype.get_length = function () {
   var self = this;
   var length, total = 0;
-  child_process.execFile(ffprobeBin, [this.src],
+  child_process.execFile(ffprobeBin, ['-hide_banner', '-loglevel', 'info', this.src],
   function(err, stdout, stderr){
+	var lines = stderr ? stderr.split('\n') : [];
+	var first = lines[0];
+	var is_webm = /matroska,webm/i.test(first);
+	var is_mp4 = /mov,mp4,m4a,3gp,3g2,mj2/i.test(first);
+	if (!is_webm && !is_mp4) {
+		fs.unlink(dest, function (err) {
+			self.finish_job(Muggle(
+					'Video stream is not WebM/MP4.'));
+		});
+		return;
+	}
     var l = stderr.match(/Duration: (\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
     if (l){
       var h = (l[1] != '00' ? l[1] + 'h' : '');
@@ -225,16 +236,17 @@ StillJob.prototype.get_length = function () {
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
-    self.encode_thumb(length, total);
+    self.encode_thumb(length, total, is_webm);
   });
 }
 
-StillJob.prototype.encode_thumb = function (length, total) {
+StillJob.prototype.encode_thumb = function (length, total, is_webm) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
-      '-ss', (total < 8 ? 0 : 5 ),
+			'-c:v', (is_webm ? 'libvpx' : 'h264'),
+			'-ss', (total < 8 ? 0 : 5 ),
 			'-i', this.src,
-			'-f', 'image2', '-vframes', '1', '-vcodec', 'png',
+			'-f', 'image2', '-vframes', '1', '-c:v', 'png',
 			'-y', dest];
 	var opts = {env: {AV_LOG_FORCE_NOCOLOR: '1'}};
 	var self = this;
@@ -256,15 +268,6 @@ StillJob.prototype.encode_thumb = function (length, total) {
 			}
 			fs.unlink(dest, function (err) {
 				self.finish_job(Muggle(msg, stderr));
-			});
-			return;
-		}
-		var is_webm = /matroska,webm/i.test(first);
-		var is_mp4 = /mov,mp4,m4a,3gp,3g2,mj2/i.test(first);
-		if (!is_webm && !is_mp4) {
-			fs.unlink(dest, function (err) {
-				self.finish_job(Muggle(
-						'Video stream is not WebM.'));
 			});
 			return;
 		}
