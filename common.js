@@ -655,7 +655,6 @@ OS.gazou_img = function (info, toppu, href) {
 		src = thumb = encodeURI(imgPaths.src + info.src);
 
 	var d = info.dims;
-	console.log(d);
 	var w = d[0], h = d[1], tw = d[2], th = d[3];
 	if (info.spoiler && !this.spoilToggle) {
 		var sp = this.spoiler_info(info.spoiler, toppu);
@@ -691,8 +690,8 @@ OS.gazou_img = function (info, toppu, href) {
 	}
 
 	var img = '<img src="'+thumb+'"';
-	if (this.autoGif || tw>=125 || th>=125)
-		img += ' width="' +tw+'" height="'+th+'">';
+	if (tw && th)
+		img += ' style="max-width:' +tw+'px; max-height='+th+'px;">';
 	else
 		img += '>';
 	if (imagerConfig.IMAGE_HATS)
