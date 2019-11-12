@@ -691,7 +691,7 @@ OS.gazou_img = function (info, toppu, href) {
 
 	var img = '<img src="'+thumb+'"';
 	if (tw && th)
-		img += ' style="max-width:' +tw+'px; max-height='+th+'px;">';
+		img += ' width="'+tw+'" height="'+th+'">';
 	else
 		img += '>';
 	if (imagerConfig.IMAGE_HATS)

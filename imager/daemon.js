@@ -766,7 +766,6 @@ function resize_image(o, callback) {
 	var dest = o.dest;
 	// force new size
 	args.push('-resize', dims + '!');
-	args.push('-auto-orient');
 	args.push('-gamma', '2.2');
 	// add background
 	if (o.bg)
