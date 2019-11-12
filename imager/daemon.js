@@ -536,7 +536,7 @@ IU.exifdel = function () {
 	var image = this.image, self = this;
 	if (image.video || image.ext == '.svg' || !config.DEL_EXIF)
 		return self.sha1();
-	child_process.execFile(exiftoolBin, ['-all=', image.path],
+	child_process.execFile(exiftoolBin, ['-all=', '-tagsFromFile', '@', '-Orientation', image.path],
 		function(err, stdout, stderr){
 			if (err)
 				return self.failure(Muggle('Exiftool error: ' + stderr));
@@ -766,6 +766,7 @@ function resize_image(o, callback) {
 	var dest = o.dest;
 	// force new size
 	args.push('-resize', dims + '!');
+	args.push('-auto-orient');
 	args.push('-gamma', '2.2');
 	// add background
 	if (o.bg)
