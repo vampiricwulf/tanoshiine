@@ -42,7 +42,7 @@ function get_thumb_specs(image, pinky, scale) {
 	var bound = config[pinky ? 'PINKY_DIMENSIONS' : 'THUMB_DIMENSIONS'];
 	var r = Math.max(w / bound[0], h / bound[1], 1);
 	var dims = [Math.round(w/r) * scale, Math.round(h/r) * scale];
-	var specs = {bound: bound, dims: dims, format: 'jpg'};
+	var specs = {bound: bound, dims: dims, format: 'jpg', rotated: image.rotated};
 	// Note: WebMs pretend to be PNGs at this step,
 	//       but those don't need transparent backgrounds.
 	//       (well... WebMs *can* have alpha channels...)
@@ -540,7 +540,20 @@ IU.exifdel = function () {
 		function(err, stdout, stderr){
 			if (err)
 				return self.failure(Muggle('Exiftool error: ' + stderr));
-			self.sha1();
+			child_process.execFile(exiftoolBin, ['-Orientation', image.path],
+				function (err, stdout, stderr){
+					if (err)
+						return self.failure(Muggle('Exiftool error: ' + stderr));
+					var match = stdout.match(/rotate (\d+)/i);
+					var degrees = match ? match[1] : "0";
+					var rotated = (degrees === "90" || degrees === "270");
+					if (rotated){
+						self.image.dims = image.dims.reverse();
+						self.image.rotated = true;
+					}
+					self.sha1();
+				}
+			);
 		}
 	);
 };
@@ -739,6 +752,9 @@ function setup_image_params(o) {
 
 	o.dest = o.format + ':' + o.dest;
 	o.flatDims = o.dims[0] + 'x' + o.dims[1];
+	if(o.rotated){
+		o.flatDims = o.dims[1] + 'x' + o.dims[0];
+	}
 	o.quality += ''; // coerce to string
 }
 
@@ -774,6 +790,7 @@ function resize_image(o, callback) {
 	args.push('-strip');
 	if (o.bg)
 		args.push('-quality', o.quality);
+	args.push('-auto-orient');
 	args.push(dest);
 	convert(args, o.src, function (err) {
 		if (err) {
