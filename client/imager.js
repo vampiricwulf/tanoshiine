@@ -155,10 +155,10 @@ var Hidamari = {
 			width = newWidth;
 			height = newHeight;
 		}
-		this.expandImage(width, height, img.ext, fullWidth && !fullHeight, widthFlag, heightFlag);
+		this.expandImage(width, height, img.ext, fullWidth && !fullHeight);
 	},
 
-	expandImage: function(width, height, ext, fullWidth, wf, hf){
+	expandImage: function(width, height, ext, fullWidth){
 		var $fig = this.$el.children('figure'), tag;
 		if (ext == '.webm' || ext == '.mp4')
 			tag = 'video';
@@ -166,8 +166,8 @@ var Hidamari = {
 			tag = 'img';
 		$fig.find('img, video').replaceWith($('<'+ tag +'/>', {
 			src: $fig.find('.imageSrc').attr('href'),
-			style: 'max-width:'+(wf?'calc(100vw - 50px)':'none')+
-				'; max-height: '+(hf?'calc(100vh - 50px)':'none')+';',
+			width: width,
+			height: height,
 			autoplay: true,
 			loop: true,
 			// Even wider
