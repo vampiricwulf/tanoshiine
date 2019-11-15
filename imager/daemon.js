@@ -231,14 +231,15 @@ StillJob.prototype.get_length = function () {
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
-    self.encode_thumb(length, total, is_webm);
+	var encoder = is_webm ? stderr.match(/Video:[\s\S]*?ENCODER.* (\S+)$/m)[1] : false;
+    self.encode_thumb(length, total, encoder);
   });
 }
 
-StillJob.prototype.encode_thumb = function (length, total, is_webm) {
+StillJob.prototype.encode_thumb = function (length, total, encoder) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
-			'-c:v', (is_webm ? 'libvpx' : 'h264'),
+			'-c:v', (encoder ? encoder : 'h264'),
 			'-ss', (total < 8 ? 0 : 5 ),
 			'-i', this.src,
 			'-f', 'image2', '-vframes', '1', '-c:v', 'png',
@@ -274,7 +275,7 @@ StillJob.prototype.encode_thumb = function (length, total, is_webm) {
 			still_path: dest,
 			has_audio: has_audio,
 			length: length,
-			type: (is_webm ? 'webm' : 'mp4'),
+			type: (encoder ? 'webm' : 'mp4'),
 		});
 	});
 };
