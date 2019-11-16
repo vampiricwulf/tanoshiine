@@ -231,7 +231,11 @@ StillJob.prototype.get_length = function () {
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
-	var encoder = is_webm ? stderr.match(/Video:[\s\S]*?ENCODER.* (\S+)$/m)[1] : false;
+	var encoder = is_webm ? stderr.match(/Video:[\s\S]*?ENCODER.* (\S+)$/m) : false;
+	if (is_webm && !encoder)
+		encoder = 'libvpx';
+	else if (is_webm)
+		encoder = encoder[1];
     self.encode_thumb(length, total, encoder);
   });
 }
