@@ -231,11 +231,14 @@ StillJob.prototype.get_length = function () {
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
-	var encoder = is_webm ? stderr.match(/Video:[\s\S]*?ENCODER.* (\S+)$/m) : false;
-	if (is_webm && !encoder)
+	var encoder = stderr.match(/Video: ([\S]+)/)[1];
+	encoder = encoder.slice(-1) == ',' ? encoder.slice(0,-1) : encoder;
+	if (encoder == 'vp8')
 		encoder = 'libvpx';
-	else if (is_webm)
-		encoder = encoder[1];
+	else if (encoder == 'vp9')
+		encoder = 'libvpx-vp9';
+	else
+		encoder = encoder;
     self.encode_thumb(length, total, encoder);
   });
 }
@@ -243,7 +246,7 @@ StillJob.prototype.get_length = function () {
 StillJob.prototype.encode_thumb = function (length, total, encoder) {
 	var dest = index.media_path('tmp', 'still_'+etc.random_id());
 	var args = ['-hide_banner', '-loglevel', 'info',
-			'-c:v', (encoder ? encoder : 'h264'),
+			'-c:v', encoder,
 			'-ss', (total < 8 ? 0 : 5 ),
 			'-i', this.src,
 			'-f', 'image2', '-vframes', '1', '-c:v', 'png',
