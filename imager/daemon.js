@@ -282,7 +282,7 @@ StillJob.prototype.encode_thumb = function (length, total, encoder) {
 			still_path: dest,
 			has_audio: has_audio,
 			length: length,
-			type: (encoder ? 'webm' : 'mp4'),
+			type: (encoder != 'h264' ? 'webm' : 'mp4'),
 		});
 	});
 };
