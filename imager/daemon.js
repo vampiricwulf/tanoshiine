@@ -231,7 +231,13 @@ StillJob.prototype.get_length = function () {
       parseFloat(l[2])*60 + parseFloat(l[3]) + '.' + parseFloat(l[4]));
       length = h + m + s;
     }
-	var encoder = stderr.match(/Video: ([\S]+)/)[1];
+	var encoder = stderr.match(/Video: ([\S]+)/);
+	if (!encoder) {
+		self.finish_job(Muggle('No video stream present in file.'));
+		return;
+	} else {
+		encoder = encoder[1];
+	}
 	encoder = encoder.slice(-1) == ',' ? encoder.slice(0,-1) : encoder;
 	if (encoder == 'vp8')
 		encoder = 'libvpx';
