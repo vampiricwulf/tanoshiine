@@ -12,10 +12,6 @@ var caps = require('../server/caps'),
 	winston = require('winston'),
 	geo = require('geoip-country');
 
-var curlBin;
-
-etc.which('curl', function (bin) { curlBin = bin; });
-
 function report(reporter_ident, op, num, description, cb) {
 
 	var board = caps.can_access_thread(reporter_ident, op);
@@ -99,13 +95,13 @@ function send_report(reporter, board, op, num, body, cb) {
 			"name": "Image Source",
 			"value": body.img
 		});
-	var args = ['-X', 'POST', '--data', JSON.stringify(json),'-H','"Content-Type: application/json"',config.WEBHOOK_URL];
-	child_process.execFile(curlBin, args,{},function (err, stdout, stderr) {
-		if(err){
-			return cb(err);
-			}
+	request.post(config.WEBHOOK_URL,{json: json},
+		function(err,resp,body) {
+			if(err)
+				cb(err);
 			cb(null);
-		});
+		}
+	);
 }
 
 function image_preview(info) {
