@@ -9,6 +9,7 @@ var caps = require('../server/caps'),
 	msgcheck = require('../server/msgcheck'),
 	okyaku = require('../server/okyaku'),
 	querystring = require('querystring'),
+	request = require('request'),
 	winston = require('winston'),
 	geo = require('geoip-country');
 
