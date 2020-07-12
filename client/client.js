@@ -4,6 +4,10 @@ function inject(frag) {
 		dest = dest.children('del:last');
 	if (this.state[0] == DEF.S_QUOTE)
 		dest = dest.children('em:last');
+	if (this.state[0] == DEF.S_RED)
+		dest = dest.children('h4:last');
+	if (this.state[0] == DEF.S_BLUE)
+		dest = dest.children('h5:last');
 	if (this.strong)
 		dest = dest.children('strong:last');
 	var out = null;

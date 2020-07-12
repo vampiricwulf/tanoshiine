@@ -50,6 +50,8 @@ DEF.S_NORMAL = 0;
 DEF.S_BOL = 1;
 DEF.S_QUOTE = 2;
 DEF.S_SPOIL = 3;
+DEF.S_RED = 4;
+DEF.S_BLUE = 5;
 
 if (typeof mediaURL == 'undefined' || !mediaURL)
 	mediaURL = imagerConfig.MEDIA_URL;
@@ -310,6 +312,10 @@ OS.iku = function (token, to) {
 	var state = this.state;
 	if (state[0] == DEF.S_QUOTE && to != DEF.S_QUOTE)
 		this.callback(safe('</em>'));
+	if (state[0] == DEF.S_RED && to != DEF.S_RED)
+		this.callback(safe('</h4>'));
+	if (state[0] == DEF.S_BLUE && to != DEF.S_BLUE)
+		this.callback(safe('</h5>'));
 	switch (to) {
 	case DEF.S_QUOTE:
 		if (state[0] != DEF.S_QUOTE) {
@@ -330,6 +336,20 @@ OS.iku = function (token, to) {
 			state[1]++;
 		}
 		break;
+	case DEF.S_RED:
+		if (state[0] != DEF.S_RED) {
+			this.callback(safe('<h4>'));
+			state[0] = DEF.S_RED;
+		}
+		this.break_heart(token);
+		break;
+	case DEF.S_BLUE:
+		if (state[0] != DEF.S_BLUE) {
+			this.callback(safe('<h5>'));
+			state[0] = DEF.S_BLUE;
+		}
+		this.break_heart(token);
+		break;
 	default:
 		this.break_heart(token);
 		break;
@@ -341,11 +361,11 @@ OS.fragment = function (frag) {
 	var chunks = frag.split(/(\[\/?spoiler\])/i);
 	var state = this.state;
 	for (var i = 0; i < chunks.length; i++) {
-		var chunk = chunks[i], q = (state[0] === DEF.S_QUOTE);
+		var chunk = chunks[i], q = (state[0] === (DEF.S_QUOTE||DEF.S_RED||DEF.S_BLUE));
 		if (i % 2) {
 			var to = DEF.S_SPOIL;
 			if (chunk[1] == '/' && state[1] < 1)
-				to = q ? DEF.S_QUOTE : DEF.S_NORMAL;
+				to = q ? state[0] : DEF.S_NORMAL;
 			this.iku(chunk, to);
 			continue;
 		}
@@ -356,8 +376,12 @@ OS.fragment = function (frag) {
 				this.iku(safe('<br>'), DEF.S_BOL);
 			else if (state[0] === DEF.S_BOL && line[0] == '>')
 				this.iku(line, DEF.S_QUOTE);
+			else if (state[0] === DEF.S_BOL && line[0] == '!')
+				this.iku(line, DEF.S_RED);
+			else if (state[0] === DEF.S_BOL && line[0] == '`')
+				this.iku(line, DEF.S_BLUE);
 			else if (line)
-				this.iku(line, q ? DEF.S_QUOTE
+				this.iku(line, q ? state[0]
 						: DEF.S_NORMAL);
 		}
 	}
@@ -371,6 +395,10 @@ OS.karada = function (body) {
 	this.callback = null;
 	if (this.state[0] == DEF.S_QUOTE)
 		output.push(safe('</em>'));
+	if (this.state[0] == DEF.S_RED)
+		output.push(safe('</h4>'));
+	if (this.state[0] == DEF.S_BLUE)
+		output.push(safe('</h5>'));
 	for (var i = 0; i < this.state[1]; i++)
 		output.push(safe('</del>'));
 	return output;
