@@ -3,7 +3,7 @@
 
 using namespace v8;
 
-void Init(Handle<Object> exports) {
+void Init(Local<Object> exports) {
 	apngDetector::Init(exports);
 }
 NODE_MODULE(findapng,Init)
