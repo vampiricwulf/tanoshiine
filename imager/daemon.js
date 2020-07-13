@@ -6,7 +6,7 @@ var async = require('async'),
 	Muggle = etc.Muggle,
 	imagerDb = require('./db'),
 	index = require('./'),
-	findapng = require('./findapng.node').findapngCpp,
+	findapng = require('./findapng.node'),
 	formidable = require('formidable'),
 	fs = require('fs'),
 	jobs = require('./jobs'),
@@ -489,11 +489,9 @@ IU.verify_image = function () {
 		stat: fs.stat.bind(fs, image.video || image.path),
 		dims: identify.bind(null, this.tagged_path),
 	};
-	if (image.ext == '.png' && !image.video){
-		checks.apng = function(callback){
-			callback(null, findapng(image.path));
-		};
-	}
+	if (image.ext == '.png' && !image.video)
+		checks.apng = this.detectAPNG.bind(this, image.path);
+	
 	var self = this;
 	async.parallel(checks, function (err, rs) {
 		if (err)
@@ -507,6 +505,28 @@ IU.verify_image = function () {
 				image.apng = 1;
 		}
 		self.verified();
+	});
+};
+
+IU.detectAPNG = function (path, cb) {
+	const stream = fs.createReadStream(path);
+
+	stream.once('err', err => {
+		winston.error(err);
+		stream.close();
+		this.failure(Muggle(err));
+	})
+	const detector = new findapng.apngDetector();
+	let done;
+	stream.on('data', function(data) {
+		if (done) 
+			return;
+		const result = detector.Detect(data),
+			isAPNG = result === 1;
+		if (isAPNG || result === 2) {
+				done = true;
+				cb(null, isAPNG);
+		}
 	});
 };
 
