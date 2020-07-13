@@ -361,7 +361,9 @@ OS.fragment = function (frag) {
 	var chunks = frag.split(/(\[\/?spoiler\])/i);
 	var state = this.state;
 	for (var i = 0; i < chunks.length; i++) {
-		var chunk = chunks[i], q = (state[0] === (DEF.S_QUOTE||DEF.S_RED||DEF.S_BLUE));
+		var chunk = chunks[i], q = (state[0] === DEF.S_QUOTE ||
+			state[0] === DEF.S_RED ||
+			state[0] === DEF.S_BLUE);
 		if (i % 2) {
 			var to = DEF.S_SPOIL;
 			if (chunk[1] == '/' && state[1] < 1)
