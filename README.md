@@ -25,7 +25,7 @@ Note: The git master branch contains the development version of the board. For m
 * ImageMagick
 * gcc, g++, make
 * libpng with development headers
-* [Node.js](https://nodejs.org) (Latest tested version is 9.9.0)
+* [Node.js](https://nodejs.org) (Latest tested version is 11.15.0)
 * redis
 * captchouli
 
