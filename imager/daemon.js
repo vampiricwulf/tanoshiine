@@ -767,7 +767,9 @@ function perceptual_hash(src, image, callback) {
 		if (err)
 			return callback(Muggle('Hashing error.', err));
 		fs.readFile(tmp, 'base64', function (err,data){
-			fs.unlink(tmp);
+			fs.unlink(tmp, (err) => {
+				
+			});
 			// Last char is always padding (=)
 			data = data.slice(0, -1);
 			if (err || data.length != 43)
