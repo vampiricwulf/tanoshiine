@@ -7,13 +7,13 @@ var concat = require('gulp-concat'),
 	minifyCSS = require('gulp-minify-css'),
 	rename = require('gulp-rename'),
 	rev = require('gulp-rev'),
-	uglify = require('gulp-uglify');
+	terser = require('gulp-terser');
 
 function gulper(name, files, dest){
 	gulp.task(name, function(){
 		gulp.src(files)
 			.pipe(concat(name))
-			.pipe(gulpif(!d, uglify()))
+			.pipe(gulpif(!d, terser()))
 			.pipe(rev())
 			.pipe(rename({ suffix: '.'+(d?'debug':'min')+'.js'}))
 			.pipe(gulp.dest(dest))
