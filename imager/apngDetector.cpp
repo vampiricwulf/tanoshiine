@@ -21,10 +21,10 @@ NAN_MODULE_INIT(apngDetector::Init){
 
   Nan::SetPrototypeMethod(tpl,"Detect",Detect);
 
-  constructor.Reset(tpl->GetFunction());
+  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
   Nan::Set(target,
 	   Nan::New<String>("apngDetector").ToLocalChecked(),
-	   tpl->GetFunction());
+     Nan::GetFunction(tpl).ToLocalChecked());
 }
 NAN_METHOD(apngDetector::New){
   if(info.IsConstructCall()){
@@ -33,7 +33,7 @@ NAN_METHOD(apngDetector::New){
     info.GetReturnValue().Set(info.This());
   }else {
     Local<Function> cons = Nan::New<Function>(constructor);
-    info.GetReturnValue().Set(cons->NewInstance());
+    info.GetReturnValue().Set(Nan::NewInstance(cons).ToLocalChecked());
   }
 }
 /* Gets a buffer with image data in it.

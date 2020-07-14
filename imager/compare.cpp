@@ -95,15 +95,15 @@ NAN_METHOD(hashCompareCpp)
     return;
   }
 
-  unsigned int threshold = info[0]->Uint32Value();
+  unsigned int threshold = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
 
 
   std::vector<BYTE> posted = base64Decode(*Nan::Utf8String(info[1]));
 
-  Handle<Array> toTest = Handle<Array>::Cast(info[2]);
+  Local<Array> toTest = Local<Array>::Cast(info[2]);
   for(unsigned int i=0; i<toTest->Length();i++) {	//Compare posted with other hashes
-    String::Utf8Value param1(toTest->Get(i)->ToString()); //change from node string to c++ string
-    std::string numHash = std::string(*param1);
+    Local<String> param1 = Nan::To<v8::String>(Nan::Get(toTest,i).ToLocalChecked()).ToLocalChecked(); //change from node string to c++ string
+    std::string numHash = *Nan::Utf8String(param1);
 
     unsigned int numPos = numHash.find_first_of(':');
     std::vector<BYTE> tested = base64Decode(numHash.substr(numPos+1,numHash.length()));
@@ -117,7 +117,7 @@ NAN_METHOD(hashCompareCpp)
 
 NAN_MODULE_INIT(Init){
   Nan::Set(target, 
-	   Nan::New<String>("hashCompareCpp").ToLocalChecked(),
-	   Nan::New<FunctionTemplate>(hashCompareCpp)->GetFunction());
+	   Nan::New("hashCompareCpp").ToLocalChecked(),
+     Nan::GetFunction(Nan::New<FunctionTemplate>(hashCompareCpp)).ToLocalChecked());
 }
 NODE_MODULE(compare,Init)

@@ -140,10 +140,10 @@ NAN_MODULE_INIT(init){
 		return;
 	Nan::Set(target, 
 		Nan::New<String>("setSalt").ToLocalChecked(),
-		Nan::New<FunctionTemplate>(setup_callback)->GetFunction());
+		Nan::GetFunction(Nan::New<FunctionTemplate>(setup_callback)).ToLocalChecked());
 	Nan::Set(target, 
 		Nan::New<String>("hash").ToLocalChecked(),
-		Nan::New<FunctionTemplate>(hash_callback)->GetFunction());
+		Nan::GetFunction(Nan::New<FunctionTemplate>(hash_callback)).ToLocalChecked());
 }
 
 NODE_MODULE(tripcode, init)
