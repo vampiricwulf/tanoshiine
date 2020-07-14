@@ -6,21 +6,21 @@ MIT licensed.
 
 Note: The git master branch contains the development version of the board. For more stable revisions, please download the latest release.
 
-##Setup
+## Setup
 
 * Install dependencies listed below
 * Run `npm install` to install npm deps and compile C++ addons
 * Configure config.js, hot.js, imager/config.js and report/config.js
 * Run `node builder.js` to run an auto-reloading development server
 
-##Production
+## Production
 
 * Have your webserver serve www/ (or wherever you've moved src, thumb, etc.)
 * Run `node server/server.js` for just the server
 * config.DAEMON support is broken for now
 * You can update client code & hot.js on-the-fly with `node server/kill.js`
 
-##Dependencies
+## Dependencies
 
 * ImageMagick
 * gcc, g++, make
@@ -29,13 +29,13 @@ Note: The git master branch contains the development version of the board. For m
 * redis
 * captchouli
 
-###Optional dependencies for various features
+### Optional dependencies for various features
 
 * ffmpeg 2.2+ for WebM support
 * pngquant  2.3.1+ for PNG thumbnails
 * exiftool for stripping images of EXIF data
 
-###Optional npm dependancies
+### Optional npm dependancies
 * ~~daemon~~ (broken currently)
 * icecast now-playing banners: node-expat
 * [send](https://github.com/visionmedia/send) (if you want to serve static files directly from the node.js process; useful in debug mode also)
@@ -48,7 +48,7 @@ Note: The git master branch contains the development version of the board. For m
 * docs/filemap.md - project file map
 * docs/nginx.config.example - example ngingx reverse proxy configuration file
 
-##Standalone upkeep scripts
+## Standalone upkeep scripts
 
 * upkeep/backup.js - uploads rdb to S3
 * upkeep/backup.sh - MEGA backup script
