@@ -1,17 +1,11 @@
 var config = require('../config');
 if (config.SUGGESTIONBOX){
   var winston = require('winston'),
-      formidable = require('formidable'),
-      gh = require('github'),
-      github = new gh({
-        version: '3.0.0'
+    formidable = require('formidable');
+  const { Octokit  } = require('@octokit/rest'),
+    github = new Octokit({
+        auth: 'TOKEN'
       });
-
-  github.authenticate({
-    type: 'basic',
-    username: 'USERNAMEHERE',
-    password: 'PASSWORDHERE'
-  });
 
   exports.newIssue = function (req, resp) {
     try {
@@ -30,14 +24,14 @@ if (config.SUGGESTIONBOX){
           return;
         }
         github.issues.create({
-          user: 'USERNAMEHERE',
-          repo: 'REPONAMEHERE',
+          owner: 'REPO-OWNER',
+          repo: 'REPO-NAME',
           title: fields.title,
           body: fields.body,
           labels: labels
         });
         if (fields['g-recaptcha-response'].length)
-          resp.end('Submitted~ Please close this window.');
+          resp.end('<script>window.close();</script>');
       });
     }
     catch (e) {
