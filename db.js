@@ -564,7 +564,13 @@ Y.insert_post = function (msg, body, extra, callback) {
 			view.imgctr = 1;
 		note_hash(m, msg.image.hash, msg.num);
 	}
+	if(view.dims){
+		view.dims = view.dims.toString();
+	}
 	m.hmset(key, view);
+	if(view.dims && view.dims.split){
+		view.dims = view.dims.split(',').map(n => parseInt(n,10));
+	}
 	m.set(key + ':body', body);
 	if (msg.links)
 		m.hmset(key + ':links', msg.links);
@@ -1172,7 +1178,13 @@ Y.add_image = function (post, alloc, ip, callback) {
 	function add_it() {
 		var m = r.multi();
 		note_hash(m, image.hash, post.num);
+		if(image.dims){
+			image.dims = image.dims.toString();
+		}
 		m.hmset(key, image);
+		if(image.dims && image.dims.split){
+			image.dims = image.dims.split(',').map(n => parseInt(n,10));
+		}
 		m.hincrby('thread:' + op, 'imgctr', 1);
 
 		delete image.hash;
