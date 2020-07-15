@@ -10,7 +10,7 @@ var concat = require('gulp-concat'),
 	terser = require('gulp-terser');
 
 function gulper(name, files, dest){
-	gulp.task(name, function(){
+	gulp.task(name, function(done){
 		gulp.src(files)
 			.pipe(concat(name))
 			.pipe(gulpif(!d, terser()))
@@ -19,10 +19,11 @@ function gulper(name, files, dest){
 			.pipe(gulp.dest(dest))
 			.pipe(rev.manifest(name+'.json'))
 			.pipe(gulp.dest('./state'));
+		done();
 	});
 }
 
-gulp.task('css', function() {
+gulp.task('css', function(done) {
 	gulp.src('./less/*.less')
 		.pipe(less({paths: ['./less/mixins']}))
 		.pipe(minifyCSS({rebase: false}))
@@ -30,6 +31,7 @@ gulp.task('css', function() {
 		.pipe(gulp.dest('./www/css'))
 		.pipe(rev.manifest('css.json'))
 		.pipe(gulp.dest('./state'));
+	done();
 });
 
 (function(){
