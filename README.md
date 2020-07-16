@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/vampiricwulf/tanoshiine.svg?branch=master)](https://travis-ci.org/vampiricwulf/tanoshiine)
-
 Real-time imageboard.
 MIT licensed.
 
@@ -25,7 +23,7 @@ Note: The git master branch contains the development version of the board. For m
 * ImageMagick
 * gcc, g++, make
 * libpng with development headers
-* [Node.js](https://nodejs.org) (Latest tested version is 11.15.0)
+* [Node.js](https://nodejs.org) (Latest tested version is 14.5.0)
 * redis
 * captchouli
 
