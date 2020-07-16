@@ -331,6 +331,7 @@ option_linkify.tab = tabs.General;
 
 function option_relative_time(toggle){
 	$.cookie('rTime', toggle, {path: '/'});
+	oneeSama.rTime = toggle;
 }
 
 option_relative_time.id = 'relativeTime';

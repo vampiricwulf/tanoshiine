@@ -68,16 +68,35 @@ var PostMixins = {
 	},
 
 	renderRelativeTime: function(){
-		if (oneeSama.rTime){
-			var $time = this.$el.find('time').first();
-			var t = date_from_time_el($time[0]).getTime();
-			var timer = setInterval(function(){
-				$time.html(oneeSama.relative_time(t, new Date().getTime()));
-			}, 60000);
-			this.listenToOnce(this.model, 'removeSelf', function(){
-				clearInterval(timer);
-			});
+		var timer;	//Only load these if they're needed to not bloat the memory up.
+		var $time;
+		var t;
+		function updateTime() {
+			$time.html(oneeSama.relative_time(t, new Date().getTime()));
 		}
+		if (oneeSama.rTime){
+			$time = this.$el.find('time').first();
+			t = this.model.attributes.time; //No need to calculate the time, we already have it inside the model.
+			timer = setInterval(updateTime, 60000);
+		}
+		this.listenTo(options, {
+			'change:relativeTime': function(){
+				clearInterval(timer);
+				if (!oneeSama.rTime){ //Previous value, this reacts before oneeSama actually changes
+					$time = this.$el.find('time').first();
+					t = this.model.attributes.time;
+					updateTime(); //Otherwise we need to wait a minute for it to take effect.
+					timer = setInterval(updateTime, 60000);
+				} else {
+					$time.html(oneeSama.readable_time(t)); //$time and t exist since previous state was activated.
+					t = undefined;
+					$time = undefined; //Free them again, might help something with thousand posts open.
+				}
+			}
+		})
+		this.listenToOnce(this.model, 'removeSelf', function(){
+			clearInterval(timer);
+		});
 	},
 };
 
