@@ -26,7 +26,7 @@ Vagrant.configure(2) do |config|
 		[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 		[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-		nvm install 14
+		nvm install 14.5.0
 		cp ./config.js.example ./config.js
 		sed -i -e 's/SERVE_STATIC_FILES: false/SERVE_STATIC_FILES: true/' ./config.js
 		sed -i -e 's/SERVE_IMAGES: false/SERVE_IMAGES: true/' ./config.js
