@@ -1,8 +1,6 @@
 // remember which posts are mine for two days
 var Mine = new Kioku('mine', 2);
-// no cookie though
-Mine.bake_cookie = function () { return false; };
-$.cookie('mine', null); // TEMP
+
 
 (function () {
 
