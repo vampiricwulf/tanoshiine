@@ -168,6 +168,14 @@ hooks.hook('reloadHot', function (hot, cb) {
 	}, cb);
 });
 
+exports.reload_bans = function(hot, cb) {
+	authcommon.suspensionKeys.forEach(function (key) { // Clear out the old values from the hot-object.
+		var up = key.toUpperCase();
+		delete hot[up];
+	});
+	hooks.trigger('reloadHot', hot, cb); // Reuse existing loader that requires a cleared hot-object to get rid of old values. 
+};
+
 function parse_suspensions(suspensions) {
 	if (!suspensions)
 		return [];
