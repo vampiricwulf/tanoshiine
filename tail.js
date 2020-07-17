@@ -1,5 +1,5 @@
 // avoids stack overflow for long lists
-exports.forEach = function (array, func, callback) {
+exports.fE = function (array, func, callback) {
 	step(0);
 	function step(i) {
 		if (i >= array.length)
@@ -12,7 +12,7 @@ exports.forEach = function (array, func, callback) {
 	}
 };
 
-exports.map = function (array, func, callback) {
+exports.m = function (array, func, callback) {
 	var results = [];
 	step(0);
 	function step(i) {

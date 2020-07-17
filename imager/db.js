@@ -90,7 +90,7 @@ O.delete_temporaries = function (callback) {
 	r.smembers('temps', function (err, temps) {
 		if (err)
 			return callback(err);
-		tail.forEach(temps, function (temp, cb) {
+		tail.fE(temps, function (temp, cb) {
 			fs.unlink(temp, function (err) {
 				if (err)
 					winston.warn('temp: ' + err);

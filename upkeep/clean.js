@@ -98,7 +98,7 @@ R.recycle_thread = function (op, cb) {
 			posts.push(post);
 		});
 		reader.on('endthread', function () {
-			tail.forEach(posts, do_post, cb);
+			tail.fE(posts, do_post, cb);
 		});
 		reader.on('error', cb);
 	});
@@ -111,7 +111,7 @@ R.recycle_archive = function (cb) {
 	r.zrange(key + ':threads', 0, -1, function (err, threads) {
 		if (err)
 			return cb(err);
-		tail.forEach(threads, do_thread, cb);
+		tail.fE(threads, do_thread, cb);
 	});
 };
 
