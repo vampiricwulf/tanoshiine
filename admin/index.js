@@ -37,7 +37,7 @@ function ban(m, mod, ip, key, type, sentence) {
 	m.rpush('auditLog', JSON.stringify(info));
 
 	// trigger reload
-	m.publish('reloadHot', 'caps');
+	m.publish('reloadBans', 'caps');
 
 	return true;
 }
@@ -104,7 +104,7 @@ var lift_expired_bans;
 				}
 			}
 			if (must_reload){
-				m.publish('reloadHot', 'caps');
+				m.publish('reloadBans', 'caps');
 				m.exec();
 			}
 			return again;
