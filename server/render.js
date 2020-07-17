@@ -9,22 +9,27 @@ var caps = require('./caps'),
 var RES = STATE.resources;
 var escape = common.escape_html;
 
-function tamashii(num) {
-	var op = db.OPs[num];
-	if (op && caps.can_access_thread(this.ident, op))
-		this.callback(this.post_ref(num, op));
-	else
-		this.callback('>>' + num);
-}
 
 exports.write_thread_html = function (reader, req, out, opts) {
+	var cookies = web.parse_cookie(req.headers.cookie);
+	var mineSet = new Set();
+	if(cookies.mine && cookies.mine.split)
+		cookies.mine.split(',').map(n => {mineSet.add(parseInt(n, 10))});
+	function tamashii(num) {
+		var op = db.OPs[num];
+		if (op && caps.can_access_thread(this.ident, op)){
+			var desc = mineSet.has(num) && '(You)';
+			this.callback(this.post_ref(num, op, desc));
+		}
+		else
+			this.callback('>>' + num);
+	}
 	var oneeSama = new common.OneeSama(tamashii);
 	oneeSama.tz_offset = req.tz_offset;
 
 	opts.ident = req.ident;
 	caps.augment_oneesama(oneeSama, opts);
 
-	var cookies = web.parse_cookie(req.headers.cookie);
 	if (cookies.spoil == 'true')
 		oneeSama.spoilToggle = (cookies.spoil == 'true');
   if (cookies.sauce == 'true')

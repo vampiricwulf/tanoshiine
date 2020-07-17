@@ -32,3 +32,4 @@ www/vint
 /nbproject/
 .netbeans.xml
 .vs/*
+/.vagrant/
