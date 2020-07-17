@@ -63,6 +63,8 @@ $DOC.on('keydown', handle_shortcut);
 function handle_shortcut(event) {
 	if (!event.altKey)
 		return;
+	if (event.key && String.fromCharCode(event.which).toUpperCase() !== event.key.toUpperCase())
+		return;
 
 	var used = false;
 	switch (event.which) {
