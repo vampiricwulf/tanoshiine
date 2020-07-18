@@ -120,7 +120,7 @@ var tabs = {
 };
 
 if (!isMobile) {
-	tabs.Pings = "Ping Keywords"
+	tabs.Pings = "Pings"
 	tabs.Shortcuts = "Shortcuts";
 }
 
