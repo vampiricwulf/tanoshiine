@@ -204,7 +204,6 @@ var break_re = new RegExp("(\\S{" + DEF.WORD_LENGTH_LIMIT + "})");
 var ref_re = '>>(\\d+';
 ref_re += '|>\\/watch\\?v=[\\w-]{11}(?:#t=[\\dhms]{1,9})?';
 ref_re += '|>\\/soundcloud\\/[\\w-]{1,40}\\/[\\w-]{1,80}';
-ref_re += '|>\\/onsen\\/(?:\\/|)\\d{0,10}';
 ref_re += '|>\\/korbo\\/';
 ref_re += '|>\\/cumzone\\/';
 ref_re += '|>\\/pastebin\\/\\w+';
@@ -249,14 +248,6 @@ OS.red_string = function (ref) {
 	else if (/^>\/soundcloud/.test(ref)) {
 		dest = 'https://soundcloud.com/' + ref.slice(13);
 		linkClass = 'embed soundcloud';
-	}
-	else if (/^>\/onsen/.test(ref)){
-		var mArray = ref.split('/');
-		var num = (/\d+/.test(mArray[2]) ? parseInt(mArray[2], 10) : false);
-		var mExtra = '';
-		if (num)
-			mExtra += num;
-		dest = '../outbound/onsen/' + mExtra;
 	}
 	else if (/^>\/pastebin/.test(ref)){
 		dest = dest = 'https://pastebin.com/' + ref.slice(11);
