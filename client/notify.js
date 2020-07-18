@@ -50,21 +50,7 @@ Backbone.on('repliedToMe', function (post) {
 		if (Unread.get('hidden'))
 			$('#beep')[0].play();
 	}
-	if (options.get('notification')) {
-		var body = post.get('body');
-		var image = post.get('image');
-		if((body || image) && Unread.get('hidden') && !isMobile){
-			var n = new Notification('見て見て!',{
-				// if the post doesn't have a image we use a bigger favicon
-				icon: encodeURI(mediaURL+ (image ? 'thumb/'+image.thumb : 'css/ui/favbig.png')),
-				body: body,
-			});
-			n.onclick = function(){
-				window.focus();
-				location.hash = '#'+num;
-			};
-		}
-	}
+	spawnNotification(post);
 	if (options.get('youCounter')) {
 		yC[THREAD]+=1;
 		yC.total+=1;
@@ -90,6 +76,26 @@ Backbone.on('afterInsert', function (model) {
 	if (Unread.get('hidden'))
 		Unread.set('unreadCount', Unread.get('unreadCount') + 1);
 });
+
+var spawnNotification = function (post) {	//Moved outside to reuse
+	if (options.get('notification')) {
+		var num = post.get('num');
+		var body = post.get('body');
+		var image = post.get('image');
+		if((body || image) && Unread.get('hidden') && !isMobile){
+			var n = new Notification('見て見て!',{
+				// if the post doesn't have a image we use a bigger favicon
+				icon: encodeURI(mediaURL+ (image ? 'thumb/'+image.thumb : 'css/ui/favbig.png')),
+				body: body,
+			});
+			n.onclick = function(){
+				window.focus();
+				location.hash = '#'+num;
+			};
+		}
+	}
+}
+window.spawnNotification = spawnNotification; //To give access from outside
 
 // Change the favicon
 function favicon(url){

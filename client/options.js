@@ -49,7 +49,10 @@ optSpecs.push(option_theme);
 optSpecs.push(option_StreamSize);
 optSpecs.push(option_reply_at_right);
 optSpecs.push(option_beep);
-optSpecs.push(option_notification);
+if(!isMobile){
+	optSpecs.push(option_notification);
+	optSpecs.push(option_ping_alert);
+}
 optSpecs.push(option_post_alert);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
@@ -114,8 +117,10 @@ var tabs = {
 	Help: "Help"
 };
 
-if (!isMobile)
+if (!isMobile) {
+	tabs.Pings = "Ping Keywords"
 	tabs.Shortcuts = "Shortcuts";
+}
 
 /* LAST N CONFIG */
 function option_last_n(n) {
@@ -384,6 +389,8 @@ option_autogif.tab = tabs.Style;
 /* TOP BANNER TOGGLE */
 
 function option_topbanner(bannertoggle) {
+	if(isMobile)
+		bannertoggle = !bannertoggle;
 	if ($(window).width() <= 640 && !bannertoggle) {
 		$('.notification').remove();
 		this.$el = $('<div/>', {
@@ -444,6 +451,9 @@ function option_topbanner(bannertoggle) {
 option_topbanner.id = 'notopbannertoggle';
 option_topbanner.label = 'Top Banner';
 option_topbanner.type = 'revcheckbox';
+if(isMobile){
+	option_topbanner.type = 'checkbox';
+}
 option_topbanner.tooltip = 'Toggle the banner at the top'
 option_topbanner.tab = tabs.General;
 
@@ -698,6 +708,43 @@ function change_shortcut(event) {
 	$input.blur();
 }
 
+function alterTriggers(event) {
+	if(event.target.type !== "button")
+		return;
+	var triggers = options.get('pingTriggers');
+	if(!_.isArray(triggers)) {
+		triggers = [];
+		options.set('pingTriggers', triggers);
+	}
+	if(event.target.id == "PingTriggerSaver") {
+		var value = event.target.previousSibling.value.trim();
+		if (value !== "") {
+			triggers.push(value);
+			$("#pingTriggers").append($('<input>', {
+				type: 'button', value: value
+			}), '<br/>')
+			event.target.previousSibling.value="";
+		}
+	}
+	else {
+		var value = event.target.value;
+		triggers.splice(triggers.indexOf(value),1);
+		event.target.nextSibling.remove(); //the <br/> 
+		event.target.remove();
+	}
+	options.trigger('change'); // force save
+}
+
+function option_ping_alert(toggle){
+
+}
+
+option_ping_alert.id = 'option_pingalert';
+option_ping_alert.label = 'Ping Alerter';
+option_ping_alert.type = 'checkbox';
+option_ping_alert.tooltip = 'Notifies you if keywords are used. Example: @YourName, see Ping tab.\nRequires "Desktop Notifications".\nMany ping triggers may have performance consequences.';
+option_ping_alert.tab = tabs.Style;
+
 _.defer(function () {
 	load_ident();
 	var save = _.debounce(save_ident, 1000);
@@ -873,6 +920,22 @@ function make_options_panel() {
 			$shortcuts.append($label, '<br>');
 		});
 		tabCont[tabs.Shortcuts] = $shortcuts;
+	}
+	if(tabs.Pings){
+		var $pingTriggers = $('<div/>', {
+			id: 'pingTriggers',
+			click: alterTriggers
+		});
+		$pingTriggers.append($('<input placeholder="enter...">'));
+		$pingTriggers.append($('<input>', {
+			type: 'button', id: 'PingTriggerSaver', value: 'add'
+		}), '<br/>');
+		(options.get('pingTriggers') || []).forEach(function (trigger) {
+			$pingTriggers.append($('<input>', {
+				type: 'button', value: trigger
+			}), '<br/>')
+		});
+		tabCont[tabs.Pings] = $pingTriggers;
 	}
 	var $tabSel = $('<ul/>', {"class": 'option_tab_sel'});
 	var $tabCont = $('<ul/>',{"class": 'option_tab_cont'});
