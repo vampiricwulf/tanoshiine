@@ -242,6 +242,8 @@ dispatcher[DEF.INSERT_POST] = function (msg) {
 	}
 	if (orig_focus)
 		orig_focus.focus();
+	
+	checkPingAlert(msg.body, model);
 };
 
 dispatcher[DEF.MOVE_THREAD] = function (msg, op) {
@@ -323,6 +325,7 @@ dispatcher[DEF.UPDATE_POST] = function (msg, op) {
 		oneeSama.state = state;
 		oneeSama.fragment(msg[1]);
 	}
+	checkPingAlert(msg[1], post);
 };
 
 dispatcher[DEF.FINISH_POST] = function (msg, op) {
@@ -523,6 +526,36 @@ dispatcher[DEF.COLLECTION_ADD] = function (msg, op) {
 	if (target && target.add)
 		target.add(msg[1], {merge: true});
 };
+
+function checkPingAlert(frag, model) {	//Use only the frag instead of the whole model body to only check the new words
+	if(!options.get('option_pingalert'))
+		return;
+	var pingTriggers = options.get('pingTriggers') || [];
+	if(pingTriggers.length == 0)
+		return;
+	if(model.get('mine'))
+		return;
+	var words = [];
+	frag.split('\n').forEach(function(line) {
+		line.split(" ").forEach(function(word) {
+			words.push(word);
+		})
+	});
+	var found = undefined;
+	for(var i=0; i<words.length; i++) {
+		for(var j=0; j<pingTriggers.length; j++) {
+			if (words[i] == pingTriggers[j]) {
+				found = words[i];
+				break;
+			}
+		}
+		if(found)
+			break;
+	}
+	if(found) {
+		spawnNotification(model)
+	}
+}
 
 (function () {
 	var m = window.location.hash.match(/^#q?(\d+)$/);

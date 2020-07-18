@@ -997,6 +997,15 @@ dispatcher[common.SPOILER_IMAGES] = caps.mod_handler(function (nums, client) {
 	});
 });
 
+dispatcher[common.SPOILER_OWN_IMAGE] = function(msg, client) {
+	if(!client.post)
+		return;
+	client.db.force_image_spoilers([client.post.num], function (err) {
+		//ignore this case, normal user doesn't need to see that.
+	})
+	return true;
+}
+
 dispatcher[common.EXECUTE_JS] = function (msg, client) {
 	if (!caps.can_administrate(client.ident))
 		return false;
@@ -1132,6 +1141,7 @@ function start_server() {
 
 	process.on('SIGHUP', hot_reloader);
 	db.on_pub('reloadHot', hot_reloader);
+	db.on_pub('reloadBans', ban_reloader); // Let's keep the old one, since we don't want to break anything relying on it 
 
 	if (config.DAEMON) {
 		var cfg = config.DAEMON;
@@ -1149,6 +1159,17 @@ function start_server() {
 			+ (config.LISTEN_HOST || '')
 			+ (is_unix_socket ? '' : ':')
 			+ (config.LISTEN_PORT + '.'));
+}
+
+function ban_reloader() {
+	caps.reload_bans(STATE.hot, function (err) { // Clears out the old bans, reads the current ones and returns here.
+		if (err) {
+			winston.error("Error trying to reload bans:");
+			winston.error(err);
+			return;
+		}
+		okyaku.scan_client_caps(); // Applies bans to currently connected clients.
+	});
 }
 
 function hot_reloader() {
