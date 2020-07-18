@@ -57,8 +57,10 @@ optSpecs.push(option_post_alert);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
 optSpecs.push(option_spoiler);
-optSpecs.push(option_image_hover);
-optSpecs.push(option_webm_hover);
+if(!isMobile){
+	optSpecs.push(option_image_hover);
+	optSpecs.push(option_webm_hover);
+}
 optSpecs.push(option_relative_time);
 optSpecs.push(option_youcounter);
 optSpecs.push(option_horizontal);
