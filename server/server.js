@@ -997,6 +997,15 @@ dispatcher[common.SPOILER_IMAGES] = caps.mod_handler(function (nums, client) {
 	});
 });
 
+dispatcher[common.SPOILER_OWN_IMAGE] = function(msg, client) {
+	if(!client.post)
+		return;
+	client.db.force_image_spoilers([client.post.num], function (err) {
+		//ignore this case, normal user doesn't need to see that.
+	})
+	return true;
+}
+
 dispatcher[common.EXECUTE_JS] = function (msg, client) {
 	if (!caps.can_administrate(client.ident))
 		return false;

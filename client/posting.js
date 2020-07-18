@@ -220,6 +220,7 @@ var ComposerView = Backbone.View.extend({
 		'keydown #trans': 'on_key_down',
 		'click #done': 'finish_wrapped',
 		'click #toggle': 'on_toggle',
+		'click #selfspoil' : 'on_selfspoil',
 	},
 
 	initialize: function (dest) {
@@ -245,6 +246,9 @@ var ComposerView = Backbone.View.extend({
 		this.submit = $('<input>', {
 			id: 'done', type: 'button', value: 'Done',
 		});
+		this.$selfspoil = $('<input>', {
+			type: 'button', id: 'selfspoil', value: 'Spoil Image'
+		});		
 		this.$subject = $('<input/>', {
 			id: 'subject',
 			'class': 'themed',
@@ -498,6 +502,11 @@ var ComposerView = Backbone.View.extend({
 		}
 	},
 
+	on_selfspoil: function() {
+		send([DEF.SPOILER_OWN_IMAGE]);
+		this.$selfspoil.remove();
+	},
+
 	add_ref: function (num, sel, selNum) {
 		/* If a >>link exists, put this one on the next line */
 		var $input = this.$input;
@@ -578,6 +587,8 @@ var ComposerView = Backbone.View.extend({
 		this.$imageInput.siblings('strong').andSelf().add(this.$cancel
 				).remove();
 		form.find('#toggle').remove();
+		if(!info.spoiler)
+			form.prepend(this.$selfspoil);
 		this.flush_pending();
 		this.model.set({uploading: false, uploaded: true,
 				sentAllocRequest: true});
