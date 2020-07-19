@@ -25,7 +25,7 @@ Note: The git master branch contains the development version of the board. For m
 * libpng with development headers
 * [Node.js](https://nodejs.org) (Latest tested version is 14.5.0)
 * redis
-* captchouli
+* [captchouli](https://github.com/bakape/captchouli)
 
 ### Optional dependencies for various features
 
