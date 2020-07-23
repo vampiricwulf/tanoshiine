@@ -860,6 +860,8 @@ dispatcher[DEF.IMAGE_STATUS] = function (msg) {
 };
 
 window.addEventListener('message', function (event) {
+	if(!postForm || event.source !== postForm.$iframe[0].contentWindow) //Only listen to messages from the uploader
+		return;
 	var msg = event.data;
 	if (msg == 'OK')
 		return;
