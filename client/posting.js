@@ -227,6 +227,7 @@ var ComposerView = Backbone.View.extend({
 
 		this.listenTo(this.model, 'change', this.render_buttons);
 		this.listenTo(this.model, 'change:spoiler', this.render_spoiler_pane);
+		this.listenTo(options, 'change:noplaceholdertoggle', this.render_placeholder);
 
 		var attrs = this.model.attributes;
 		var op = attrs.op;
@@ -242,7 +243,6 @@ var ComposerView = Backbone.View.extend({
 			rows: '1',
 			"class": 'themed',
 			autocomplete: 'off',
-			placeholder: '█'
 		});
 		this.submit = $('<input>', {
 			id: 'done', type: 'button', value: 'Done',
@@ -307,7 +307,7 @@ var ComposerView = Backbone.View.extend({
 			this.$subject.focus();
 		}
 		$('aside').remove();
-
+		this.render_placeholder(options, options.get('noplaceholdertoggle'));
 		preload_panes();
 	},
 
@@ -737,6 +737,14 @@ var ComposerView = Backbone.View.extend({
 			self.$imageInput.prop('disabled', !!attrs.uploading);
 			self.$uploadStatus.html(attrs.uploadStatus);
 		});
+	},
+
+	render_placeholder: function (model, newValue) {
+		if (!newValue){
+			this.$input[0].placeholder = '█';
+		} else {
+			this.$input[0].placeholder = '';
+		}
 	},
 
 	prep_upload: function () {

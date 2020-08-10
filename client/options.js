@@ -64,6 +64,7 @@ if(!isMobile){
 optSpecs.push(option_relative_time);
 optSpecs.push(option_youcounter);
 optSpecs.push(option_horizontal);
+optSpecs.push(option_postPlaceholder);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
 optSpecs.push(option_alwaysLock);
@@ -785,6 +786,16 @@ _.defer(function () {
 		shortcutKeys[s.name+'c'] = prefs[s.name+'c'] === undefined ? true : prefs[s.name+'c'];
 	});
 });
+
+/* Opt-out option for the placeholder on your postbox */
+function option_postPlaceholder(toggle) {
+
+}
+option_postPlaceholder.id = 'noplaceholdertoggle';
+option_postPlaceholder.label = 'Post Placeholder';
+option_postPlaceholder.type = 'revcheckbox';
+option_postPlaceholder.tooltip = 'Toggle the box indicator in your posts'
+option_postPlaceholder.tab = tabs.Style;
 
 /* TOGGLER FOR TOP BANNER BUTTONS */
 
