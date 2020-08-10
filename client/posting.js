@@ -1,4 +1,4 @@
-var saku, postForm;
+﻿var saku, postForm;
 var UPLOADING_MSG = 'Uploading...';
 
 connSM.on('synced', postSM.feeder('sync'));
@@ -242,7 +242,7 @@ var ComposerView = Backbone.View.extend({
 			rows: '1',
 			"class": 'themed',
 			autocomplete: 'off',
-			placeholder: 'Type here...'
+			placeholder: '█'
 		});
 		this.submit = $('<input>', {
 			id: 'done', type: 'button', value: 'Done',
