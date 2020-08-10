@@ -118,8 +118,14 @@ $NAV
 		<source src="" type="audio/mpeg">
 	</audio>
 </div>
-<div id='Ycount' class='modal' style='display:none !important; position:fixed;top:22px;right:0;z-index:0 !important;'>
-	Session (You)s: {s}<br/>Total (You)s: {t}
+<div style='position:fixed;top:22px;right:0;z-index:0 !important;'>
+	<div id='Ycount' class='modal' style='display:none !important;'>
+		Session (You)s: {s}<br/>Total (You)s: {t}
+	</div>
+	<div id='Mentions' class='modal' style='display:none !important;'>
+		Mentions:<br/>
+		<button onclick="$('#Mentions a+br').remove(); $('#Mentions a').remove(); Mentions.clear()">Clear All</button>
+	</div>
 </div>
 
 $THREADS

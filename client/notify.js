@@ -95,7 +95,16 @@ var spawnNotification = function (post) {	//Moved outside to reuse
 		}
 	}
 }
-window.spawnNotification = spawnNotification; //To give access from outside
+
+var spawnMention = function(post) {
+	var num = post.get('num');
+	if(!Mentions.has(num)){
+		Mentions.add(num);
+		$('<a href="#'+num+'" onclick="Mentions.delete('+num+');this.nextSibling.remove();this.remove()">>>'+num+' </a><br/>').insertBefore($("#Mentions button"));
+		spawnNotification(post);
+	}
+}
+window.spawnMention = spawnMention; //To give access from outside
 
 // Change the favicon
 function favicon(url){

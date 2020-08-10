@@ -553,7 +553,7 @@ function checkPingAlert(frag, model) {	//Use only the frag instead of the whole 
 			break;
 	}
 	if(found) {
-		spawnNotification(model)
+		spawnMention(model)
 	}
 }
 
