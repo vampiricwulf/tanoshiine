@@ -1,4 +1,4 @@
-var BOARD, THREAD, BUMP, PAGE, mediaURL, options, themeVersion, yC;
+var BOARD, THREAD, BUMP, PAGE, mediaURL, options, themeVersion, yC, Mentions;
 // NOTE: options gets turned into a backbone model later
 
 (function () {
@@ -14,6 +14,7 @@ var BOARD, THREAD, BUMP, PAGE, mediaURL, options, themeVersion, yC;
 		yC[THREAD] = 0;
 	if (!yC.total)
 		yC.total = 0;
+	Mentions = new Set();
 	BUMP = /\/$/.test(p);
 	t = p.match(/\/page(\d+)$/);
 	PAGE = t ? parseInt(t[1], 10) : -1;

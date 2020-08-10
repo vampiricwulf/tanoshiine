@@ -51,8 +51,8 @@ optSpecs.push(option_reply_at_right);
 optSpecs.push(option_beep);
 if(!isMobile){
 	optSpecs.push(option_notification);
-	optSpecs.push(option_ping_alert);
 }
+optSpecs.push(option_ping_alert);
 optSpecs.push(option_post_alert);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
@@ -117,11 +117,11 @@ options.on('change', function () {
 var tabs = {
 	General: "General",
 	Style: "Style",
-	Help: "Help"
+	Help: "Help",
+	Pings: "Pings"
 };
 
 if (!isMobile) {
-	tabs.Pings = "Pings"
 	tabs.Shortcuts = "Shortcuts";
 }
 
@@ -714,6 +714,17 @@ function change_shortcut(event) {
 function alterTriggers(event) {
 	if(event.target.type !== "button")
 		return;
+	if(event.target.id == "MentionsToggle") {
+		var toggle = !!options.get('mentionsList');
+		if(toggle) {
+			$('#Mentions').hide();
+		}
+		else {
+			$('#Mentions').show();
+		}
+		options.set('mentionsList', !toggle);
+		return;
+	}
 	var triggers = options.get('pingTriggers');
 	if(!_.isArray(triggers)) {
 		triggers = [];
@@ -739,13 +750,19 @@ function alterTriggers(event) {
 }
 
 function option_ping_alert(toggle){
-
+	var toggle = options.get('mentionsList');
+	if(toggle) {
+		$('#Mentions').show();
+	}
+	else {
+		$('#Mentions').hide();
+	}
 }
 
 option_ping_alert.id = 'option_pingalert';
 option_ping_alert.label = 'Ping Alerter';
 option_ping_alert.type = 'checkbox';
-option_ping_alert.tooltip = 'Notifies you if keywords are used. Example: @YourName, see Ping tab.\nRequires "Desktop Notifications".\nMany ping triggers may have performance consequences.';
+option_ping_alert.tooltip = 'Notifies you if keywords are used. Example: @YourName, see Ping tab.\nCan make use of enabled "Desktop Notifications".\nMany ping triggers may have performance consequences.';
 option_ping_alert.tab = tabs.Style;
 
 _.defer(function () {
@@ -939,6 +956,9 @@ function make_options_panel() {
 			id: 'pingTriggers',
 			click: alterTriggers
 		});
+		$pingTriggers.append($('<input>', {
+			type: 'button', id: 'MentionsToggle', value: 'Toggle Mentions Panel'
+		}), '<br/>');
 		$pingTriggers.append($('<input placeholder="enter...">'));
 		$pingTriggers.append($('<input>', {
 			type: 'button', id: 'PingTriggerSaver', value: 'add'
