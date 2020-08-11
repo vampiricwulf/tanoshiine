@@ -52,7 +52,7 @@ optSpecs.push(option_beep);
 if(!isMobile){
 	optSpecs.push(option_notification);
 }
-optSpecs.push(option_ping_alert);
+optSpecs.push(option_mention_scanner);
 optSpecs.push(option_post_alert);
 optSpecs.push(option_sauce);
 optSpecs.push(option_autogif);
@@ -118,7 +118,7 @@ var tabs = {
 	General: "General",
 	Style: "Style",
 	Help: "Help",
-	Pings: "Pings"
+	Mentions: "Mentions"
 };
 
 if (!isMobile) {
@@ -711,46 +711,8 @@ function change_shortcut(event) {
 	$input.blur();
 }
 
-function alterTriggers(event) {
-	if(event.target.type !== "button")
-		return;
-	if(event.target.id == "MentionsToggle") {
-		var toggle = !!options.get('mentionsList');
-		if(toggle) {
-			$('#Mentions').hide();
-		}
-		else {
-			$('#Mentions').show();
-		}
-		options.set('mentionsList', !toggle);
-		return;
-	}
-	var triggers = options.get('pingTriggers');
-	if(!_.isArray(triggers)) {
-		triggers = [];
-		options.set('pingTriggers', triggers);
-	}
-	if(event.target.id == "PingTriggerSaver") {
-		var value = event.target.previousSibling.value.trim();
-		if (value !== "") {
-			triggers.push(value);
-			$("#pingTriggers").append($('<input>', {
-				type: 'button', value: value
-			}), '<br/>')
-			event.target.previousSibling.value="";
-		}
-	}
-	else {
-		var value = event.target.value;
-		triggers.splice(triggers.indexOf(value),1);
-		event.target.nextSibling.remove(); //the <br/> 
-		event.target.remove();
-	}
-	options.trigger('change'); // force save
-}
-
-function option_ping_alert(toggle){
-	var toggle = options.get('mentionsList');
+function option_mention_scanner(toggle){
+	var toggle = !! options.get('mentionsList');
 	if(toggle) {
 		$('#Mentions').show();
 	}
@@ -759,11 +721,103 @@ function option_ping_alert(toggle){
 	}
 }
 
-option_ping_alert.id = 'option_pingalert';
-option_ping_alert.label = 'Ping Alerter';
-option_ping_alert.type = 'checkbox';
-option_ping_alert.tooltip = 'Notifies you if keywords are used. Example: @YourName, see Ping tab.\nCan make use of enabled "Desktop Notifications".\nMany ping triggers may have performance consequences.';
-option_ping_alert.tab = tabs.Style;
+function toggle_mention_panel(event) {
+	var toggle = !! options.get('mentionsList');
+	if(toggle) {
+		$('#Mentions').hide();
+	}
+	else {
+		$('#Mentions').show();
+	}
+	options.set('mentionsList', !toggle);
+}
+
+function load_mention_triggers() {
+	var triggers = options.get('mentionTriggers');
+	if(!_.isArray(triggers)) {
+		triggers = [];
+		options.set('mentionTriggers', triggers);
+		return;
+	}
+	for(let i=0; i<triggers.length;i++){
+		if(triggers[i].regex) {
+			triggers[i].cachedRegexp = new RegExp(triggers[i].rawString, triggers[i].insensitive ? 'i' : '');
+		}
+	}
+}
+
+function generate_mention_trigger(event) {
+	var mentionTrigger = {
+		rawString: '',
+		regex: false,
+		insensitive: false,
+	};
+	var children = event.target.parentElement.children;
+	mentionTrigger.rawString = children[0].value.trim();
+	if(mentionTrigger.rawString === '')
+		return;
+	children[0].value = '';
+	for(let i=1; i<children.length-1; i++){
+		var child = children[i].children[0];
+		mentionTrigger[child.dataset.content] = child.checked;
+		child.checked = false;
+	}
+	if (mentionTrigger.regex) {
+		mentionTrigger.cachedRegexp = new RegExp(mentionTrigger.rawString, mentionTrigger.insensitive ? 'i' : '');
+	}
+	var triggers = options.get('mentionTriggers');
+	triggers.push(mentionTrigger);
+	options.trigger('change'); // force save
+	$('#mentionTriggers').append(generate_mention_html(triggers, mentionTrigger))
+}
+
+function generate_mention_html(triggers, mentionTrigger) {
+	var onTextChange = function(event) {
+		mentionTrigger.rawString = event.target.value;
+		if(mentionTrigger.regex) {
+			mentionTrigger.cachedRegexp = new RegExp(mentionTrigger.rawString, mentionTrigger.insensitive ? 'i' : '');
+		}
+		options.trigger('change');
+	}
+	var onCheckboxChange = function(event) {
+		mentionTrigger[event.target.dataset.content] = event.target.checked;
+		if(mentionTrigger.regex){
+			mentionTrigger.cachedRegexp = new RegExp(mentionTrigger.rawString, mentionTrigger.insensitive ? 'i' : '');
+		} else {
+			if(event.target.dataset.content === "regex")
+				delete mentionTrigger.cachedRegexp
+		}
+		options.trigger('change');
+	}
+	var removeTrigger = function(event) {
+		console.log(event);
+		triggers.splice(triggers.indexOf(mentionTrigger), 1);
+		options.trigger('change');
+		event.target.parentElement.remove();
+	}
+	var triggerHtml = $('<div/>').append($('<input>', {
+		'data-content': 'rawString', change: onTextChange, value: mentionTrigger.rawString
+	})).append($('<label/>', {
+		text: 'Case Insensitive'
+	}).append($('<input>', {
+		type: 'checkbox','data-content': 'insensitive', click: onCheckboxChange, checked: mentionTrigger.insensitive
+	}))).append($('<label/>', {
+		text: 'RegExp'
+	}).append($('<input>', {
+		type: 'checkbox','data-content': 'regex', click: onCheckboxChange, checked: mentionTrigger.regex
+	}))).append($('<input>', {
+		type: 'button', value: 'Remove', click: removeTrigger
+	}));
+
+
+	return triggerHtml;
+}
+
+option_mention_scanner.id = 'option_mentionscanner';
+option_mention_scanner.label = 'Mention Scanner';
+option_mention_scanner.type = 'checkbox';
+option_mention_scanner.tooltip = 'Notifies you if keywords are used. Example: @YourName.\nCan make use of enabled "Desktop Notifications".\nMany mention triggers may have performance consequences.';
+option_mention_scanner.tab = tabs.Mentions;
 
 _.defer(function () {
 	load_ident();
@@ -796,6 +850,8 @@ _.defer(function () {
 	optSpecs.forEach(function (spec) {
 		spec(options.get(spec.id));
 	});
+
+	load_mention_triggers();
 
 	var prefs = options.get('shortcuts') || {};
 	shortcuts.forEach(function (s) {
@@ -951,24 +1007,33 @@ function make_options_panel() {
 		});
 		tabCont[tabs.Shortcuts] = $shortcuts;
 	}
-	if(tabs.Pings){
-		var $pingTriggers = $('<div/>', {
-			id: 'pingTriggers',
-			click: alterTriggers
+	if(tabs.Mentions){
+		var $mentionTriggers = $('<div/>', {
+			id: 'mentionTriggers',
 		});
-		$pingTriggers.append($('<input>', {
-			type: 'button', id: 'MentionsToggle', value: 'Toggle Mentions Panel'
+		$mentionTriggers.append($('<input>', {
+			type: 'button', id: 'MentionsToggle', value: 'Toggle Mentions Panel', click: toggle_mention_panel
 		}), '<br/>');
-		$pingTriggers.append($('<input placeholder="enter...">'));
-		$pingTriggers.append($('<input>', {
-			type: 'button', id: 'PingTriggerSaver', value: 'add'
-		}), '<br/>');
-		(options.get('pingTriggers') || []).forEach(function (trigger) {
-			$pingTriggers.append($('<input>', {
-				type: 'button', value: trigger
-			}), '<br/>')
+		var $mentionAdder = $('<div/>').append($('<input>', {
+			'data-content': 'rawString', value: ''
+		})).append($('<label/>', {
+			text: 'Case Insensitive'
+		}).append($('<input>', {
+			type: 'checkbox','data-content': 'insensitive', checked: false
+		}))).append($('<label/>', {
+			text: 'RegExp'
+		}).append($('<input>', {
+			type: 'checkbox','data-content': 'regex', checked: false
+		}))).append($('<input>', {
+			type: 'button', value: 'Add', click: generate_mention_trigger
+		}));
+
+		$mentionTriggers.append($mentionAdder);
+		var mentionTriggers = options.get('mentionTriggers') || [];
+		mentionTriggers.forEach(function (trigger) {
+			$mentionTriggers.append(generate_mention_html(mentionTriggers, trigger))
 		});
-		tabCont[tabs.Pings] = $pingTriggers;
+		tabCont[tabs.Mentions].push($mentionTriggers);
 	}
 	var $tabSel = $('<ul/>', {"class": 'option_tab_sel'});
 	var $tabCont = $('<ul/>',{"class": 'option_tab_cont'});
