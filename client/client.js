@@ -243,7 +243,7 @@ dispatcher[DEF.INSERT_POST] = function (msg) {
 	if (orig_focus)
 		orig_focus.focus();
 	
-	checkPingAlert(msg.body, model);
+	scanForMention(msg.body, model);
 };
 
 dispatcher[DEF.MOVE_THREAD] = function (msg, op) {
@@ -325,7 +325,7 @@ dispatcher[DEF.UPDATE_POST] = function (msg, op) {
 		oneeSama.state = state;
 		oneeSama.fragment(msg[1]);
 	}
-	checkPingAlert(msg[1], post);
+	scanForMention(msg[1], post);
 };
 
 dispatcher[DEF.FINISH_POST] = function (msg, op) {
@@ -527,11 +527,13 @@ dispatcher[DEF.COLLECTION_ADD] = function (msg, op) {
 		target.add(msg[1], {merge: true});
 };
 
-function checkPingAlert(frag, model) {	//Use only the frag instead of the whole model body to only check the new words
-	if(!options.get('option_pingalert'))
+function scanForMention(frag, model) {	//Use only the frag instead of the whole model body to only check the new words
+	if(!options.get('option_mentionscanner'))
 		return;
-	var pingTriggers = options.get('pingTriggers') || [];
-	if(pingTriggers.length == 0)
+	if(Mentions.has(model.get('num')))
+		return;
+	var mentionTriggers = options.get('mentionTriggers') || [];
+	if(mentionTriggers.length == 0)
 		return;
 	if(model.get('mine'))
 		return;
@@ -543,10 +545,26 @@ function checkPingAlert(frag, model) {	//Use only the frag instead of the whole 
 	});
 	var found = undefined;
 	for(var i=0; i<words.length; i++) {
-		for(var j=0; j<pingTriggers.length; j++) {
-			if (words[i] == pingTriggers[j]) {
-				found = words[i];
-				break;
+		var word = words[i];
+		for(var j=0; j<mentionTriggers.length; j++) {
+			var mentionTrigger = mentionTriggers[j];
+			if(mentionTrigger.regex) {
+				if(mentionTrigger.cachedRegexp.test(word)){
+					found = word;
+					break;
+				}
+			}
+			else{
+				if(mentionTrigger.insensitive){
+					if(mentionTrigger.rawString.toUpperCase() === word.toUpperCase()){
+					found = word;
+					break;
+					}
+				}
+				else if(mentionTrigger.rawString === word){
+					found = word;
+					break;
+				}
 			}
 		}
 		if(found)
