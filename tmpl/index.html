@@ -56,51 +56,30 @@ $NAV
 			onclick="
 			var $vid = $('video');
 			var $aud = $('audio');
-			if (this.innerHTML == '►') {
-				if ($vid[0] || $aud[0]) {
-					if ($vid[0]) {
-						for (var i = 0; i < $vid.length; i++){
-							$('video')[i].pause();
-						}
-					}
-					if ($aud[0]) {
-						for (var i = 0; i < $aud.length; i++){
-							$('audio')[i].pause();
-						}
-					}
-					this.innerHTML = 'Ⅱ';
-				}
+			if(this.innerHTML == '►') {
+				if($vid.length)
+					$vid.each((n,e) => {e.pause();});
+				if($aud.length) 
+					$aud.each((n,e) => {e.pause();});
+				this.innerHTML = 'Ⅱ';
 			} else {
-				if ($vid[0] || $aud[0]) {
-					if ($vid[0]) {
-						for (var i = 0; i < $vid.length; i++){
-							$('video')[i].play();
-						}
-					}
-					if ($aud[0]) {
-						for (var i = 0; i < $aud.length; i++){
-							$('audio')[i].play();
-						}
-					}
-					this.innerHTML = '►';
-				}
-			}" >►</button>   <input id="volumeSlider" type="range" min="0" max="100"
-			onchange="
-				vol = this.value / 100;
-				localStorage.lastVolume = vol;
-				var $vid = $('video');
-				var $aud = $('audio');
-				if ($vid[0]) {
-					for (var i = 0; i < $vid.length; i++){
-						$('video')[i].volume = vol;
-					}
-				}
-				if ($aud[0]) {
-					for (var i = 0; i < $aud.length; i++){
-						$('audio')[i].volume = vol;
-					}
-				}"
-			style="width:200px;" />
+				if($vid.length)
+					$vid.each((n,e) => {e.play();});
+				if($aud.length) 
+					$aud.each((n,e) => {e.play();});
+				this.innerHTML = '►';
+			}" >►</button>  
+			<input id="volumeSlider" type="range" min="0" max="100"
+				onchange="
+					vol = this.value / 100;
+					localStorage.lastVolume = vol;
+					var $vid = $('video');
+					var $aud = $('audio');
+					if($vid.length)
+						$vid.each((n,e) => {e.volume = vol;});
+					if($aud.length) 
+						$aud.each((n,e) => {e.volume = vol;});"
+				style="width:200px;" />
 		</div>
 	</span>
 </span>
@@ -129,6 +108,8 @@ $NAV
 	if (localStorage.lastVolume) {
 		vol = parseFloat(localStorage.lastVolume, 10);
 		$('#volumeSlider')[0].value = vol * 100;
-	}
+	} else {
+		localStorage.lastVolume = 0.5;
+    }
 </script>
 <script src="{{MEDIA_URL}}js/{{CLIENT_JS}}"></script>
