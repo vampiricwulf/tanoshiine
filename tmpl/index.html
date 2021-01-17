@@ -54,31 +54,20 @@ $NAV
 			<br>
 			<button id="playButton" style="font-size:18pt; text-decoration: none;"
 			onclick="
-			var $vid = $('video');
-			var $aud = $('audio');
+			var $va = $('video, audio');
 			if(this.innerHTML == '►') {
-				if($vid.length)
-					$vid.each((n,e) => {e.pause();});
-				if($aud.length) 
-					$aud.each((n,e) => {e.pause();});
+				$va.each((n,e) => {e.pause();});
 				this.innerHTML = 'Ⅱ';
 			} else {
-				if($vid.length)
-					$vid.each((n,e) => {e.play();});
-				if($aud.length) 
-					$aud.each((n,e) => {e.play();});
+				$va.each((n,e) => {e.play();});
 				this.innerHTML = '►';
 			}" >►</button>  
 			<input id="volumeSlider" type="range" min="0" max="100"
 				onchange="
 					vol = this.value / 100;
 					localStorage.lastVolume = vol;
-					var $vid = $('video');
-					var $aud = $('audio');
-					if($vid.length)
-						$vid.each((n,e) => {e.volume = vol;});
-					if($aud.length) 
-						$aud.each((n,e) => {e.volume = vol;});"
+					var $va = $('video, audio');
+					$va.each((n,e) => {e.volume = vol;});"
 				style="width:200px;" />
 		</div>
 	</span>
