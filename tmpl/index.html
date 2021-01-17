@@ -15,8 +15,6 @@
 		var reportConfig = {{CLIENT_REPORT}};
 		var hotConfig = {{CLIENT_HOT}};
 		var configHash = '{{CLIENT_CONFIG_HASH}}';
-		var StreamStatus = {video: false, audio: false, loadingA: false, loadingV: false};
-		var d = new Date().getTime();
 	</script>
 	<!--<link href='https://fonts.googleapis.com/css?family=Creepster' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="/css/spooki.css?v=9">-->
@@ -107,17 +105,6 @@ $NAV
 	</span>
 </span>
 <div id="hover_overlay"></div>
-<div id="StreamPlayer" class="modal" style="display:none !important;position:fixed;top:50%;right:0;transform:translate(0,-50%);-ms-transform:translate(0,-50%);-webkit-transform:translate(0,-50%);-moz-transform:translate(0,-50%);">
-	<div id="grabbar" style="line-height:20px;text-align:center;color:black;background-color:grey;width:100%;margin:0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:move;">Drag Bar</div>
-	<span>Loading...</span>
-	<video style="display:none;" controls>
-		<source src="" type="video/webm">
-	</video>
-	<audio width="300px" height="3em" style="display:none;" controls>
-		<source src="" type="audio/ogg">
-		<source src="" type="audio/mpeg">
-	</audio>
-</div>
 <div style='position:fixed;top:22px;right:0;z-index:0 !important;'>
 	<div id='Ycount' class='modal' style='display:none !important;'>
 		Session (You)s: {s}<br/>Total (You)s: {t}
@@ -143,110 +130,5 @@ $NAV
 		vol = parseFloat(localStorage.lastVolume, 10);
 		$('#volumeSlider')[0].value = vol * 100;
 	}
-	$('#StreamPlayer video')[0].width = parseInt($(window).width()/3,10);
-	$('#StreamPlayer video')[0].onloadeddata = function() {
-		StreamStatus.video = true; 
-		setTimeout(function() {StreamStatus.loadingV = false;}, 1000); 
-		if ($('#StreamPlayer video')[0].videoHeight == 0) {
-			$('#StreamPlayer video')[0].style.display = "none";
-			$('#StreamPlayer video source')[0].src = "";
-			$('#StreamPlayer video')[0].load();
-			$('#StreamPlayer audio source')[0].src = "http://192.210.179.210:8000/radio?" + d;
-			$('#StreamPlayer audio source')[1].src = "http://192.210.179.210:8000/radio?" + d;
-			$('#StreamPlayer audio')[0].load();
-		} else {
-			$('#StreamButton')[0].text = "Stream (Online)";
-			$('#StreamPlayer video')[0].style.display = "block";
-			$('#StreamPlayer video')[0].volume = vol;
-			$('#StreamPlayer audio')[0].style.display = "none";
-		}
-		$('#StreamPlayer span')[0].style.display = "none";
-	};
-	$('#StreamPlayer video')[0].onloadstart = function() {
-		StreamStatus.loadingV = true;
-		$('#StreamButton')[0].text = "Stream (Connecting)";
-		$('#StreamPlayer span')[0].style.display = "block";
-	};
-	$('#StreamPlayer video')[0].onemptied = function() {
-		StreamStatus.video = false; 
-		setTimeout(function() {StreamStatus.loadingV = false;}, 1000);
-		setTimeout(function() {
-			if ( $('#StreamPlayer video')[0].networkState == 3 && $('#StreamPlayer video source')[0].src != "" && !StreamStatus.loadingA && !StreamStatus.audio ) {
-				$('#StreamButton')[0].text = "Stream (Offline)";
-			}
-		},300);
-		$('#StreamPlayer video')[0].style.display = "none";
-		$('#StreamPlayer span')[0].style.display = "none";
-	};
-	$('#StreamPlayer audio')[0].onloadeddata = function() {
-		StreamStatus.audio = true;
-		$('#StreamButton')[0].text = "Stream (Online)";
-		setTimeout(function() {StreamStatus.loadingA = false;}, 1000); 
-		$('#StreamPlayer audio')[0].volume = vol;
-		$('#StreamPlayer audio')[0].style.display = "block";
-	};
-	$('#StreamPlayer audio')[0].onloadstart = function() {
-		StreamStatus.loadingA = true; 
-	}; 
-	$('#StreamPlayer audio')[0].onemptied = function() {
-		StreamStatus.audio = false; 
-		setTimeout(function() {StreamStatus.loadingA = false;}, 1000); 
-		if ($('#StreamPlayer audio')[0].networkState == 3 && $('#StreamPlayer audio source')[0].src != "") {
-			$('#StreamButton')[0].text = "Stream (Offline)";
-		}
-		$('#StreamPlayer audio')[0].style.display = "none";
-	};
-	$('#StreamButton')[0].onclick = function(){ 
-		if (!StreamStatus.loadingA && !StreamStatus.loadingV) {
-			if ($('#StreamPlayer')[0].style.display == "block") {
-				$('#StreamPlayer video source')[0].src = "";
-				$('#StreamPlayer video')[0].load();
-				$('#StreamPlayer audio source')[0].src = "";
-				$('#StreamPlayer audio source')[1].src = "";
-				$('#StreamPlayer audio')[0].load();
-				setTimeout(function() {$('#StreamButton')[0].text = "Stream (Disconnected)";},100);
-				$('#StreamPlayer')[0].style.display = "none";
-			} else {
-				var d = new Date().getTime();
-				if (StreamStatus.video || StreamStatus.audio) {
-					$('#StreamPlayer')[0].style.display = "block";
-					$('#StreamPlayer span')[0].style.display = "none";
-				}  else if (!StreamStatus.video || $('#StreamPlayer video')[0].readyState == 2 || !StreamStatus.audio || $('#StreamPlayer audio')[0].readyState == 2) {
-					$('#StreamPlayer video source')[0].src = "http://192.210.179.210:8000/radio?" + d;
-					$('#StreamPlayer video')[0].load();
-				} else {
-					$('#StreamPlayer')[0].style.display = "none";
-				}
-			}
-		}
-	};
-	$(function() {
-		$('body').on('mousedown', '#grabbar', function(event) {
-			if (event.which == 1) {
-				var parent = $(this).parent();
-				parent.addClass('draggable').parents().on('mousemove', function(e) {
-					if ($('#StreamPlayer').css("right") == "0px") {
-						$('#StreamPlayer').css("right","");
-						$('#StreamPlayer').css("transform","");
-					}
-					$('.draggable').offset({
-						top: e.pageY - 20,
-						left: e.pageX - $('.draggable').outerWidth() / 2
-					}).on('mouseup', function() {
-						parent.removeClass('draggable');
-					});
-				});
-				event.preventDefault();
-			}
-		}).on('mouseup', function(event) {
-			if (event.which == 1)
-				$('.draggable').removeClass('draggable');
-		});
-	});
-	$(document).ready(function() {
-		StreamStatus.loadingA = false;
-		StreamStatus.loadingV = false;
-		$('#StreamButton').text = "Stream";
-	});
 </script>
 <script src="{{MEDIA_URL}}js/{{CLIENT_JS}}"></script>
