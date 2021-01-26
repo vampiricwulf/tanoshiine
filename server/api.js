@@ -16,6 +16,10 @@ var r = global.redis;
 // On a different port for now. Will migrate everything to express some day
 app.listen(config.API_PORT);
 
+app.get(/api\/config\/?/, function(req, res) {
+	res.json(state.clientConfig);
+})
+
 app.get(/api\/(post|thread)\/([0-9]+)\/?/, function(req, res){
 	res.set(JSONHeaders);
 	var par = req.params,
@@ -120,18 +124,24 @@ function getPosts(nums, isOP, cb) {
 			links = key + ':links';
 			m.hgetall(key);
 			m.hgetall(links);
+			m.get(key+':body')
 		}
 		m.exec(function(err, data){
 			if (err)
 				return cb(err);
 			var post, links;
-			for (var i = 0; i < data.length; i += 2) {
+			for (var i = 0; i < data.length; i += 3) {
 				post = data[i];
 				links = data[i + 1];
+				body = data[i+2];
 				if (!post)
 					continue;
 				if (links)
 					post.links = links;
+				if(body !== null) {
+					post.body = body;
+					post.editing = true;
+				}
 				pruneData(post);
 				posts.push(post);
 			}
@@ -147,7 +157,7 @@ function pruneData(data){
 	delete data.ip;
 	// Useless on the client
 	delete data.hash;
-	delete data.hctr;
+	// delete data.hctr;
 	delete data.tags;
 }
 
