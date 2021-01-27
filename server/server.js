@@ -154,6 +154,14 @@ function synchronize(msg, client) {
 	return true;
 }
 
+dispatcher[common.DESYNC] = function (msg, client) {
+	if(client.db){
+		client.db.kikanai();
+		client.db.disconnect();
+	}
+	return true;
+}
+
 function setup_imager_relay(cb) {
 	var onegai = new imager.Onegai;
 	onegai.relay_client_messages();
