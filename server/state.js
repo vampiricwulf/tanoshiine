@@ -103,7 +103,8 @@ var clientConfig = _.pick(config,
 	'READ_ONLY',
 	'API_URL',
 	'IP_TAGGING',
-	'BOARDS'
+	'BOARDS',
+	'DEFAULT_BOARD'
 );
 var clientImager = _.pick(imager,
 	'WEBM',
