@@ -17,6 +17,7 @@ var r = global.redis;
 app.listen(config.API_PORT);
 
 app.get(/api\/config\/?/, function(req, res) {
+	res.set(JSONHeaders);
 	res.json(state.clientConfig);
 })
 
