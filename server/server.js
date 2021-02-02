@@ -79,6 +79,10 @@ function synchronize(msg, client) {
 		/* Sync logic is buggy; allow for now */
 		//return true;
 	}
+	return linkToDatabase(board, syncs, live, client);
+}
+
+function linkToDatabase(board, syncs, live, client) { //Splitting this up to re-use
 	if (!caps.can_access_board(client.ident, board))
 		return false;
 	var dead_threads = [], count = 0, op;
@@ -150,6 +154,24 @@ function synchronize(msg, client) {
 			if (err)
 				winston.error(err);
 		});
+	}
+	return true;
+}
+
+dispatcher[common.RESYNC] = function(msg, client) {
+	//If you were to just synchronize again it wouldn't work because of the duplicate id, 
+	//and if you use a new id every time you'd end up receiving push messages multiple times
+	// because of the client getting listed multiple times in STATE.
+	if (!check(['string', 'id=>nat', 'boolean'], msg))
+		return false;
+	var board = msg[0], syncs = msg[1], live = msg[2];
+	return linkToDatabase(board, syncs, live, client);
+}
+
+dispatcher[common.DESYNC] = function (msg, client) {
+	if(client.db){
+		client.db.kikanai();
+		client.db.disconnect();
 	}
 	return true;
 }
