@@ -16,10 +16,10 @@ var r = global.redis;
 // On a different port for now. Will migrate everything to express some day
 app.listen(config.API_PORT);
 
-app.get(/api\/config\/?/, function(req, res) {
+app.get(/api\/config\/?/, function (req, res) {
 	res.set(JSONHeaders);
 	res.json(state.clientConfig);
-})
+});
 
 app.get(/api\/(post|thread)\/([0-9]+)\/?/, function(req, res){
 	res.set(JSONHeaders);
@@ -125,7 +125,7 @@ function getPosts(nums, isOP, cb) {
 			links = key + ':links';
 			m.hgetall(key);
 			m.hgetall(links);
-			m.get(key+':body')
+			m.get(key + ':body');
 		}
 		m.exec(function(err, data){
 			if (err)
