@@ -44,7 +44,7 @@ app.get(/api\/(post|thread)\/([0-9]+)\/?/, function(req, res){
 	if (par[0] == 'post')
 		getPosts([par[1]], isOP, respond);
 	else if (isOP)
-		getThreads([par[1]], Infinity, respond);
+		getThreads([par[1]], req.query.last || Infinity, respond);
 	else
 		res.sendStatus(404);
 });
