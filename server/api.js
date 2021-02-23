@@ -3,7 +3,9 @@ var _ = require('underscore'),
 	config = require('../config'),
 	db = require('../db'),
 	express = require('express'),
-	state = require('./state');
+	persona = require('./persona'),
+	state = require('./state'),
+	web = require('./web');
 
 var app = express();
 var JSONHeaders = {
@@ -15,6 +17,23 @@ var JSONHeaders = {
 var r = global.redis;
 // On a different port for now. Will migrate everything to express some day
 app.listen(config.API_PORT);
+
+app.use(function(req, res, next) {
+	var forward = req.headers['x-forwarded-for'],
+	ip = config.TRUST_X_FORWARDED_FOR && forward ? forward : req.connection.remoteAddress;
+	req.ident = {ip: ip};
+	var cookies = web.parse_cookie(req.headers.cookie);
+	var cookie = persona.extract_login_cookie(cookies);
+	if (cookie) {
+		persona.check_cookie(cookie, function(err, ident) {
+			if (!err)
+				_.extend(req.ident, ident);
+			next();
+		});
+	}
+	else
+		next();
+})
 
 app.get(/api\/config\/?/, function (req, res) {
 	res.set(JSONHeaders);
@@ -105,9 +124,7 @@ app.get(/\/api\/size\/([a-z0-9]+)\/?/, function(req, res){
 
 // Check board existanace and access rights
 function invalid(req, board){
-	var forward = req.headers['x-forwarded-for'],
-		ip = config.TRUST_X_FORWARDED_FOR && forward ? forward : req.connection.remoteAddress;
-	if (!caps.can_access_board({ip: ip}, board))
+	if (!caps.can_access_board(req.ident, board))
 		return true;
 	return false;
 };
