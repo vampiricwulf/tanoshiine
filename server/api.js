@@ -18,14 +18,14 @@ var r = global.redis;
 // On a different port for now. Will migrate everything to express some day
 app.listen(config.API_PORT);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	var forward = req.headers['x-forwarded-for'],
-	ip = config.TRUST_X_FORWARDED_FOR && forward ? forward : req.connection.remoteAddress;
-	req.ident = {ip: ip};
+		ip = config.TRUST_X_FORWARDED_FOR && forward ? forward : req.connection.remoteAddress;
+	req.ident = { ip: ip };
 	var cookies = web.parse_cookie(req.headers.cookie);
 	var cookie = persona.extract_login_cookie(cookies);
 	if (cookie) {
-		persona.check_cookie(cookie, function(err, ident) {
+		persona.check_cookie(cookie, function (err, ident) {
 			if (!err)
 				_.extend(req.ident, ident);
 			next();
@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
 	}
 	else
 		next();
-})
+});
 
 app.get(/api\/config\/?/, function (req, res) {
 	res.set(JSONHeaders);
