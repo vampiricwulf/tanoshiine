@@ -1,4 +1,5 @@
 var _ = require('underscore'),
+	authcommon = require('../admin/common'),
 	caps = require('./caps'),
 	config = require('../config'),
 	db = require('../db'),
@@ -61,9 +62,9 @@ app.get(/api\/(post|thread)\/([0-9]+)\/?/, function(req, res){
 	}
 
 	if (par[0] == 'post')
-		getPosts([par[1]], isOP, respond);
+		getPosts([par[1]], isOP, req.ident, respond);
 	else if (isOP)
-		getThreads([par[1]], req.query.last || Infinity, respond);
+		getThreads([par[1]], req.query.last || Infinity, req.ident, respond);
 	else
 		res.sendStatus(404);
 });
@@ -85,7 +86,7 @@ app.get(/\/api\/(catalog|board)\/([a-z0-9]+)\/?/, function(req, res){
 		if (!nums || nums.length === 0)
 			return res.sendStatus(404);
 
-		getThreads(nums.reverse(), limit, function(err, threads) {
+		getThreads(nums.reverse(), limit, req.ident, function(err, threads) {
 			if (err)
 				res.send(err);
 			if (!threads || threads.length === 0)
@@ -129,7 +130,7 @@ function invalid(req, board){
 	return false;
 };
 
-function getPosts(nums, isOP, cb) {
+function getPosts(nums, isOP, ident, cb) {
 		var posts = [],
 			m = r.multi(),
 			keyHeader = isOP ? 'thread:' : 'post:',
@@ -160,7 +161,11 @@ function getPosts(nums, isOP, cb) {
 					post.body = body;
 					post.editing = true;
 				}
-				pruneData(post);
+				if(caps.can_moderate(ident)) {
+					pruneDataModerators(post);
+				} else {
+					pruneData(post);
+				}
 				posts.push(post);
 			}
 			// No posts retrieved
@@ -179,7 +184,21 @@ function pruneData(data){
 	delete data.tags;
 }
 
-function getThreads(nums, replyLimit, cb) {
+function pruneDataModerators(data){
+	if (data.ip && config.IP_MNEMONIC) {
+		var mnem = authcommon.ip_mnemonic(data.ip);
+		var tag = authcommon.mnemonic_tag(data.ip);
+		if(mnem)
+			data.mnemonic = mnem;
+		if(tag)
+			data.tag = tag;
+	} 
+	delete data.ip;
+	delete data.hash;
+	delete data.tags;
+}
+
+function getThreads(nums, replyLimit, ident, cb) {
 	var threads = [], m = r.multi(), key;
 	for (var num of nums) {
 		key = 'thread:' + num;
@@ -201,7 +220,11 @@ function getThreads(nums, replyLimit, cb) {
 			replies = data[i + 3];
 			if (!op)
 				continue;
-			pruneData(op);
+			if(caps.can_moderate(ident)) {
+				pruneDataModerators(op);
+			} else {
+				pruneData(op);
+			}
 			if (links)
 				op.links = links;
 			if (dels.length > 0)
@@ -219,7 +242,7 @@ function getThreads(nums, replyLimit, cb) {
 		if (allReplies.length === 0)
 			return cb(null, threads);
 
-		getPosts(allReplies, false, function(err, replies){
+		getPosts(allReplies, false, ident, function(err, replies){
 			if (err)
 				return cb(err);
 			if (!replies)
