@@ -103,11 +103,13 @@ function append_mnemonic(info) {
 	var header = info.header, ip = info.data.ip;
 	if (!ip)
 		return;
-	var mnemonic = config.IP_MNEMONIC && ip_mnemonic(ip);
+	var mnemonic = info.data.mnemonic || config.IP_MNEMONIC && ip_mnemonic(ip);
 	var key = ip_key(ip);
 
 	// Terrible hack.
-	if (mnemonic && modCache.addresses) {
+	if (mnemonic && info.data.tag) {
+		mnemonic += ' "' + info.data.tag + '"';
+	} else if (mnemonic && modCache.addresses) {
 		var addr = modCache.addresses[key];
 		if (addr && addr.name && config.IP_TAGGING)
 			mnemonic += ' "' + addr.name + '"';
@@ -121,9 +123,21 @@ function append_mnemonic(info) {
 
 function append_mnemonic_no_ip(info) {
 	var header = info.header, ip = info.data.ip;
-	if (!ip)
-		return;
-	var mnemonic = config.IP_MNEMONIC && ip_mnemonic(ip);
+	if (!ip){
+		if(!info.data.mnemonic)
+			return;
+	}
+	var mnemonic = info.data.mnemonic || config.IP_MNEMONIC && ip_mnemonic(ip);
+	var key = ip_key(ip);
+
+	// Terrible hack.
+	if (mnemonic && info.data.tag) {
+			mnemonic += ' "' + info.data.tag + '"';
+	}	else if (mnemonic && modCache.addresses) {
+		var addr = modCache.addresses[key];
+		if (addr && addr.name && config.IP_TAGGING)
+			mnemonic += ' "' + addr.name + '"';
+	}
 
 	var s = common.safe;
 	header.push(s(' <a class="mod addr">'),

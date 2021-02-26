@@ -170,7 +170,7 @@ function subscribe() {
 			count: STATE.clientsByIP[ip].length
 		});
 	}
-	this.send([0, common.COLLECTION_RESET, 'addrs', ips]);
+	this.send([0, common.COLLECTION_ADD, 'addrs', ips]);
 
 	return true;
 }

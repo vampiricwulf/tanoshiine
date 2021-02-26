@@ -1,5 +1,6 @@
 var _ = require('underscore'),
-    async = require('async'),
+		async = require('async'),
+		authcommon = require('./admin/common'),
     cache = require('./server/state').dbCache,
     caps = require('./server/caps'),
     common = require('./common'),
@@ -180,6 +181,10 @@ function inject_extra(op, kind, msg, extra) {
 		var m = msg.match(/^(\d+,\d+,\d+,)(.+)$/);
 		var post = JSON.parse(m[2]);
 		post.ip = extra.ip;
+		var mnemonic = authcommon.ip_mnemonic(extra.ip);
+		var tag = authcommon.mnemonic_tag(extra.ip);
+		if(mnemonic) post.mnemonic = mnemonic;
+		if(tag) post.tag = tag;
 		return m[1] + JSON.stringify(post);
 	}
 }
