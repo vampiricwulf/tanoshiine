@@ -1,14 +1,23 @@
 MM DD NAME
 3 20 Wulf
 4 2 NotSo
+6 20 Chuthulu & Retro
 6 23 PAN
+6 26 Puff
+7 1 C*nada
+7 4 United States of America
+7 18 Perkele (TN)
 7 22 Kirara
 7 28 Rene
 8 4 Arisu
 8 25 Rin
 9 12 Tano
 9 14 Windows ME
+9 15 StuCo
 9 23 Maria
+10 8 Rukusu
+10 18 Rei
+10 25 Nala
 11 16 LV
 12 10 sp0rk
 12 15 Nika
