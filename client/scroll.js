@@ -125,6 +125,12 @@ if (window.scrollMaxY !== undefined)
 		return window.scrollMaxY -5 <= window.scrollY;
 	};
 
+window.addEventListener("resize", () => {
+	if(lockTarget == PAGE_BOTTOM) {
+		window.scroll(0, document.documentElement.scrollHeight)
+	}
+})
+
 (function () {
 	menuHandlers.Focus = function (model) {
 		var num = model && model.id;

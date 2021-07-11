@@ -33,3 +33,4 @@ www/vint
 .netbeans.xml
 .vs/*
 /.vagrant/
+*.bak
