@@ -122,7 +122,7 @@ var at_bottom = function() {
 };
 if (window.scrollMaxY !== undefined)
 	at_bottom = function () {
-		return window.scrollMaxY <= window.scrollY;
+		return window.scrollMaxY -5 <= window.scrollY;
 	};
 
 (function () {
