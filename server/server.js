@@ -613,7 +613,7 @@ web.resource(/^\/(\w+)\/(\d+)\/$/, function (req, params, cb) {
 
 web.resource(/^\/outbound\/(sn|iq|io)\/(.*)$/,
 function (req, params, cb) {
-  var src = '//' + config.LOGIN_COOKIE_DOMAIN + imager.config.MEDIA_URL + 'src/' + params[2];
+  var src = '//' + config.LOGIN_COOKIE_DOMAIN + imager.config.MEDIA_URL + 'mid/' + params[2];
   var u = urlParse(src, false, true);
   if (!u.protocol) {
     u.protocol = 'http:';

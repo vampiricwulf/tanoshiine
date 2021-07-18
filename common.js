@@ -634,9 +634,9 @@ OS.gazou = function (info, toppu) {
 	else {
 		src = encodeURI(this.image_paths().src + info.src);
 		caption = [
-			(/\.(webm|mp4)/.test(info.src)?'Video':
 			(/\.(mp3|ogg|wav)/.test(info.src)?'Audio':
-			(this.sauceToggle?image_sauce_id(info.src):'Image'))), ' ',
+			(this.sauceToggle?image_sauce_id(info.mid):
+			(/\.(webm|mp4)/.test(info.src)?'Video':'Image'))), ' ',
 			new_tab_link(src, (this.thumbStyle == 'hide') ? '[Show]' : info.src, 'imageSrc')
 		];
 	}
@@ -674,7 +674,8 @@ thumbStyles = ['small', 'sharp', 'large', 'hide'];
 OS.gazou_img = function (info, toppu, href) {
 	var src, thumb;
 	var imgPaths = this.image_paths();
-	var m = info.src ? /.gif$/.test(info.src) : false;
+	var matchGIF = info.src ? /.gif$/.test(info.src) : false;
+	var matchSVG = info.src ? /.svg$/.test(info.src) : false;
 	if (!info.vint)
 		src = thumb = encodeURI(imgPaths.src + info.src);
 
@@ -692,7 +693,7 @@ OS.gazou_img = function (info, toppu, href) {
 		src = encodeURI('../outbound/hash/' + info.MD5);
 		thumb = imgPaths.vint + info.vint;
 	}
-	else if (m && this.autoGif) {
+	else if ((matchGIF && this.autoGif) || matchSVG) {
 		thumb = src;
 		if (!toppu && this.thumbStyle == 'large') {
 			tw *= 2;
