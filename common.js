@@ -492,7 +492,7 @@ function readable_dice(bit, d) {
 	}
 	if(bit.toLowerCase() == '#russian'){
 		var time = d[0].russianTime + d[0].russianCountdown;
-		return safe('#russian <syncwatch class="embed" start='+time+
+		return safe(bit+' <syncwatch class="embed" start='+time+
 				" end="+time+
 				" hour="+0+
 				" min="+0+
