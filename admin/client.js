@@ -200,6 +200,7 @@ var AddressView = Backbone.View.extend({
 		var $el = this.$el;
 		if (IDENT.auth == 'Admin') {
 			$('<span/>', {"class": 'ip'}).appendTo($el);
+			$('<span/>', {"class": 'geo'}).appendTo($el);
 			$el.append(' &nbsp; ', $('<input/>', {
 				"class": 'sel-all',
 				type: 'button',
@@ -236,6 +237,7 @@ var AddressView = Backbone.View.extend({
 			return this;
 		}
 		this.$('.ip').text(attrs.ip);
+		this.$('.geo').text(" "+attrs.geo);
 		if (config.IP_TAGGING) {
 			var $name = this.$('.name');
 			if (!this.focusedName) {
