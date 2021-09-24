@@ -8,4 +8,5 @@ module.exports = {
 	
 	// Discord Webhook https://discordapp.com/developers/docs/resources/webhook
 	WEBHOOK_URL: '',
+	LOG_WEBHOOK_URL: '',
 };

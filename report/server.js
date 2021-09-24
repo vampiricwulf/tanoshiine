@@ -53,6 +53,51 @@ function report(reporter_ident, op, num, description, cb) {
 	});
 }
 
+function send_modlog(ident, type, content, cb) {
+	if(!config.LOG_WEBHOOK_URL){
+		if(cb) return cb(null);
+		return;
+	}
+	const responsible =  maybe_mnemonic(ident.ip);
+	const rlookup = geo.lookup(ident.ip);
+	const rcountry =  rlookup ? rlookup.country : `Unknown ${ident.ip}`
+
+	if (type === "Ban/Unban") {
+		//content here is just the ip that's getting banned and the duration, do the lookup for country and mnemonic here
+		let mnemonic = maybe_mnemonic(content.ip);
+		let clookup = geo.lookup(content.ip);
+		let country =  clookup ? clookup.country : `Unknown ${content.ip}`
+		let duration = content.duration === 0 ? "unban" : Number.isInteger(content.duration) ? (content.duration / 1000 +" seconds") : content.duration;
+		content = `${content.ip} # ${mnemonic.mnemonic || '???'}${mnemonic.tag || ""}`+"\nCountry: "+country+"\nDuration: "+duration;
+	}
+
+	var json = {
+			"embeds":[
+				{
+					"title": type,
+					"fields": [
+						{
+							"name": "Details",
+							"value": content,
+							"inline": true
+						},
+						{
+							"name": "Responsible",
+							"value": (responsible.mnemonic || "???") + (responsible.tag || "")+"\nCountry: "+rcountry,
+							"inline": true
+						}
+					]
+				}
+			]
+		};
+	request.post(config.LOG_WEBHOOK_URL,{json: json},
+		function(err,resp,body) { //We don't care if it actually logs or not, no need to act on that.
+			if(cb) cb(null);
+		}
+	);	
+}
+exports.send_modlog = send_modlog;
+
 function send_report(reporter, board, op, num, body, cb) {
 	var noun;
 	var url = config.DOMAIN + board + '/' + op + '?reported';
@@ -144,6 +189,7 @@ function maybe_mnemonic(ip) {
 }
 
 
+if(config.REPORTS){
 okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 	if (!msgcheck.check(['id', 'string', 'string'], msg))
 		return false;
@@ -216,3 +262,4 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 		return true;
 	}
 };
+}

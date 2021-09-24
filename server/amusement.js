@@ -1,4 +1,5 @@
-var common = require('../common'),
+var ban_self = require('../admin/index').ban_self,
+	common = require('../common'),
 	db = require('../db'),
     hooks = require('../hooks'),
     radio = require('./radio');
@@ -31,6 +32,16 @@ exports.roll_dice = function (frag, post, extra) {
 				rolls.push(threadContainer[post.op]);
 			if (info.bully == 'total')
 				rolls.push(bully_counter);
+		}
+		else if(info.russian) {
+			var result = 0;
+			if((Math.floor(Math.random() * 100) + 1) < info.russian.chance) {
+				setTimeout(() => {
+					ban_self(extra.ip);
+				}, info.russian.countdown);
+				result = 1;
+			}
+			rolls.push({russianTime: info.russian.time, russianCountdown: info.russian.countdown, result});
 		}
 		else if(info.start)	//syncwatch
 			rolls.push({start:info.start, end:info.end, hour:info.hour, min:info.min, sec:info.sec});
