@@ -425,7 +425,8 @@ function parse_dice(frag) {
 	if (frag == '#btotal')
 		return {bully: 'total'};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
-	if (frag == '#russian'){
+	// Russian Roulette Ban
+	if (frag.toLowerCase() == '#russian'){
 		return {russian: {time: serverTime(), countdown: config.SELFBANDELAY, chance: config.SELFBANCHANCE}};
 	}
 	// Regular dice
@@ -489,7 +490,7 @@ function readable_dice(bit, d) {
 				" sec="+d[0].sec+
 				' >syncwatch</syncwatch>');
 	}
-	if(bit == '#russian'){
+	if(bit.toLowerCase() == '#russian'){
 		var time = d[0].russianTime + d[0].russianCountdown;
 		return safe('#russian <syncwatch class="embed" start='+time+
 				" end="+time+

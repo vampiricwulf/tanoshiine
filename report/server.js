@@ -60,7 +60,7 @@ function send_modlog(ident, type, content, cb) {
 	}
 	const responsible =  maybe_mnemonic(ident.ip);
 	const rlookup = geo.lookup(ident.ip);
-	const rcountry =  rlookup ? rlookup.country : `Unknown ${ident.ip}`
+	const rcountry =  rlookup ? rlookup.country : `Unknown ${ident.ip}`;
 
 	if (type === "Ban/Unban") {
 		//content here is just the ip that's getting banned and the duration, do the lookup for country and mnemonic here
