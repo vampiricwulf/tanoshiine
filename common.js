@@ -401,7 +401,7 @@ OS.karada = function (body) {
 };
 
 
-var dice_re = /(#flip|#awoo|#1ball|#8ball|#9ball|bully|#bcount|#btotal|#sw(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
+var dice_re = /(#flip|#awoo|#1ball|#8ball|#9ball|bully|#bcount|#btotal|#russian|#sw(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[+-]\d+)?|#\d{0,2}d\d{1,4}(?:[+-]\d{1,4})?)/i;
 
 
 function parse_dice(frag) {
@@ -425,6 +425,9 @@ function parse_dice(frag) {
 	if (frag == '#btotal')
 		return {bully: 'total'};
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
+	if (frag == '#russian'){
+		return {russian: {time: serverTime(), countdown: config.SELFBANDELAY, chance: config.SELFBANCHANCE}};
+	}
 	// Regular dice
 	if (m){
 		var n = parseInt(m[1], 10) || 1, faces = parseInt(m[2], 10);
@@ -485,6 +488,17 @@ function readable_dice(bit, d) {
 				" min="+d[0].min+
 				" sec="+d[0].sec+
 				' >syncwatch</syncwatch>');
+	}
+	if(bit == '#russian'){
+		var time = d[0].russianTime + d[0].russianCountdown;
+		return safe('#russian <syncwatch class="embed" start='+time+
+				" end="+time+
+				" hour="+0+
+				" min="+0+
+				" sec="+0+
+				" type=russian"+
+				" result="+d[0].result+
+				' >russian</syncwatch>');
 	}
 	var f = d[0], n = d.length, b = 0;
 	if (d[n-1] && typeof d[n-1] == 'object') {

@@ -62,18 +62,27 @@ function timer_from_el($el) {
 	var maxh = pad($el.attr('hour'));
 	var maxm = pad($el.attr('min'));
 	var maxs = pad($el.attr('sec'));
+	var type = $el.attr('type') || "regular";
 
 	(function moumouikkai(){
 		// Prevent memory leak
 		if (!$el.length)
 			return;
 		var now = serverTime();
-		if (now > end)
+		if (now > end){
+			if(type === "russian"){
+				if($el.attr('result') === "1") {
+					$el.css("color", "red");
+					return $el.text("User got Banned for this roll!");
+				}
+				return $el.text("Safe!")
+			}
 			return $el.text('Finished');
+		}
 		// If the start time is in the future
 		if (start > now) {
 			var countdown = Math.round((start-now)/1000);
-			if(countdown==10 || countdown==5)
+			if((countdown==10 || countdown==5) && type === "regular")
 				Backbone.trigger('syncCountdown',countdown);
 			$el.text('Countdown: ' + countdown);
 			return setTimeout(moumouikkai, 1000);

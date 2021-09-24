@@ -72,6 +72,11 @@ var config = {
 	CURFEW_BOARDS: ['moe'],
 
 	SUGGESTIONBOX: false,
+
+	SELFBANTIME: 5 * 60 * 1000, // Duration of the selfban
+	SELFBANDELAY: 20 * 1 * 1000, // Countdown until it reveals the result and starts the ban if needed
+	SELFBANCHANCE: 2, //It rolls a d100, if the result is below this number it bans
+
 };
 
 module.exports = config;

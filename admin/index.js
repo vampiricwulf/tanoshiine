@@ -1,7 +1,9 @@
 var authcommon = require('./common'),
     caps = require('../server/caps'),
+		config = require('../config'),
     common= require('../common'),
     okyaku = require('../server/okyaku'),
+		report = require('../report/server'),
     STATE = require('../server/state');
 
 require('./panel');
@@ -9,6 +11,26 @@ require('./panel');
 function connect() {
 	return global.redis;
 }
+
+function ban_self(ip){
+	var m = connect().multi();
+	var type = 'timeout';
+	var sentence = config.SELFBANTIME;
+	if (!authcommon.is_valid_ip(ip))
+		return false;
+	var key = authcommon.ip_key(ip);
+	var client = {ident: {ip}}
+
+	var m = connect().multi();
+	if(!ban(m, client, ip, key, type, sentence))
+		return false;
+
+	m.exec(function (err) {
+		//if (err)
+	});
+	return true;
+}
+exports.ban_self = ban_self;
 
 function ban(m, mod, ip, key, type, sentence) {
 	if (type == 'unban') {
@@ -35,7 +57,8 @@ function ban(m, mod, ip, key, type, sentence) {
 	if (mod.ident.email)
 		info.email = mod.ident.email;
 	m.rpush('auditLog', JSON.stringify(info));
-
+	report.send_modlog(mod.ident, "Ban/Unban", {ip, duration: sentence})
+	
 	// trigger reload
 	m.publish('reloadBans', 'caps');
 

@@ -19,6 +19,7 @@ var _ = require('underscore'),
 		postalert = require('./postalert'),
     suggest = require('./issuetracker'),
     render = require('./render'),
+		modlog = undefined,
     STATE = require('./state'),
     tripcode = require('./../tripcode/tripcode'),
     urlParse = require('url').parse,
@@ -32,8 +33,7 @@ if (config.CURFEW_BOARDS)
 	require('../curfew/server');
 try {
 	var reportConfig = require('../report/config');
-	if (reportConfig.REPORTS)
-		require('../report/server');
+	report = require('../report/server');
 } catch (e) {}
 require('../time/server');
 if (config.VOICE_PATH)
@@ -964,6 +964,9 @@ dispatcher[common.DELETE_POSTS] = caps.mod_handler(function (nums, client) {
 	client.db.remove_posts(nums, function (err, dels) {
 		if (err)
 			client.kotowaru(Muggle("Couldn't delete.", err));
+		if(report) {
+			report.send_modlog(client.ident, "Delete Posts", nums.join('\n'))
+		}
 	});
 });
 
@@ -976,6 +979,9 @@ dispatcher[common.LOCK_THREAD] = caps.mod_handler(function (nums, client) {
 		if (err)
 			client.kotowaru(Muggle(
 					"Couldn't (un)lock thread.", err));
+		if(report) {
+			report.send_modlog(client.ident, "Lock/Unlock", nums.join('\n'))
+		}
 	});
 });
 
@@ -985,6 +991,9 @@ dispatcher[common.DELETE_IMAGES] = caps.mod_handler(function (nums, client) {
 	client.db.remove_images(nums, function (err, dels) {
 		if (err)
 			client.kotowaru(Muggle("Couldn't delete images.",err));
+		if(report) {
+			report.send_modlog(client.ident, "Delete Images", nums.join('\n'))
+		}
 	});
 });
 
@@ -1016,6 +1025,9 @@ dispatcher[common.SPOILER_IMAGES] = caps.mod_handler(function (nums, client) {
 		if (err)
 			client.kotowaru(Muggle("Couldn't spoiler images.",
 					err));
+		if(report) {
+			report.send_modlog(client.ident, "Spoiler Images", nums.join('\n'))
+		}
 	});
 });
 
