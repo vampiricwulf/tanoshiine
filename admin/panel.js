@@ -3,6 +3,7 @@ var _ = require('underscore'),
     caps = require('../server/caps'),
     common = require('../common'),
 	config = require('../config'),
+	geo = require('geoip-country'),
     okyaku = require('../server/okyaku'),
     STATE = require('../server/state');
 
@@ -49,7 +50,8 @@ okyaku.dispatcher[authcommon.FETCH_ADDRESS] = function (msg, client) {
 	}
 
 	// Cache miss
-	ADDRS[key] = addr = {ip: ip, key: key, shallow: true};
+	var lookup = geo.lookup(ip);
+	ADDRS[key] = addr = {ip: ip, key: key, geo: lookup ? lookup.country : "unknown", shallow: true};
 	var r = connect();
 	r.hgetall('ip:'+key, function (err, info) {
 		if (err) {
