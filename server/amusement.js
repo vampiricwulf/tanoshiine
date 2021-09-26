@@ -8,6 +8,7 @@ var rollLimit = 10;
 var bully_counter;
 var r = global.redis;
 var threadContainer = {};
+var russianClicks = 0;
 
 exports.roll_dice = function (frag, post, extra) {
 	var ms = frag.split(common.dice_re);
@@ -35,11 +36,14 @@ exports.roll_dice = function (frag, post, extra) {
 		}
 		else if(info.russian) {
 			var result = 0;
-			if((Math.floor(Math.random() * 100) + 1) < info.russian.chance) {
+			if(Math.random() < (1/(6-russianClicks))) {
 				setTimeout(() => {
 					ban_self(extra.ip);
 				}, info.russian.countdown);
+				russianClicks = 0;
 				result = 1;
+			} else {
+				russianClicks += 1;
 			}
 			rolls.push({russianTime: info.russian.time, russianCountdown: info.russian.countdown, result});
 		}
