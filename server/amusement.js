@@ -35,8 +35,10 @@ exports.roll_dice = function (frag, post, extra) {
 				rolls.push(bully_counter);
 		}
 		else if(info.russian) {
+			if(post.dice && post.dice.length+dice.length >= rollLimit)
+			continue;
 			var result = 0;
-			if(Math.random() < (1/(6-russianClicks))) {
+			if(Math.random() < (1/(info.chamberSize-russianClicks))) {
 				setTimeout(() => {
 					ban_self(extra.ip);
 				}, info.russian.countdown);
