@@ -85,6 +85,7 @@ var config = {
 	},
 	SELFBANDELAY: 20 * 1 * 1000, // Countdown until it reveals the result and starts the ban if needed
 	RUSSIANDECAY: 3*60*60*1000,
+	RUSSIANCHAMBERSIZE: 6, //INFINITY = 0% Chance, 1 = 100% Chance
 
 };
 
