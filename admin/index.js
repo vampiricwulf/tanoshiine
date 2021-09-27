@@ -12,23 +12,49 @@ function connect() {
 	return global.redis;
 }
 
+function calculateSelfbantime(stage) {
+	return config.SELFBANTIME[stage] || calculateSelfbantime(stage-1)*2; // In case not enough stages are configured, it just doubles the previous one
+}
+
 function ban_self(ip){
-	var m = connect().multi();
 	var type = 'timeout';
-	var sentence = config.SELFBANTIME;
 	if (!authcommon.is_valid_ip(ip))
 		return false;
 	var key = authcommon.ip_key(ip);
 	var client = {ident: {ip}};
 
 	var m = connect().multi();
-	if(!ban(m, client, ip, key, type, sentence))
-		return false;
+	var stageKey = 'russian:lvl:'+ip;
+	m.get(stageKey);
+	m.pttl(stageKey); 
+	m.exec(function (err,rs) {
+		if (err) return false;
 
-	m.exec(function (err) {
-		//if (err)
+		var stage = rs[0];
+		var TTL = rs[1];
+
+		if(stage) {
+			stage = Number(stage);
+			var supposedDecay = config.RUSSIANDECAY * stage;
+			var decayAmount = supposedDecay - TTL;
+			var decayStages = Math.floor(decayAmount / config.RUSSIANDECAY);
+			stage = Math.max(0, (stage - decayStages)) // Just making sure if the config got changed inbetween, so we don't go negative.
+		} else {
+			stage = 0;
+			TTL = 0;
+		}
+		stage++;
+		var sentence = calculateSelfbantime(stage);
+	
+		var m = connect().multi();
+		if(!ban(m, client, ip, key, type, sentence))
+			return false;
+
+		m.set(stageKey, stage, 'px', TTL+config.RUSSIANDECAY);
+		m.exec(function (err,rs) {
+		})
+		return true;
 	});
-	return true;
 }
 exports.ban_self = ban_self;
 

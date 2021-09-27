@@ -427,7 +427,7 @@ function parse_dice(frag) {
 	var m = frag.match(/^#(\d*)d(\d+)([+-]\d+)?$/i);
 	// Russian Roulette Ban
 	if (frag.toLowerCase() == '#russian'){
-		return {russian: {time: serverTime(), countdown: config.SELFBANDELAY, chance: config.SELFBANCHANCE}};
+		return {russian: {time: serverTime(), countdown: config.SELFBANDELAY, chamberSize: config.RUSSIANCHAMBERSIZE}};
 	}
 	// Regular dice
 	if (m){

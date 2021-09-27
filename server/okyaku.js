@@ -163,7 +163,7 @@ exports.scan_client_caps = function () {
 				return;
 			if (ident.timeout) {
 				okyaku.blackhole = true;
-				return;
+				// return;
 			}
 			if (!caps.can_access_board(ident, okyaku.board)) {
 				try {
