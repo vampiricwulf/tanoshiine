@@ -73,7 +73,7 @@ function timer_from_el($el) {
 			if(type === "russian"){
 				if($el.attr('result') === "1") {
 					$el.css("color", "red");
-					return $el.text("USER HAS MET AN UNLUCKY FATE");
+					return $el.text("*BANG*");
 				}
 				return $el.text("*click*");
 			}
