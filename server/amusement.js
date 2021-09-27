@@ -36,7 +36,7 @@ exports.roll_dice = function (frag, post, extra) {
 		}
 		else if(info.russian) {
 			if(post.dice && post.dice.length+dice.length >= rollLimit)
-			continue;
+				continue;
 			var result = 0;
 			if(Math.random() < (1/(info.chamberSize-russianClicks))) {
 				setTimeout(() => {

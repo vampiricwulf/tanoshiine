@@ -38,7 +38,7 @@ function ban_self(ip){
 			var supposedDecay = config.RUSSIANDECAY * stage;
 			var decayAmount = supposedDecay - TTL;
 			var decayStages = Math.floor(decayAmount / config.RUSSIANDECAY);
-			stage = Math.max(0, (stage - decayStages)) // Just making sure if the config got changed inbetween, so we don't go negative.
+			stage = Math.max(0, (stage - decayStages)); // Just making sure if the config got changed inbetween, so we don't go negative.
 		} else {
 			stage = 0;
 			TTL = 0;
@@ -52,7 +52,7 @@ function ban_self(ip){
 
 		m.set(stageKey, stage, 'px', TTL+config.RUSSIANDECAY);
 		m.exec(function (err,rs) {
-		})
+		});
 		return true;
 	});
 }
