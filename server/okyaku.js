@@ -158,7 +158,7 @@ OK.finish_post = function (callback) {
 exports.scan_client_caps = function () {
 	for (var ip in STATE.clientsByIP) {
 		var ident = caps.lookup_ident(ip);
-		STATE.clientsByIP[ip].forEach(function (okyaku) {
+		STATE.clientsByIP[ip].slice().forEach(function (okyaku) {
 			if (!okyaku.id || !okyaku.board)
 				return;
 			if (ident.timeout) {
