@@ -38,7 +38,7 @@ exports.roll_dice = function (frag, post, extra) {
 			if(post.dice && post.dice.length+dice.length >= rollLimit)
 				continue;
 			var result = 0;
-			if(Math.random() < (1/(info.chamberSize-russianClicks))) {
+			if(Math.random() < (1/(info.russian.chamberSize-russianClicks))) {
 				setTimeout(() => {
 					ban_self(extra.ip);
 				}, info.russian.countdown);
