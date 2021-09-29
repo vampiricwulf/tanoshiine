@@ -16,10 +16,34 @@ function calculateSelfbantime(stage) {
 	return config.SELFBANTIME[stage] || calculateSelfbantime(stage-1)*2; // In case not enough stages are configured, it just doubles the previous one
 }
 
-function ban_self(ip){
+var selfBanQueue = [];
+var selfBanInProgress = false;
+
+function enqueueSelfBan(ip) {
+	selfBanQueue.push(ip);
+	trySelfBan();
+}
+
+exports.ban_self = enqueueSelfBan;
+
+function trySelfBan(){
+	if (selfBanQueue.length > 0 && !selfBanInProgress) {
+		selfBanInProgress = true;
+		setImmediate(() => {
+			ban_self(selfBanQueue[0], () => {
+				selfBanQueue.shift();
+				selfBanInProgress = false;
+				trySelfBan();
+			})
+		})
+	}
+}
+
+
+function ban_self(ip, cb){
 	var type = 'timeout';
 	if (!authcommon.is_valid_ip(ip))
-		return false;
+		return cb();
 	var key = authcommon.ip_key(ip);
 	var client = {ident: {ip}};
 
@@ -28,7 +52,7 @@ function ban_self(ip){
 	m.get(stageKey);
 	m.pttl(stageKey); 
 	m.exec(function (err,rs) {
-		if (err) return false;
+		if (err) return cb();
 
 		var stage = rs[0];
 		var TTL = rs[1];
@@ -45,18 +69,17 @@ function ban_self(ip){
 		}
 		stage++;
 		var sentence = calculateSelfbantime(stage);
-	
+
 		var m = connect().multi();
 		if(!ban(m, client, ip, key, type, sentence))
-			return false;
+			return cb();
 
 		m.set(stageKey, stage, 'px', TTL+config.RUSSIANDECAY);
 		m.exec(function (err,rs) {
+			return cb();
 		});
-		return true;
 	});
 }
-exports.ban_self = ban_self;
 
 function ban(m, mod, ip, key, type, sentence) {
 	if (type == 'unban') {
