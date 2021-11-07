@@ -248,7 +248,7 @@ var ComposerView = Backbone.View.extend({
 			id: 'done', type: 'button', value: 'Done',
 		});
 		this.$selfspoil = $('<input>', {
-			type: 'button', id: 'selfspoil', value: 'Spoil Image'
+			type: 'button', id: 'selfspoil', value: 'Spoil Image', tabindex: "-1"
 		});		
 		this.$subject = $('<input/>', {
 			id: 'subject',
