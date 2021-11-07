@@ -65,6 +65,7 @@ optSpecs.push(option_relative_time);
 optSpecs.push(option_youcounter);
 optSpecs.push(option_horizontal);
 optSpecs.push(option_postPlaceholder);
+optSpecs.push(option_selfSpoilButton);
 optSpecs.push(option_user_bg);
 optSpecs.push(option_user_bg_image);
 optSpecs.push(option_alwaysLock);
@@ -871,6 +872,16 @@ option_postPlaceholder.label = 'Post Placeholder';
 option_postPlaceholder.type = 'revcheckbox';
 option_postPlaceholder.tooltip = 'Toggle the box indicator in your posts'
 option_postPlaceholder.tab = tabs.Style;
+
+/* Opt-out option for the "Spoil Image" button */
+function option_selfSpoilButton(toggle) {
+
+}
+option_selfSpoilButton.id = 'noselfspoilbutton';
+option_selfSpoilButton.label = 'In-post "Spoil Image" Button';
+option_selfSpoilButton.type = 'revcheckbox';
+option_selfSpoilButton.tooltip = 'Toggle the button to spoil your already posted image.'
+option_selfSpoilButton.tab = tabs.Style;
 
 /* TOGGLER FOR TOP BANNER BUTTONS */
 
