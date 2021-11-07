@@ -491,6 +491,15 @@ dispatcher[DEF.HOT_INJECTION] = function(msg){
 		imagerConfig = msg[2][1];
 		reportConfig = msg[2][2];
 		hotConfig = msg[2][3];
+
+		//Change banner accordingly on configchange
+		if(config.BIRTHDAY){
+			$('#bannerCenter').html('<b>' + "Happy Birthday " + config.BIRTHDAY + "!" + '</b>');
+		} else if (hotConfig.CUSTOM_BANNER_TOP){
+			$('#bannerCenter').html('<b>' + hotConfig.CUSTOM_BANNER_TOP + '</b>');
+		} else {
+			$('#bannerCenter').html('<b>' + '</b>'); //To potentially clear a previous birthday out
+		}
 	}
 };
 

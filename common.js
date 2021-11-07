@@ -734,7 +734,7 @@ OS.gazou_img = function (info, toppu, href) {
 		img += ' width="'+tw+'" height="'+th+'">';
 	else
 		img += '>';
-	if (imagerConfig.IMAGE_HATS)
+	if (!!config.BIRTHDAY || imagerConfig.IMAGE_HATS)
 		img = '<span class="hat"></span>' + img;
 	// Override src with href, if specified
 	img = new_tab_link(href || src, safe(img));

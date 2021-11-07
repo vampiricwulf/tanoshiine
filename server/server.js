@@ -1176,6 +1176,8 @@ function start_server() {
 	process.on('SIGHUP', hot_reloader);
 	db.on_pub('reloadHot', hot_reloader);
 	db.on_pub('reloadBans', ban_reloader); // Let's keep the old one, since we don't want to break anything relying on it 
+	
+	hooks.hook_sync('reloadHot', hot_reloader);
 
 	if (config.DAEMON) {
 		var cfg = config.DAEMON;
@@ -1244,6 +1246,7 @@ if (require.main == module) {
 		throw new Error("Refusing to run as root.");
 	if (!tripcode.setSalt(config.SECURE_SALT))
 		throw "Bad SECURE_SALT";
+	require('./birthdays');	//Before the initial hot resource load and before start_server sets up the hook for reloading, this way we use one less load of resources on startup
 	async.series([
 		imager.make_media_dirs,
 		setup_imager_relay,

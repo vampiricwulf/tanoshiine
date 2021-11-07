@@ -406,8 +406,10 @@ function option_topbanner(bannertoggle) {
 		$('#bannerTop').hide();
 		return;
 	}
-
-	if (hotConfig.CUSTOM_BANNER_TOP)
+	
+	if(config.BIRTHDAY){
+		$('#bannerCenter').html('<b>' +"Happy Birthday " + config.BIRTHDAY + "!"+ '</b>');
+	} else if (hotConfig.CUSTOM_BANNER_TOP)
 		$('#bannerCenter').html('<b>' + hotConfig.CUSTOM_BANNER_TOP + '</b>');
 
 	if(!bannertoggle) {
