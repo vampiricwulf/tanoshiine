@@ -87,6 +87,32 @@ var config = {
 	RUSSIANDECAY: 3*60*60*1000,
 	RUSSIANCHAMBERSIZE: 6, //INFINITY = 0% Chance, 1 = 100% Chance
 
+  BIRTHDAY: false,
+  BIRTHDAYS: [	//Example configuration, no need to care for order or manually adding multiple people per day.
+    { month: 7, day: 24, display: "Akari" },
+    { month: 4, day: 22, display: "Yui" },
+    { month: 3, day: 28, display: "Kyouko" },
+    {
+      month: 1,
+      day: 20,
+      display: "Ayano",
+    },
+    {
+      month: 11,
+      day: 6,
+      display: "Chinatsu",
+    },
+    {
+      month: 3,
+      day: 10,
+      display: "Chitose",
+    },
+    {
+      month: 3,
+      day: 10,
+      display: "Chizuru",
+    },
+  ],
 };
 
 module.exports = config;

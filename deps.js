@@ -22,6 +22,7 @@ exports.SERVER_DEPS = [
 	'server/amusement.js',
 	'server/api.js',
 	'server/archive.js',
+	'server/birthdays.js',
 	'server/caps.js',
 	'server/msgcheck.js',
 	'server/okyaku.js',

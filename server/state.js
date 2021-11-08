@@ -104,7 +104,8 @@ var clientConfig = _.pick(config,
 	'API_URL',
 	'IP_TAGGING',
 	'BOARDS',
-	'DEFAULT_BOARD'
+	'DEFAULT_BOARD',
+	'BIRTHDAY'
 );
 var clientImager = _.pick(imager,
 	'WEBM',
@@ -119,6 +120,10 @@ var clientImager = _.pick(imager,
 	'IMAGE_HATS'
 );
 var clientReport = _.pick(report, 'REPORTS');
+
+hooks.hook_sync('changeBD', function(bday) { //Normally the config isn't meant to be changed after initial reading so we have to do this little workaround.
+	clientConfig.BIRTHDAY = bday;
+})
 
 function reload_scripts(cb) {
 	async.mapSeries(['client', 'vendor', 'mod'], getRevision,

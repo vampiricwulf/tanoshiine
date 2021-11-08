@@ -228,6 +228,7 @@ var ComposerView = Backbone.View.extend({
 		this.listenTo(this.model, 'change', this.render_buttons);
 		this.listenTo(this.model, 'change:spoiler', this.render_spoiler_pane);
 		this.listenTo(options, 'change:noplaceholdertoggle', this.render_placeholder);
+		this.listenTo(options, 'change:noselfspoilbutton', this.render_selfspoilbutton);
 
 		var attrs = this.model.attributes;
 		var op = attrs.op;
@@ -248,7 +249,7 @@ var ComposerView = Backbone.View.extend({
 			id: 'done', type: 'button', value: 'Done',
 		});
 		this.$selfspoil = $('<input>', {
-			type: 'button', id: 'selfspoil', value: 'Spoil Image'
+			type: 'button', id: 'selfspoil', value: 'Spoil Image', tabindex: "-1", hidden: options.get("noselfspoilbutton")
 		});		
 		this.$subject = $('<input/>', {
 			id: 'subject',
@@ -747,6 +748,10 @@ var ComposerView = Backbone.View.extend({
 		}
 	},
 
+	render_selfspoilbutton: function (model, newValue) {
+			this.$selfspoil[0].hidden = newValue;
+	},
+
 	prep_upload: function () {
 		this.model.set('uploadStatus', UPLOADING_MSG);
 		this.$input.focus();
@@ -886,6 +891,18 @@ function preload_panes() {
 	for (var i = 0; i < spoilerImages.length; i++)
 		new Image().src = spoiler_pane_url(spoilerImages[i]);
 }
+
+oneeSama.hook('menuOptions', function (info) {
+	if (!info.model)
+		return; // can't selfspoil drafts
+	if (postForm && postForm.model.id == info.model.id && info.model.attributes.image && !info.model.attributes.image.spoiler)
+		info.options.push('Spoil');
+});
+
+menuHandlers.Spoil = function (model, $post) {
+	if(postForm)
+		postForm.on_selfspoil();
+};
 
 (function () {
 	var CV = ComposerView.prototype;
