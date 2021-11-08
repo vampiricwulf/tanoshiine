@@ -123,7 +123,7 @@ var clientReport = _.pick(report, 'REPORTS');
 
 hooks.hook_sync('changeBD', function(bday) { //Normally the config isn't meant to be changed after initial reading so we have to do this little workaround.
 	clientConfig.BIRTHDAY = bday;
-})
+});
 
 function reload_scripts(cb) {
 	async.mapSeries(['client', 'vendor', 'mod'], getRevision,

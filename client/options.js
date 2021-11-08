@@ -880,7 +880,7 @@ function option_selfSpoilButton(toggle) {
 option_selfSpoilButton.id = 'noselfspoilbutton';
 option_selfSpoilButton.label = 'In-post "Spoil Image" Button';
 option_selfSpoilButton.type = 'revcheckbox';
-option_selfSpoilButton.tooltip = 'Toggle the button to spoil your already posted image.'
+option_selfSpoilButton.tooltip = 'Toggle the button to spoil your already posted image.';
 option_selfSpoilButton.tab = tabs.Style;
 
 /* TOGGLER FOR TOP BANNER BUTTONS */
