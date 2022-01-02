@@ -4,7 +4,7 @@ function drop_shita(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	var files = e.dataTransfer.files;
-	if (!files.length)
+	if (!files.length || e.dataTransfer.getData("text/uri-list").startsWith(window.location.origin))
 		return;
 	if (!postForm) {
 		with_dom(function () {
