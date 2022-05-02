@@ -257,6 +257,8 @@ var ComposerView = Backbone.View.extend({
 			maxlength: hotConfig.SUBJECT_MAX_LENGTH,
 			width: '80%',
 		});
+		this.$captcha = $("<div id='threadCaptcha'>Loading...</div>");
+		this.captchaID;
 		this.blockquote = $('<blockquote/>');
 		this.$sizer = $('<pre/>').appendTo('body');
 		this.pending = '';
@@ -286,6 +288,8 @@ var ComposerView = Backbone.View.extend({
 		this.blockquote.append(this.buffer, this.line_buffer, this.$input);
 		post.append(this.meta, this.blockquote);
 		if (!op) {
+			if(window.reportConfig.REPORTS)
+				post.append('<label for="captcha">Captcha Status: </label>', this.$captcha);
 			post.append('<label for="subject">Subject: </label>',
 					this.$subject);
 			this.blockquote.hide();
@@ -306,6 +310,8 @@ var ComposerView = Backbone.View.extend({
 		else {
 			post.after('<hr class="sectionHr"/>');
 			this.$subject.focus();
+			if(window.reportConfig.REPORTS)
+				this.request_new_captcha();
 		}
 		$('aside').remove();
 		this.render_placeholder(options, options.get('noplaceholdertoggle'));
@@ -362,6 +368,8 @@ var ComposerView = Backbone.View.extend({
 			this.blockquote.after(this.submit);
 		if (!op) {
 			this.$subject.siblings('label').andSelf().remove();
+			if(window.reportConfig.REPORTS)
+				this.$captcha.siblings('label').andSelf().remove();
 			this.blockquote.show();
 			this.resize_input();
 			this.$input.focus();
@@ -615,6 +623,7 @@ var ComposerView = Backbone.View.extend({
 		opt('name', $name.val().trim());
 		opt('email', $email.val().trim());
 		opt('subject', this.$subject.val().trim());
+		opt('captchaID', this.captchaID);
 		opt('frag', text);
 		opt('image', image);
 		opt('op', this.model.get('op'));
@@ -860,6 +869,73 @@ var ComposerView = Backbone.View.extend({
 	render_spoiler_pane: function (model, sp) {
 		var img = sp ? spoiler_pane_url(sp) : mediaURL + 'css/ui/pane.png';
 		this.$toggle.css('background-image', 'url("' + img + '")');
+	},
+
+	//thread captcha stuff
+	captchaURL: '/captcha/',
+	captchaTimeoutDuration: 5 * 60 * 1000,
+	captchaTimeout: 0,
+	request_new_captcha: function() {
+		var self = this;
+		$.ajax({
+			url: this.captchaURL,
+			success: renderCaptcha,
+			error: handleLoadError,
+		});
+
+		function renderCaptcha(captcha) {
+			var form = document.createElement('form');
+			form.method = 'post';
+			form.class = 'captchouli-width captchouli-form';
+			form.style = 'font-family: Sans-Serif';
+			form.innerHTML = captcha;
+			self.captchaID = form['captchouli-id'].value;
+			form.addEventListener('submit', handleSubmit);
+			resetCaptcha();
+			document.getElementById('threadCaptcha').appendChild(form);
+			setTimeout(function(){
+				$('.captchouli-width').width($('.captchouli-img').width()*3.2);
+				$('input.captchouli-width').width($('.captchouli-img').width()*3);
+			},100);
+		}
+		function resetCaptcha() {
+			document.getElementById('threadCaptcha').innerHTML = '';
+			if (self.captchaTimeout)
+				clearTimeout(self.captchaTimeout);
+
+			self.captchaTimeout = setTimeout(function () {
+				self.captchaTimeout=0;
+				document.getElementById('threadCaptcha').innerText = "Captcha timed out";
+			}, self.captchaTimeoutDuration);
+		}
+		function handleLoadError() {
+			document.getElementById('threadCaptcha').innerText = "Couldn\'t load captcha."
+		}
+		function handleSubmitError() {
+			document.getElementById('threadCaptcha').innerText = "Couldn\'t submit solution."
+		}
+		function handleSubmit(event) {
+			event.preventDefault();
+			var formData = $(event.target).serialize();
+			$.ajax({
+				url: self.captchaURL,
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: 'application/x-www-form-urlencoded',
+				success: handleResponse,
+				error: handleSubmitError
+			});
+		}
+		function handleResponse(resp) {
+			var captchaDiv = document.getElementById('threadCaptcha');
+			if (resp === self.captchaID) {
+				captchaDiv.innerText = 'Captcha success';
+			} else {
+				renderCaptcha(resp);
+			}
+		}
+
 	}
 });
 

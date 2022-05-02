@@ -188,6 +188,55 @@ function maybe_mnemonic(ip) {
 	return {'mnemonic': mnem, 'tag': tag};
 }
 
+function validateCaptcha(captchouliID) {
+	return new Promise((resolve, reject) => {
+		if (!captchouliID) {
+			reject("Pretty please?");
+			return;
+		}
+
+		var postData = querystring.stringify({
+			"captchouli-id": captchouliID,
+		});
+		var options = {
+			port: config.CAPTCHASERVER_PORT,
+			path: "/status",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Content-Length": postData.length,
+			},
+		};
+		var req = http.request(options, function (res) {
+			if (res.statusCode !== 200) {
+				reject("Captcha-server unreachable");
+				return;
+			}
+
+			res.setEncoding("utf8");
+			res.on("data", function (chunk) {
+				if (chunk !== "true") {
+					reject("Captcha was not solved.");
+					return;
+				}
+				resolve();
+				return;
+			});
+			res.on("end", function () {});
+		});
+
+		req.on("error", function (e) {
+			winston.error(e);
+			reject("Captcha-server unreachable");
+			return;
+		});
+
+		// write data to request body
+		req.write(postData);
+		req.end();
+	});
+}
+exports.validateCaptcha = validateCaptcha;
 
 if(config.REPORTS){
 okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
@@ -201,6 +250,21 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 	if (!op || !caps.can_access_thread(client.ident, op))
 		return reply_error("Post does not exist.");
 
+	validateCaptcha(captchouliID)
+		.then(() => {
+			report(client.ident, op, num, description, function (err) {
+				if (err) {
+					winston.error(err);
+					return reply_error("Couldn't send report.");
+				}
+				// success!
+				client.send([op, common.REPORT_POST, num]);
+			});
+		})
+		.catch(reply_error);
+	return true;
+
+	/*
 	if (!captchouliID)
 		return reply_error("Pretty please?");
 
@@ -252,6 +316,7 @@ okyaku.dispatcher[common.REPORT_POST] = function (msg, client) {
 	req.write(postData);
 	req.end();
 	return true;
+	*/
 
 	function reply_error(err) {
 		if (!err)

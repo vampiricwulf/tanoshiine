@@ -712,6 +712,7 @@ var insertSpec = [{
 	email: 'opt string',
 	auth: 'opt string',
 	subject: 'opt string',
+	captchaID: 'opt string',
 }];
 
 dispatcher[common.INSERT_POST] = function (msg, client) {
@@ -729,17 +730,33 @@ dispatcher[common.INSERT_POST] = function (msg, client) {
 		return false;
 	if (config.DEBUG)
 		debug_command(client, frag);
-
-	allocate_post(msg, client, function (err) {
-		if (err)
-			client.kotowaru(Muggle("Allocation failure.", err));
-		else 
-			try{
-				okyaku.push([client.post.op, common.POST_ALERT, client.board])
-			} catch (err) {
-
-			}
-	});
+	if(!msg.op && reportConfig.REPORTS) {
+		report.validateCaptcha(msg.captchaID).then(() => {
+			allocate_post(msg, client, function (err) {
+				if (err)
+					client.kotowaru(Muggle("Allocation failure.", err));
+				else 
+					try{
+						okyaku.push([client.post.op, common.POST_ALERT, client.board])
+					} catch (err) {
+		
+					}
+			});
+		}).catch((err) => {
+			client.kotowaru(Muggle("Captcha failure: "+err, err));
+		});
+	} else {
+		allocate_post(msg, client, function (err) {
+			if (err)
+				client.kotowaru(Muggle("Allocation failure.", err));
+			else 
+				try{
+					okyaku.push([client.post.op, common.POST_ALERT, client.board])
+				} catch (err) {
+	
+				}
+		});
+	}
 	return true;
 };
 
