@@ -259,6 +259,7 @@ var ComposerView = Backbone.View.extend({
 		});
 		this.$captcha = $("<div id='threadCaptcha'>Loading...</div>");
 		this.captchaID;
+		this.showCaptcha = (hotConfig.POST_PASS_NEEDED && !options.get("postPassword") && hotConfig.POST_PASS_CAPTCHA && (!hotConfig.POST_PASS_THREADONLY || !op));
 		this.blockquote = $('<blockquote/>');
 		this.$sizer = $('<pre/>').appendTo('body');
 		this.pending = '';
@@ -287,9 +288,9 @@ var ComposerView = Backbone.View.extend({
 		shift_replies(dest.thread);
 		this.blockquote.append(this.buffer, this.line_buffer, this.$input);
 		post.append(this.meta, this.blockquote);
+		if(this.showCaptcha)
+			post.append('<label for="captcha">Captcha Status: </label>', this.$captcha);
 		if (!op) {
-			if(window.reportConfig.REPORTS)
-				post.append('<label for="captcha">Captcha Status: </label>', this.$captcha);
 			post.append('<label for="subject">Subject: </label>',
 					this.$subject);
 			this.blockquote.hide();
@@ -303,6 +304,8 @@ var ComposerView = Backbone.View.extend({
 
 		this.$input.input(this.on_input.bind(this, undefined));
 
+		if(this.showCaptcha)
+			this.request_new_captcha();
 		if (op) {
 			this.resize_input();
 			this.$input.focus();
@@ -310,8 +313,6 @@ var ComposerView = Backbone.View.extend({
 		else {
 			post.after('<hr class="sectionHr"/>');
 			this.$subject.focus();
-			if(window.reportConfig.REPORTS)
-				this.request_new_captcha();
 		}
 		$('aside').remove();
 		this.render_placeholder(options, options.get('noplaceholdertoggle'));
@@ -368,12 +369,12 @@ var ComposerView = Backbone.View.extend({
 			this.blockquote.after(this.submit);
 		if (!op) {
 			this.$subject.siblings('label').andSelf().remove();
-			if(window.reportConfig.REPORTS)
-				this.$captcha.siblings('label').andSelf().remove();
 			this.blockquote.show();
 			this.resize_input();
 			this.$input.focus();
 		}
+		if(this.showCaptcha)
+			this.$captcha.siblings('label').andSelf().remove();
 
 		window.onbeforeunload = function () {
 			return "You have an unfinished post.";
@@ -624,6 +625,7 @@ var ComposerView = Backbone.View.extend({
 		opt('email', $email.val().trim());
 		opt('subject', this.$subject.val().trim());
 		opt('captchaID', this.captchaID);
+		opt('postPassword', options.get('postPassword'));
 		opt('frag', text);
 		opt('image', image);
 		opt('op', this.model.get('op'));
@@ -909,10 +911,10 @@ var ComposerView = Backbone.View.extend({
 			}, self.captchaTimeoutDuration);
 		}
 		function handleLoadError() {
-			document.getElementById('threadCaptcha').innerText = "Couldn\'t load captcha."
+			document.getElementById('threadCaptcha').innerText = "Couldn\'t load captcha.";
 		}
 		function handleSubmitError() {
-			document.getElementById('threadCaptcha').innerText = "Couldn\'t submit solution."
+			document.getElementById('threadCaptcha').innerText = "Couldn\'t submit solution.";
 		}
 		function handleSubmit(event) {
 			event.preventDefault();

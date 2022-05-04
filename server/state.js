@@ -66,7 +66,10 @@ function reload_hot_config(cb) {
 			'ADMIN_ALIAS',
 			'MOD_ALIAS',
 			'SAGE_ENABLED',
-			'THREAD_LAST_N'
+			'THREAD_LAST_N',
+			'POST_PASS_NEEDED',
+			'POST_PASS_CAPTCHA',
+			'POST_PASS_THREADONLY',
 		);
 
 		reloadCSS(clientHot, function(err) {
