@@ -713,7 +713,7 @@ var insertSpec = [{
 	auth: 'opt string',
 	subject: 'opt string',
 	captchaID: 'opt string',
-	postPassword: 'opt string'
+	postPassword: 'opt string',
 }];
 
 dispatcher[common.INSERT_POST] = function (msg, client) {
