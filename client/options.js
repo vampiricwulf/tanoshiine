@@ -72,6 +72,7 @@ optSpecs.push(option_alwaysLock);
 optSpecs.push(option_postUnloading);
 optSpecs.push(option_last_n);
 optSpecs.push(option_clean_ls);
+optSpecs.push(option_postPassword);
 
 nashi.upload = !!$('<input type="file"/>').prop('disabled');
 
@@ -883,6 +884,14 @@ option_selfSpoilButton.type = 'revcheckbox';
 option_selfSpoilButton.tooltip = 'Toggle the button to spoil your already posted image.';
 option_selfSpoilButton.tab = tabs.Style;
 
+function option_postPassword(){
+
+}
+option_postPassword.id = 'postPassword';
+option_postPassword.label = 'Gold Pass';
+option_postPassword.type = "text";
+option_postPassword.tab = tabs.General;
+
 /* TOGGLER FOR TOP BANNER BUTTONS */
 
 function position_bmodal(target){
@@ -944,6 +953,8 @@ function make_options_panel() {
 			val = !$o.prop('checked');
 		else if (spec.type == 'positive')
 			val = Math.max(parseInt($o.val(), 10), 1);
+		else if (spec.type == 'text')
+			val = $o.val().trim().replace(hotConfig.EXCLUDE_REGEXP, '').substr(0, 100);
 		else if (spec.type == 'image')
 			val = event.target;
 		else
@@ -968,6 +979,11 @@ function make_options_panel() {
 			$input = $('<input />', {
 				width: '4em',
 				maxlength: 4,
+				val: val,
+			});
+		} else if (type == "text"){
+			$input = $('<input />', {
+				width: '10em',
 				val: val,
 			});
 		} else if (type == 'image'){

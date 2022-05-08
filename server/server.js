@@ -712,6 +712,8 @@ var insertSpec = [{
 	email: 'opt string',
 	auth: 'opt string',
 	subject: 'opt string',
+	captchaID: 'opt string',
+	postPassword: 'opt string'
 }];
 
 dispatcher[common.INSERT_POST] = function (msg, client) {
@@ -729,17 +731,39 @@ dispatcher[common.INSERT_POST] = function (msg, client) {
 		return false;
 	if (config.DEBUG)
 		debug_command(client, frag);
-
-	allocate_post(msg, client, function (err) {
-		if (err)
-			client.kotowaru(Muggle("Allocation failure.", err));
-		else 
-			try{
-				okyaku.push([client.post.op, common.POST_ALERT, client.board])
-			} catch (err) {
-
-			}
-	});
+	// In case there is no need for a password, the password matches, or the pass is only needed for threads and it is a regular post: Just proceed normally
+	if(!STATE.hot.POST_PASS_NEEDED || (STATE.hot.POST_PASS === msg.postPassword) || (STATE.hot.POST_PASS_THREADONLY && msg.op)){	
+		allocate_post(msg, client, function (err) {
+			if (err)
+				client.kotowaru(Muggle("Allocation failure.", err));
+			else 
+				try{
+					okyaku.push([client.post.op, common.POST_ALERT, client.board]);
+				} catch (err) {
+	
+				}
+		});
+		return true;
+	}
+	if(!msg.postPassword && STATE.hot.POST_PASS_CAPTCHA) {
+		report.validateCaptcha(msg.captchaID).then(() => {
+			allocate_post(msg, client, function (err) {
+				if (err)
+					client.kotowaru(Muggle("Allocation failure.", err));
+				else 
+					try{
+						okyaku.push([client.post.op, common.POST_ALERT, client.board]);
+					} catch (err) {
+		
+					}
+			});
+		}).catch((err) => {
+			client.kotowaru(Muggle("Captcha failure: "+err, err));
+		});
+		return true;
+	}
+	//Reaching here means the pass is needed, the pass didn't match, the pass is required for this type of post but the captcha isn't an option, meaning it won't post
+	client.kotowaru(Muggle("You need a pass for this post."));
 	return true;
 };
 

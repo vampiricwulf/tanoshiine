@@ -72,4 +72,10 @@ this.hot = {
 	SPECIAL_TRIPCODES: {
 		kyubey: "／人◕ ‿‿ ◕人＼",
 	},
+
+	//Posting password and captcha options
+	POST_PASS: "secret",	//Password for submitting posts
+	POST_PASS_NEEDED: true,	//Enable or disable the need for the password
+	POST_PASS_CAPTCHA: true,	//Allow the user to solve a captcha instead of supplying a password
+	POST_PASS_THREADONLY: true,	//Limit the need of password for thread creation instead of all posts
 };
