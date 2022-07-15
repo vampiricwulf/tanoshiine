@@ -7,9 +7,34 @@ var _ = require('underscore'),
     okyaku = require('../server/okyaku'),
     STATE = require('../server/state');
 
+var LOOKUP = {};
 var ADDRS = STATE.dbCache.addresses;
 authcommon.modCache.addresses = ADDRS;
 var ip_key = authcommon.ip_key;
+
+STATE.emitter.on("change:clientsByIP", (ip, clients) => {
+	if (LOOKUP[ip]) return; //That way it should only try to load the name the very first time the ip connects
+	var lookup = geo.lookup(ip);
+	var key = ip_key(ip);
+	let addr;
+	ADDRS[key] = addr = {
+		ip: ip,
+		key: key,
+		geo: lookup ? lookup.country : "unknown",
+		shallow: true,
+	};
+	var r = connect();
+	r.hgetall("ip:" + key, function (err, info) {
+		if (err) {
+			if (ADDRS[key] === addr) delete ADDRS[key];
+			return;
+		}
+		if (ADDRS[key] !== addr) return;
+
+		_.extend(addr, info);
+	});
+	LOOKUP[ip] = true;
+});
 
 function on_client_ip(ip, clients) {
 	var addr = {key: ip_key(ip), ip: ip, count: clients.length};
