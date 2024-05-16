@@ -307,42 +307,55 @@ $(document).on('click', '.x', function (event) {
     var resp = get_x(m[1], m[2]).tweet;
     var $obj = $('<div />', {
         class: 'x-container'
-    });
+    }).css({
+		display: 'grid',
+	});
     /* AUTHOR */
-    var $author = $('<div />', {
-        class: 'x-author-container'
-    });
+    var $author = $('<div />', { //subgrid
+        class: 'x-author-container',
+    }).css({
+		display: 'grid',
+		grid-column: '1fr 4fr',
+		grid-row: '1fr',
+	});
+    var $authorinfo = $('<div />', { //subgrid
+        class: 'x-author-info-container',
+    }).css({
+		display: 'grid',
+		grid-column: '2 / 3',
+		grid-row: '1 / 3',
+		grid-template-columns: 'subgrid';
+		grid-template-rows: 'subgrid';
+	});
     $author.append($('<img />', {
             src: resp.author.avatar_url
         }));
-    $author.append($(`<div>${resp.author.name}</div>`));
-    $author.append($(`<div>@${resp.author.screen_name}</div>`));
+    $authorinfo.append($(`<div>${resp.author.name}</div>`));
+    $authorinfo.append($(`<div>@${resp.author.screen_name}</div>`));
     /* MEDIA */
-    if (resp.media) {
+    if (resp.media) { //subgrid move this into a content container
         var $media = $('<div />', {
-            class: 'x-media-container',
-            style: 'order: 1;'
+            class: 'x-media-container'
         });
         for (let i = 0; i < resp.media.length; i++) {
             var item = resp.media[i];
             var typeMedia = item.type;
             $media.append($('<img \>', {
-                    src: item.url,
-                    style: `order:${i + 1};`,
+                    src: item.url
                 }));
         }
     }
     /* CONTENT */
     var $content = $(`<div>${resp.text}</div>`, {
-        class: 'x-content-container'
+        class: 'x-content',
     });
     /* QUOTE */
-    var $quote = $('<div />', {
-        class: 'x-quote-container'
+    var $quote = $('<div />', { //subgrid containing 2 subgrids
+        class: 'x-quote-container',
     });
     /* INFO */
     var $info = $('<div />', {
-        class: 'x-info-container'
+        class: 'x-info',
     });
 
     with_dom(function () {
