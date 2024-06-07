@@ -210,6 +210,7 @@ ref_re += '|>\\/soundcloud\\/[\\w-]{1,40}\\/[\\w-]{1,80}';
 ref_re += '|>\\/korbo\\/';
 ref_re += '|>\\/cumzone\\/';
 ref_re += '|>\\/pastebin\\/\\w+';
+ref_re += '|>\\/x\\/\\w+\\/\\w+';
 
 for (var i = 0; i < config.BOARDS.length; i++) {
     ref_re += '|>\\/' + config.BOARDS[i] + '\\/(?:\\d+)?';
@@ -253,8 +254,13 @@ OS.red_string = function (ref) {
 		linkClass = 'embed soundcloud';
 	}
 	else if (/^>\/pastebin/.test(ref)){
-		dest = dest = 'https://pastebin.com/' + ref.slice(11);
+		dest = 'https://pastebin.com/' + ref.slice(11);
 		linkClass = 'embed pastebin';
+	}
+	else if (/^>\/x/.test(ref)){
+		var xMeta = ref.match(/x\/(\w+)\/(\d+)/);
+		dest = `https://x.com/${xMeta[1]}/status/${xMeta[2]}`;
+		linkClass = 'embed x';
 	}
 	else if (/>\/korbo/.test(ref)){
 		dest = '../korbo/';

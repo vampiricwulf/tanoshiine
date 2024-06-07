@@ -471,6 +471,16 @@ var ComposerView = Backbone.View.extend({
 		    var pbin = '>>>/pastebin/' +m[2];
 		    val = embedRewrite(m, pbin);
 		}
+
+		// X links
+		while(true){
+		    var m = val.match(x_re);
+		    if (!m)
+		        break;
+		    var xbin = `>>>/x/${m[1]}/${m[2]}`;
+		    val = embedRewrite(m, xbin);
+		}
+
 		if (changed)
 			$input.val(val);
 

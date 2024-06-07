@@ -279,22 +279,116 @@ $(document).on('click', '.pastebin', function (event) {
 });
 
 // X
-var x_re = /(?:https?:\/\/)?(?:www\.|g\.)?(?:(?:fx|vx)?twitt(?:e|p)r|(?:fix)?(?:up|v)?x)\.com\/(\w+)?\/?status\/(\d{19})(?:\S*)?/;
+var x_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|g\.)?(?:(?:fx|vx)?twitt(?:e|p)r|(?:fix)?(?:up|v)?x)\.com\/(\w+)?\/?status\/(\d{19})(?:\S*)?/;
 
-function get_x(author, id) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', `https://api.fxtwitter.com/${author}/status/${id}${(shouldTranslate) ? '/en' : ''}`);
-    xhr.send(null);
-    return JSON.parse(xhr.response);
 
+function build_xeet(resp) {
+    var $xeet =  $('<div />', {
+        class: 'x-container'
+    }).css({
+		display: 'flex',
+        'flex-direction': 'column',
+        gap: '8px'
+	});
+
+    /* AUTHOR */
+    var $meta = $('<div />', {
+        class: 'x-meta-container',
+    }).css({
+		display: 'flex',
+        'flex-direction': 'row',
+        gap: '8px'
+	});
+    var $author = $('<a />', {
+        class: 'x-author-container',
+        href: resp.author.url,
+        target: '_blank'
+    }).css({
+		display: 'flex',
+        'flex-direction': 'row',
+        gap: '8px'
+	});
+    $author.append($('<img />', {
+            src: resp.author.avatar_url
+        }));
+    $authorinfo = $('<div />', {
+        class: 'x-author-info-container'
+    }).css({
+		display: 'flex',
+        'flex-direction': 'column',
+        gap: '8px'
+	});
+    $authorinfo.append($(`<span>${resp.author.name}</span>`));
+    $authorinfo.append($(`<span>@${resp.author.screen_name}</span>`));
+    $author.append($authorinfo);
+    $meta.append($author);
+    $meta.append($(`<a>Open in New Tab</a>`, { //replace with symbol
+        href: resp.url,
+        target: '_blank'
+    }));
+
+    /* CONTENT */
+    var $content = $(`<div>${resp.text}</div>`, {
+        class: 'x-content',
+    });
+
+    /* MEDIA */
+    if (resp.media) {
+        var $media = $('<div />', {
+            class: 'x-media-container'
+        }).css({
+            display: 'flex',
+            'flex-direction': 'column',
+            gap: '8px'
+        });
+        var $mediaTop = $('<div />', {
+            class: 'x-media-container-top'
+        }).css({
+            display: 'flex',
+            'flex-direction': 'row',
+            gap: '8px'
+        });
+        var $mediaBottom = $('<div />', {
+            class: 'x-media-container-bottom'
+        }).css({
+            display: 'flex',
+            'flex-direction': 'row',
+            gap: '8px'
+        });
+        for (let i = 0; i < resp.media.length; i++) {
+            var item = resp.media[i];
+            var $temp = i < 2 ? $mediaTop : $mediaBottom;
+            $temp.append($(item.type != "photo" ? '<img />' : '<video />', {
+                    src: item.url
+                }));
+        }
+        $media.append($mediaTop);
+        if (resp.media.length > 2)
+            $media.append($mediaBottom);
+    }
+
+    /* NOTES */
+    if (resp.community_note)
+        var $notes = $(`<div>COMMUNITY NOTED</div>`, {
+            class: 'x-notes',
+        });
+
+    /* Combine */
+    $xeet.append($meta);
+    $xeet.append($content);
+    $xeet.append($media);
+    if (resp.community_note)
+        $xeet.append($notes);
+    
+    return $xeet
 }
-
+// After getting this to work, move CSS to the base stylesheet
 $(document).on('click', '.x', function (event) {
     if (event.which > 1 || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey)
         return;
     var $target = $(event.target);
 
-    var $obj = $target.find('div');
+    var $obj = $target.find('.x-container');
     if ($obj.length) {
         $obj.siblings('br').andSelf().remove();
         return false;
@@ -304,59 +398,29 @@ $(document).on('click', '.x', function (event) {
     if (!m)
         return;
 
-    var resp = get_x(m[1], m[2]).tweet;
-    var $obj = $('<div />', {
-        class: 'x-container'
-    }).css({
-		display: 'grid',
-	});
-    /* AUTHOR */
-    var $author = $('<div />', { //subgrid
-        class: 'x-author-container',
-    }).css({
-		display: 'grid',
-		grid-column: '1fr 4fr',
-		grid-row: '1fr',
-	});
-    var $authorinfo = $('<div />', { //subgrid
-        class: 'x-author-info-container',
-    }).css({
-		display: 'grid',
-		grid-column: '2 / 3',
-		grid-row: '1 / 3',
-		grid-template-columns: 'subgrid';
-		grid-template-rows: 'subgrid';
-	});
-    $author.append($('<img />', {
-            src: resp.author.avatar_url
-        }));
-    $authorinfo.append($(`<div>${resp.author.name}</div>`));
-    $authorinfo.append($(`<div>@${resp.author.screen_name}</div>`));
-    /* MEDIA */
-    if (resp.media) { //subgrid move this into a content container
-        var $media = $('<div />', {
-            class: 'x-media-container'
-        });
-        for (let i = 0; i < resp.media.length; i++) {
-            var item = resp.media[i];
-            var typeMedia = item.type;
-            $media.append($('<img \>', {
-                    src: item.url
-                }));
-        }
-    }
-    /* CONTENT */
-    var $content = $(`<div>${resp.text}</div>`, {
-        class: 'x-content',
-    });
+    var resp = $.ajax(`https://api.fxtwitter.com/${m[1]}/status/${m[2]}}`,{async:false}).responseJSON.tweet;
+    var $obj = build_xeet(resp);
+
     /* QUOTE */
-    var $quote = $('<div />', { //subgrid containing 2 subgrids
-        class: 'x-quote-container',
-    });
+    if (resp.quote) {
+        var $quote = $('<div />', { //redesign the above to be a function to rerun on building quote
+            class: 'x-quote-container',
+        });
+        $quote.append(build_xeet(resp.quote));
+        $obj.append($quote);
+    }
+
     /* INFO */
     var $info = $('<div />', {
         class: 'x-info',
-    });
+    }).css({
+		display: 'flex',
+        'flex-direction': 'column',
+        gap: '8px'
+	});
+    $info.append($(`<span>${resp.created_at}</span>`));
+    $info.append($(`<span>Replies: ${resp.replies} Quotes: ${resp.retweets} Likes: ${resp.likes} Views: ${resp.views}</span>`));
+    $obj.append($info);
 
     with_dom(function () {
         $target.append('<br>', $obj);
