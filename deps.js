@@ -69,6 +69,7 @@ exports.CLIENT_DEPS = [
 	'client/conn.js',
 	'client/notify.js',
 	'client/drop.js',
+	'client/paste.js',
 	'client/hide.js',
 	'client/hover.js',
 	'client/amusement.js',
