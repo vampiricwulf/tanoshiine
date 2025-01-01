@@ -24,6 +24,8 @@
             file = new File([blob], filename, {
                 type: blob.type
             });
+        } else {
+            return;
         }
 
         if (!postForm) {
