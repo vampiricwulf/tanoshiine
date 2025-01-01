@@ -1,6 +1,7 @@
 (function() {
 
     function paste_ema(e) {
+        if (options.get("pasteImage")) return;
         let items = (e.clipboardData || e.originalEvent.clipboardData).items;
         let blob = null;
         let file = null;
