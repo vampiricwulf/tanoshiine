@@ -999,7 +999,7 @@ dispatcher[common.DELETE_OWN_POST] = function (nums, client) {
 		return;
 	client.db.remove_posts([client.post.num], function (err, dels) {
 		if(report) {
-			report.send_modlog(client.ident, "Selfdelete Post", client.post.num);
+			report.send_modlog(client.ident, "Self-Delete Post", client.post.num);
 		}
 	});
 	return true;
@@ -1037,7 +1037,7 @@ dispatcher[common.DELETE_OWN_IMAGE] = function(msg, client) {
 		return;
 	client.db.remove_images([client.post.num], function (err, dels) {
 		if(report) {
-			report.send_modlog(client.ident, "Selfdelete Image", client.post.num);
+			report.send_modlog(client.ident, "Self-Delete Image", client.post.num);
 		}
 	});
 	return true;
@@ -1082,7 +1082,7 @@ dispatcher[common.SPOILER_OWN_IMAGE] = function(msg, client) {
 		return;
 	client.db.force_image_spoilers([client.post.num], function (err) {
 		if(report) {
-			report.send_modlog(client.ident, "Selfspoiler Image", client.post.num);
+			report.send_modlog(client.ident, "Self-Spoiler Image", client.post.num);
 		}
 	})
 	return true;
