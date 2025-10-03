@@ -518,6 +518,17 @@ var ComposerView = Backbone.View.extend({
 		this.$selfspoil.remove();
 	},
 
+	on_selfdeleteIMG: function() {
+		send([DEF.DELETE_OWN_IMAGE]);
+		this.$selfspoil.remove();
+		this.remove_uploaded();
+	},
+
+		on_selfdeletePost: function() {
+		send([DEF.DELETE_OWN_POST]);
+		this.$selfspoil.remove();
+	},
+
 	add_ref: function (num, sel, selNum) {
 		/* If a >>link exists, put this one on the next line */
 		var $input = this.$input;
@@ -612,6 +623,15 @@ var ComposerView = Backbone.View.extend({
 			'max-width': 'calc(93vw - '+$img.width()+'px - 25px)',
 		});
 
+		this.resize_input();
+	},
+
+	remove_uploaded: function() {
+		this.blockquote.css({
+			'margin-left': '',
+			'padding-left': '',
+			'max-width': '',
+		});
 		this.resize_input();
 	},
 
@@ -970,16 +990,28 @@ function preload_panes() {
 		new Image().src = spoiler_pane_url(spoilerImages[i]);
 }
 
-oneeSama.hook('menuOptions', function (info) {
-	if (!info.model)
-		return; // can't selfspoil drafts
-	if (postForm && postForm.model.id == info.model.id && info.model.attributes.image && !info.model.attributes.image.spoiler)
-		info.options.push('Spoil');
+oneeSama.hook("menuOptions", function (info) {
+	if (!info.model) return; // can't interact with drafts
+	if (postForm &&	postForm.model.id == info.model.id &&	info.model.attributes.image	) {
+		if (!info.model.attributes.image.spoiler) info.options.push("Spoil Image");
+		info.options.push("Delete Image");
+	}
+	info.options.push("Delete Post");
 });
 
-menuHandlers.Spoil = function (model, $post) {
+menuHandlers["Spoil Image"] = function (model, $post) {
 	if(postForm)
 		postForm.on_selfspoil();
+};
+
+menuHandlers["Delete Image"] = function (model, $post) {
+	if(postForm) 
+		postForm.on_selfdeleteIMG();
+};
+
+menuHandlers["Delete Post"] = function (model, $post) {
+	if(postForm) 
+		postForm.on_selfdeletePost();
 };
 
 (function () {
