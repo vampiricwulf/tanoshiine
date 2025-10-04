@@ -527,6 +527,7 @@ var ComposerView = Backbone.View.extend({
 		on_selfdeletePost: function() {
 		send([DEF.DELETE_OWN_POST]);
 		this.$selfspoil.remove();
+		this.$input.remove();
 	},
 
 	add_ref: function (num, sel, selNum) {
@@ -992,11 +993,13 @@ function preload_panes() {
 
 oneeSama.hook("menuOptions", function (info) {
 	if (!info.model) return; // can't interact with drafts
-	if (postForm &&	postForm.model.id == info.model.id &&	info.model.attributes.image	) {
-		if (!info.model.attributes.image.spoiler) info.options.push("Spoil Image");
-		info.options.push("Delete Image");
+	if (postForm &&	postForm.model.id == info.model.id ) {
+		if (info.model.attributes.image){
+			if (!info.model.attributes.image.spoiler) info.options.push("Spoil Image");
+			info.options.push("Delete Image");
+		}
+		info.options.push("Delete Post");
 	}
-	info.options.push("Delete Post");
 });
 
 menuHandlers["Spoil Image"] = function (model, $post) {
