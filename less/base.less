@@ -145,8 +145,30 @@ body > aside {
   margin-top: 6px;
   float: none;
  }
+ .tweet-video-link {
+  position: relative;
+  display: block;
+  text-decoration: none;
+ }
+ .tweet-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+ }
  .tweet-meta {
   font-size: 12px;
+ }
+ // Nested quoted tweet
+ .tweet-embed {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
  }
 }
 del {

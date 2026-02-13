@@ -222,8 +222,7 @@ $(document).on('mouseenter', '.soundcloud', function (event) {
 /* TWITTER / X */
 var tweet_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?(?:x|twitter|fxtwitter|vxtwitter|fixupx|fixvx|cunnyx|hitlerx)\.com\/([\w]{1,15})\/status\/(\d+)/;
 
-function make_tweet(data) {
-	var tweet = data.tweet;
+function make_tweet_content(tweet) {
 	var $div = $('<div class="tweet-embed"></div>');
 
 	// Author row
@@ -249,8 +248,8 @@ function make_tweet(data) {
 		e.stopPropagation();
 		e.preventDefault();
 		var $btn = $(this);
-		if ($div.find('.tweet-translated').length) {
-			$div.find('.tweet-translated').remove();
+		if ($div.find('> .tweet-translated').length) {
+			$div.find('> .tweet-translated').remove();
 			$btn.text('Translate');
 			return;
 		}
@@ -266,7 +265,7 @@ function make_tweet(data) {
 						$('<div class="tweet-translated-label"></div>').text('Translated to English'),
 						$('<div class="tweet-translated-text"></div>').text(tTweet.text)
 					);
-					$div.find('.tweet-text').before($translated);
+					$div.find('> .tweet-text').before($translated);
 					$btn.text('Hide Translation');
 				}
 				else {
@@ -283,13 +282,45 @@ function make_tweet(data) {
 	// Tweet text
 	$div.append($('<div class="tweet-text"></div>').text(tweet.text));
 
-	// Media
-	if (tweet.media && tweet.media.photos && tweet.media.photos.length) {
+	// Media — Twitter CDN blocks video hotlinking, use fxtwitter proxy where possible
+	if (tweet.media) {
 		var $media = $('<div class="tweet-media"></div>');
-		for (var i = 0; i < tweet.media.photos.length; i++) {
-			$media.append($('<img>', {src: tweet.media.photos[i].url}));
+		var mediaProxy = 'https://d.fxtwitter.com/i/status/' + tweet.id;
+		if (tweet.media.photos) {
+			for (var i = 0; i < tweet.media.photos.length; i++) {
+				$media.append($('<img>', {src: tweet.media.photos[i].url}));
+			}
 		}
-		$div.append($media);
+		if (tweet.media.videos) {
+			for (var i = 0; i < tweet.media.videos.length; i++) {
+				var vid = tweet.media.videos[i];
+				if (vid.type === 'gif') {
+					// fxtwitter proxies GIFs through gif.fxtwitter.com
+					$media.append($('<img>', {src: mediaProxy + '.mp4'}));
+				}
+				else {
+					// Real videos can't be proxied — show thumbnail linking to tweet
+					var $vidLink = $('<a>', {
+						href: 'https://x.com/i/status/' + tweet.id,
+						target: '_blank',
+						rel: 'nofollow',
+						'class': 'tweet-video-link',
+					});
+					$vidLink.on('click', function (e) { e.stopPropagation(); });
+					var $thumb = $('<img>', {src: vid.thumbnail_url});
+					var $play = $('<span class="tweet-play-btn">\u25B6</span>');
+					$vidLink.append($thumb, $play);
+					$media.append($vidLink);
+				}
+			}
+		}
+		if ($media.children().length)
+			$div.append($media);
+	}
+
+	// Quoted tweet
+	if (tweet.quote) {
+		$div.append(make_tweet_content(tweet.quote));
 	}
 
 	// Timestamp and engagement
@@ -309,6 +340,10 @@ function make_tweet(data) {
 	$div.append($meta);
 
 	return $div;
+}
+
+function make_tweet(data) {
+	return make_tweet_content(data.tweet);
 }
 
 $(document).on('click', '.tweet', function (e) {
