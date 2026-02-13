@@ -1,6 +1,6 @@
 /* YOUTUBE */
 var danbooru_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?danbooru\.donmai\.us\/posts\/?\?(?:utf8=%E2%9C%93&)?tags=(.*)/;
-var yt_re = /(?:https?:\/\/)?(?:www\.|m\.)?youtu\.?be(?:\.com\/watch\?v=|\/)([\w-]{11})(?:.*t=(\d+(?:h)?(?:\d+)?(?:m)?(?:\d+)?(?:s)?))?/;
+var yt_re = /(?:https?:\/\/)?(?:www\.|m\.)?youtu\.?be(?:\.com\/watch\?v=|\/)([\w-]{11})(?:[^\s"<>]*?t=(\d+(?:h)?(?:\d+)?(?:m)?(?:\d+)?(?:s)?))?[^\s"<>]*/;
 var yt_time_re = /(?:(\d+h)?(\d+m)?(\d+s)?)?(\d+)?/;
 
 function make_video(id, params, start) {
@@ -133,7 +133,7 @@ $(document).on('mouseenter', '.watch', function (event) {
 
 /* SOUNDCLOUD */
 
-var soundcloud_url_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/([\w-]{1,40}\/[\w-]{1,80})\/?/;
+var soundcloud_url_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?soundcloud\.com\/([\w-]{1,40}\/[\w-]{1,80})\/?[^\s"<>]*/;
 
 function make_soundcloud(path, dims) {
 	var query = {
@@ -220,10 +220,10 @@ $(document).on('mouseenter', '.soundcloud', function (event) {
 });
 
 /* TWITTER / X */
-var tweet_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?(?:x|twitter|fxtwitter|vxtwitter|fixupx|fixvx|cunnyx|hitlerx)\.com\/([\w]{1,15})\/status\/(\d+)/;
+var tweet_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?(?:x|twitter|fxtwitter|vxtwitter|fixupx|fixvx|cunnyx|hitlerx)\.com\/([\w]{1,15})\/status\/(\d+)[^\s"<>]*/;
 
 /* BLUESKY */
-var bsky_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?bsky\.app\/profile\/([\w.:%-]+)\/post\/([\w]+)/;
+var bsky_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?bsky\.app\/profile\/([\w.:%-]+)\/post\/([\w]+)[^\s"<>]*/;
 
 function make_tweet_content(tweet) {
 	var $div = $('<div class="tweet-embed"></div>');
@@ -689,7 +689,7 @@ $(document).on('mouseenter', '.bsky', function (event) {
 });
 
 // PASTEBIN
-var pastebin_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m.)?pastebin\.com\/(raw\/)?(.*)/;
+var pastebin_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m\.)?pastebin\.com\/(raw\/)?(\w+)[^\s"<>]*/;
 //Pastebin's API seems built for MAKING pastebins but not sharing them.
 
 $(document).on('click', '.pastebin', function(event){
