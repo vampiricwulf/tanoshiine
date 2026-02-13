@@ -222,6 +222,9 @@ $(document).on('mouseenter', '.soundcloud', function (event) {
 /* TWITTER / X */
 var tweet_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?(?:x|twitter|fxtwitter|vxtwitter|fixupx|fixvx|cunnyx|hitlerx)\.com\/([\w]{1,15})\/status\/(\d+)/;
 
+/* BLUESKY */
+var bsky_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?bsky\.app\/profile\/([\w.:%-]+)\/post\/([\w]+)/;
+
 function make_tweet_content(tweet) {
 	var $div = $('<div class="tweet-embed"></div>');
 
@@ -258,12 +261,13 @@ function make_tweet_content(tweet) {
 			url: 'https://api.fxtwitter.com/status/' + tweetId + '/en',
 			dataType: 'json',
 			success: function (tData) {
-				var tTweet = tData.tweet;
-				if (tTweet && tTweet.text) {
+				var tl = tData.tweet && tData.tweet.translation;
+				if (tl && tl.text) {
+					var label = 'Translated from ' + (tl.source_lang_en || tl.source_lang || 'unknown');
 					var $translated = $('<div class="tweet-translated"></div>');
 					$translated.append(
-						$('<div class="tweet-translated-label"></div>').text('Translated to English'),
-						$('<div class="tweet-translated-text"></div>').text(tTweet.text)
+						$('<div class="tweet-translated-label"></div>').text(label),
+						$('<div class="tweet-translated-text"></div>').text(tl.text)
 					);
 					$div.find('> .tweet-text').before($translated);
 					$btn.text('Hide Translation');
@@ -428,6 +432,259 @@ $(document).on('mouseenter', '.tweet', function (event) {
 				node.textContent = orig + '???';
 			});
 		},
+	});
+});
+
+/* BLUESKY EMBED */
+
+var BSKY_API = 'https://public.api.bsky.app/xrpc/';
+
+function render_bsky_images($media, images) {
+	for (var i = 0; i < images.length; i++) {
+		$media.append($('<img>', {src: images[i].fullsize, alt: images[i].alt || ''}));
+	}
+}
+
+function render_bsky_video($media, embed, handle, rkey) {
+	var $vidLink = $('<a>', {
+		href: 'https://bsky.app/profile/' + handle + '/post/' + rkey,
+		target: '_blank',
+		rel: 'nofollow',
+		'class': 'bsky-video-link',
+	});
+	$vidLink.on('click', function (e) { e.stopPropagation(); });
+	var $thumb = $('<img>', {src: embed.thumbnail});
+	var $play = $('<span class="bsky-play-btn">\u25B6</span>');
+	$vidLink.append($thumb, $play);
+	$media.append($vidLink);
+}
+
+function render_bsky_quote($div, record) {
+	var $quote = $('<div class="bsky-embed"></div>');
+	var author = record.author || {};
+	var $qAuthor = $('<div class="bsky-author"></div>');
+	if (author.avatar) {
+		$qAuthor.append($('<img>', {src: author.avatar, 'class': 'bsky-avatar', alt: ''}));
+	}
+	var $qNames = $('<div class="bsky-names"></div>');
+	$qNames.append(
+		$('<span class="bsky-displayname"></span>').text(author.displayName || ''),
+		' ',
+		$('<span class="bsky-handle"></span>').text('@' + (author.handle || ''))
+	);
+	$qAuthor.append($qNames);
+	$quote.append($qAuthor);
+
+	var value = record.value || {};
+	if (value.text) {
+		$quote.append($('<div class="bsky-text"></div>').text(value.text));
+	}
+
+	// Quote may have its own images via record.embeds[]
+	if (record.embeds) {
+		var $qMedia = $('<div class="bsky-media"></div>');
+		for (var i = 0; i < record.embeds.length; i++) {
+			var qEmbed = record.embeds[i];
+			if (qEmbed.$type === 'app.bsky.embed.images#view' && qEmbed.images) {
+				render_bsky_images($qMedia, qEmbed.images);
+			}
+		}
+		if ($qMedia.children().length)
+			$quote.append($qMedia);
+	}
+
+	$div.append($quote);
+}
+
+function make_bsky_content(post) {
+	var $div = $('<div class="bsky-embed"></div>');
+	var author = post.author || {};
+
+	// Author row
+	var $author = $('<div class="bsky-author"></div>');
+	if (author.avatar) {
+		$author.append($('<img>', {src: author.avatar, 'class': 'bsky-avatar', alt: ''}));
+	}
+	var $names = $('<div class="bsky-names"></div>');
+	$names.append(
+		$('<span class="bsky-displayname"></span>').text(author.displayName || ''),
+		' ',
+		$('<span class="bsky-handle"></span>').text('@' + (author.handle || ''))
+	);
+	$author.append($names);
+	$div.append($author);
+
+	// Post text
+	var record = post.record || {};
+	if (record.text) {
+		$div.append($('<div class="bsky-text"></div>').text(record.text));
+	}
+
+	// Media
+	var embed = post.embed;
+	if (embed) {
+		var handle = author.handle || '';
+		// Extract rkey from post URI (at://did/app.bsky.feed.post/rkey)
+		var rkey = '';
+		if (post.uri) {
+			var uriParts = post.uri.split('/');
+			rkey = uriParts[uriParts.length - 1];
+		}
+
+		var $media = $('<div class="bsky-media"></div>');
+		var mediaEmbed = embed;
+		var recordEmbed = null;
+
+		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
+			mediaEmbed = embed.media;
+			recordEmbed = embed.record;
+		}
+		else if (embed.$type === 'app.bsky.embed.record#view') {
+			recordEmbed = embed;
+			mediaEmbed = null;
+		}
+
+		if (mediaEmbed) {
+			if (mediaEmbed.$type === 'app.bsky.embed.images#view' && mediaEmbed.images) {
+				render_bsky_images($media, mediaEmbed.images);
+			}
+			else if (mediaEmbed.$type === 'app.bsky.embed.video#view') {
+				render_bsky_video($media, mediaEmbed, handle, rkey);
+			}
+		}
+
+		if ($media.children().length)
+			$div.append($media);
+
+		if (recordEmbed && recordEmbed.record) {
+			render_bsky_quote($div, recordEmbed.record);
+		}
+	}
+
+	// Timestamp and engagement
+	var date = record.createdAt ? new Date(record.createdAt) : null;
+	var timeStr = date ? date.toLocaleString() : '';
+	var $meta = $('<div class="bsky-meta"></div>');
+	var parts = [];
+	if (timeStr)
+		parts.push(timeStr);
+	if (post.likeCount != null)
+		parts.push(post.likeCount + ' likes');
+	if (post.repostCount != null)
+		parts.push(post.repostCount + ' reposts');
+	if (post.replyCount != null)
+		parts.push(post.replyCount + ' replies');
+	$meta.text(parts.join(' \u00B7 '));
+	$div.append($meta);
+
+	return $div;
+}
+
+function resolve_bsky_did(handle) {
+	// If it's already a DID, return it directly
+	if (/^did:/.test(handle)) {
+		return $.Deferred().resolve(handle).promise();
+	}
+	return $.ajax({
+		url: BSKY_API + 'com.atproto.identity.resolveHandle',
+		data: {handle: handle},
+		dataType: 'json',
+	}).then(function (data) {
+		return data.did;
+	});
+}
+
+$(document).on('click', '.bsky', function (e) {
+	if (e.which > 1 || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)
+		return;
+	var $target = $(e.target);
+
+	if (!$target.is('a'))
+		return;
+
+	var $embed = $target.find('.bsky-embed');
+	if ($embed.length) {
+		$embed.siblings('br').andSelf().remove();
+		$target.css('width', 'auto');
+		return false;
+	}
+
+	var href = $target.attr('href');
+	var m = href.match(/bsky\.app\/profile\/([\w.:%-]+)\/post\/([\w]+)/);
+	if (!m)
+		return;
+	var handle = m[1];
+	var rkey = m[2];
+
+	resolve_bsky_did(handle).then(function (did) {
+		var uri = 'at://' + did + '/app.bsky.feed.post/' + rkey;
+		return $.ajax({
+			url: BSKY_API + 'app.bsky.feed.getPostThread',
+			data: {uri: uri, depth: 0, parentHeight: 0},
+			dataType: 'json',
+		});
+	}).then(function (data) {
+		if (!data || !data.thread || !data.thread.post) return;
+		var $div = make_bsky_content(data.thread.post);
+		var width = Math.min(550, Math.round($(window).innerWidth() * 0.75));
+		with_dom(function () {
+			$target.css('width', width).append('<br>', $div);
+		});
+	}, function () {
+		with_dom(function () {
+			var $err = $('<div class="bsky-embed">Failed to load post.</div>');
+			$target.append('<br>', $err);
+		});
+	});
+	return false;
+});
+
+$(document).on('mouseenter', '.bsky', function (event) {
+	var $target = $(event.target);
+	if ($target.data('requestedTitle'))
+		return;
+	$target.data('requestedTitle', true);
+	var node = $target.contents().filter(function () {
+		return this.nodeType === 3;
+	})[0];
+	if (!node)
+		return;
+	var orig = node.textContent;
+	with_dom(function () {
+		node.textContent = orig + '...';
+	});
+
+	var href = $target.attr('href');
+	var m = href.match(/bsky\.app\/profile\/([\w.:%-]+)\/post\/([\w]+)/);
+	if (!m)
+		return;
+	var handle = m[1];
+	var rkey = m[2];
+
+	resolve_bsky_did(handle).then(function (did) {
+		var uri = 'at://' + did + '/app.bsky.feed.post/' + rkey;
+		return $.ajax({
+			url: BSKY_API + 'app.bsky.feed.getPostThread',
+			data: {uri: uri, depth: 0, parentHeight: 0},
+			dataType: 'json',
+		});
+	}).then(function (data) {
+		with_dom(function () {
+			var post = data && data.thread && data.thread.post;
+			if (post && post.author && post.record && post.record.text) {
+				var text = post.record.text;
+				var preview = text.length > 80 ? text.slice(0, 80) + '...' : text;
+				var name = post.author.displayName || post.author.handle || '';
+				node.textContent = orig + ': ' + name + ' - ' + preview;
+				$target.css({color: 'black'});
+			}
+			else
+				node.textContent = orig + ' (gone?)';
+		});
+	}, function () {
+		with_dom(function () {
+			node.textContent = orig + '???';
+		});
 	});
 });
 

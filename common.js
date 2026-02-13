@@ -213,6 +213,7 @@ ref_re += '|>\\/korbo\\/';
 ref_re += '|>\\/cumzone\\/';
 ref_re += '|>\\/pastebin\\/\\w+';
 ref_re += '|>\\/tweet\\/\\d+';
+ref_re += '|>\\/bsky\\/[\\w.:%-]+\\/[\\w]+';
 
 for (var i = 0; i < config.BOARDS.length; i++) {
     ref_re += '|>\\/' + config.BOARDS[i] + '\\/(?:\\d+)?';
@@ -262,6 +263,12 @@ OS.red_string = function (ref) {
 	else if (/^>\/tweet/.test(ref)) {
 		dest = 'https://x.com/i/status/' + ref.slice(8);
 		linkClass = 'embed tweet';
+	}
+	else if (/^>\/bsky/.test(ref)) {
+		var bskyParts = ref.slice(7);
+		var slashIdx = bskyParts.indexOf('/');
+		dest = 'https://bsky.app/profile/' + bskyParts.slice(0, slashIdx) + '/post/' + bskyParts.slice(slashIdx + 1);
+		linkClass = 'embed bsky';
 	}
 	else if (/>\/korbo/.test(ref)){
 		dest = '../korbo/';

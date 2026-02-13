@@ -480,6 +480,15 @@ var ComposerView = Backbone.View.extend({
 			var tw = '>>>/tweet/' + m[2];
 			val = embedRewrite(m, tw);
 		}
+
+		// Bluesky links
+		while (true) {
+			var m = val.match(bsky_re);
+			if (!m)
+				break;
+			var bs = '>>>/bsky/' + m[1] + '/' + m[2];
+			val = embedRewrite(m, bs);
+		}
 		if (changed)
 			$input.val(val);
 
