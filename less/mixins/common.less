@@ -35,3 +35,22 @@ b {
     border-color: @link;
     cursor: pointer;
 }
+.tweet-embed {
+ background-color: @postBG;
+ border: @border;
+ color: @base;
+ .tweet-displayname {
+  color: @bold;
+ }
+ .tweet-handle,
+ .tweet-meta,
+ .tweet-translated-label {
+  color: fade(@base, 60%);
+ }
+ .tweet-translate-btn {
+  color: @link;
+ }
+ .tweet-translated {
+  border-left: 3px solid @link;
+ }
+}

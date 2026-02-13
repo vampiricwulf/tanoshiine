@@ -471,6 +471,15 @@ var ComposerView = Backbone.View.extend({
 		    var pbin = '>>>/pastebin/' +m[2];
 		    val = embedRewrite(m, pbin);
 		}
+
+		// Tweet links
+		while (true) {
+			var m = val.match(tweet_re);
+			if (!m)
+				break;
+			var tw = '>>>/tweet/' + m[2];
+			val = embedRewrite(m, tw);
+		}
 		if (changed)
 			$input.val(val);
 

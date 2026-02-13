@@ -219,6 +219,183 @@ $(document).on('mouseenter', '.soundcloud', function (event) {
 	}
 });
 
+/* TWITTER / X */
+var tweet_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.)?(?:x|twitter|fxtwitter|vxtwitter|fixupx|fixvx|cunnyx|hitlerx)\.com\/([\w]{1,15})\/status\/(\d+)/;
+
+function make_tweet(data) {
+	var tweet = data.tweet;
+	var $div = $('<div class="tweet-embed"></div>');
+
+	// Author row
+	var $author = $('<div class="tweet-author"></div>');
+	var $avatar = $('<img>', {
+		src: tweet.author.avatar_url,
+		'class': 'tweet-avatar',
+		alt: '',
+	});
+	var $names = $('<div class="tweet-names"></div>');
+	$names.append(
+		$('<span class="tweet-displayname"></span>').text(tweet.author.name),
+		' ',
+		$('<span class="tweet-handle"></span>').text('@' + tweet.author.screen_name)
+	);
+	$author.append($avatar, $names);
+	$div.append($author);
+
+	// Translate button
+	var $translateBtn = $('<a class="tweet-translate-btn">Translate</a>');
+	var tweetId = tweet.id;
+	$translateBtn.on('click', function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+		var $btn = $(this);
+		if ($div.find('.tweet-translated').length) {
+			$div.find('.tweet-translated').remove();
+			$btn.text('Translate');
+			return;
+		}
+		$btn.text('Translating...');
+		$.ajax({
+			url: 'https://api.fxtwitter.com/status/' + tweetId + '/en',
+			dataType: 'json',
+			success: function (tData) {
+				var tTweet = tData.tweet;
+				if (tTweet && tTweet.text) {
+					var $translated = $('<div class="tweet-translated"></div>');
+					$translated.append(
+						$('<div class="tweet-translated-label"></div>').text('Translated to English'),
+						$('<div class="tweet-translated-text"></div>').text(tTweet.text)
+					);
+					$div.find('.tweet-text').before($translated);
+					$btn.text('Hide Translation');
+				}
+				else {
+					$btn.text('Translate');
+				}
+			},
+			error: function () {
+				$btn.text('Translate');
+			},
+		});
+	});
+	$div.append($translateBtn);
+
+	// Tweet text
+	$div.append($('<div class="tweet-text"></div>').text(tweet.text));
+
+	// Media
+	if (tweet.media && tweet.media.photos && tweet.media.photos.length) {
+		var $media = $('<div class="tweet-media"></div>');
+		for (var i = 0; i < tweet.media.photos.length; i++) {
+			$media.append($('<img>', {src: tweet.media.photos[i].url}));
+		}
+		$div.append($media);
+	}
+
+	// Timestamp and engagement
+	var date = tweet.created_at ? new Date(tweet.created_timestamp * 1000) : null;
+	var timeStr = date ? date.toLocaleString() : '';
+	var $meta = $('<div class="tweet-meta"></div>');
+	var parts = [];
+	if (timeStr)
+		parts.push(timeStr);
+	if (tweet.likes != null)
+		parts.push(tweet.likes + ' likes');
+	if (tweet.retweets != null)
+		parts.push(tweet.retweets + ' retweets');
+	if (tweet.replies != null)
+		parts.push(tweet.replies + ' replies');
+	$meta.text(parts.join(' \u00B7 '));
+	$div.append($meta);
+
+	return $div;
+}
+
+$(document).on('click', '.tweet', function (e) {
+	if (e.which > 1 || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)
+		return;
+	var $target = $(e.target);
+
+	if (!$target.is('a'))
+		return;
+
+	var $embed = $target.find('.tweet-embed');
+	if ($embed.length) {
+		$embed.siblings('br').andSelf().remove();
+		$target.css('width', 'auto');
+		return false;
+	}
+
+	var href = $target.attr('href');
+	var m = href.match(/x\.com\/\w+\/status\/(\d+)/) || href.match(/x\.com\/i\/status\/(\d+)/);
+	if (!m)
+		return;
+	var id = m[1];
+
+	$.ajax({
+		url: 'https://api.fxtwitter.com/status/' + id,
+		dataType: 'json',
+		success: function (data) {
+			if (!data || !data.tweet) return;
+			var $div = make_tweet(data);
+			var width = Math.min(550, Math.round($(window).innerWidth() * 0.75));
+			with_dom(function () {
+				$target.css('width', width).append('<br>', $div);
+			});
+		},
+		error: function () {
+			with_dom(function () {
+				var $err = $('<div class="tweet-embed">Failed to load tweet.</div>');
+				$target.append('<br>', $err);
+			});
+		},
+	});
+	return false;
+});
+
+$(document).on('mouseenter', '.tweet', function (event) {
+	var $target = $(event.target);
+	if ($target.data('requestedTitle'))
+		return;
+	$target.data('requestedTitle', true);
+	var node = $target.contents().filter(function () {
+		return this.nodeType === 3;
+	})[0];
+	if (!node)
+		return;
+	var orig = node.textContent;
+	with_dom(function () {
+		node.textContent = orig + '...';
+	});
+
+	var href = $target.attr('href');
+	var m = href.match(/x\.com\/\w+\/status\/(\d+)/) || href.match(/x\.com\/i\/status\/(\d+)/);
+	if (!m)
+		return;
+
+	$.ajax({
+		url: 'https://api.fxtwitter.com/status/' + m[1],
+		dataType: 'json',
+		success: function (data) {
+			with_dom(function () {
+				var tweet = data && data.tweet;
+				if (tweet && tweet.author && tweet.text) {
+					var preview = tweet.text.length > 80 ? tweet.text.slice(0, 80) + '...' : tweet.text;
+					node.textContent = orig + ': ' + tweet.author.name + ' - ' + preview;
+					$target.css({color: 'black'});
+				}
+				else
+					node.textContent = orig + ' (gone?)';
+			});
+		},
+		error: function () {
+			with_dom(function () {
+				node.textContent = orig + '???';
+			});
+		},
+	});
+});
+
 // PASTEBIN
 var pastebin_re = /(?:>>>*?)?(?:https?:\/\/)?(?:www\.|m.)?pastebin\.com\/(raw\/)?(.*)/;
 //Pastebin's API seems built for MAKING pastebins but not sharing them.

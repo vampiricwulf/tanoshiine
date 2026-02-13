@@ -212,6 +212,7 @@ ref_re += '|>\\/soundcloud\\/[\\w-]{1,40}\\/[\\w-]{1,80}';
 ref_re += '|>\\/korbo\\/';
 ref_re += '|>\\/cumzone\\/';
 ref_re += '|>\\/pastebin\\/\\w+';
+ref_re += '|>\\/tweet\\/\\d+';
 
 for (var i = 0; i < config.BOARDS.length; i++) {
     ref_re += '|>\\/' + config.BOARDS[i] + '\\/(?:\\d+)?';
@@ -257,6 +258,10 @@ OS.red_string = function (ref) {
 	else if (/^>\/pastebin/.test(ref)){
 		dest = dest = 'https://pastebin.com/' + ref.slice(11);
 		linkClass = 'embed pastebin';
+	}
+	else if (/^>\/tweet/.test(ref)) {
+		dest = 'https://x.com/i/status/' + ref.slice(8);
+		linkClass = 'embed tweet';
 	}
 	else if (/>\/korbo/.test(ref)){
 		dest = '../korbo/';

@@ -86,8 +86,68 @@ body > aside {
  color: black;
 }
 .soundcloud,
-.watch {
+.watch,
+.tweet {
  cursor: pointer;
+}
+.tweet-embed {
+ max-width: 550px;
+ padding: 12px;
+ border-radius: 12px;
+ margin-top: 4px;
+ font-size: 14px;
+ line-height: 1.4;
+ text-decoration: none;
+ .tweet-author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+ }
+ .tweet-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 8px;
+  float: none;
+ }
+ .tweet-names {
+  display: flex;
+  flex-direction: column;
+ }
+ .tweet-displayname {
+  font-weight: bold;
+ }
+ .tweet-handle {
+  font-size: 13px;
+ }
+ .tweet-translate-btn {
+  display: inline-block;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  text-decoration: underline;
+ }
+ .tweet-translated {
+  padding-left: 8px;
+  margin-bottom: 6px;
+ }
+ .tweet-translated-label {
+  font-size: 12px;
+  margin-bottom: 2px;
+ }
+ .tweet-text {
+  margin-bottom: 8px;
+  white-space: pre-wrap;
+ }
+ .tweet-media img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 6px;
+  float: none;
+ }
+ .tweet-meta {
+  font-size: 12px;
+ }
 }
 del {
  &,
