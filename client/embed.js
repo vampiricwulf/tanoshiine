@@ -697,7 +697,7 @@ $(document).on('click', '.pastebin', function(event){
 		return;
 	var $target = $(event.target);
 
-	var $obj = $target.find('iframe');
+	var $obj = $target.find('.pastebin-embed');
 	if ($obj.length) {
 		$obj.siblings('br').andSelf().remove();
 		$target.css('width', 'auto');
@@ -708,17 +708,88 @@ $(document).on('click', '.pastebin', function(event){
     if (!m)
         return;
     var width = Math.round($(window).innerWidth() * 0.65);
-    var uri = 'https://pastebin.com/embed_iframe.php?i='+ m[2];
-    var $obj = $('<iframe></iframe>', {
-		type: 'text/html',
-                src: uri,
-		frameborder: '0',
-                width: width
-                });
+    var uri = 'https://pastebin.com/raw/' + m[2];
 
-
-    with_dom(function () {
-		$target.css('width', width).append('<br>', $obj);
+    $.get(uri).done(function(data) {
+        var lines = data.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+            .split('\n');
+        var $table = $('<table/>').css({
+            'border-collapse': 'collapse',
+            'width': '100%',
+            'font-family': 'monospace',
+            'font-size': '13px',
+            'line-height': '1.4'
         });
+        for (var i = 0; i < lines.length; i++) {
+            var bg = i % 2 === 0 ? 'rgba(255,255,255,0.03)'
+                : 'rgba(255,255,255,0.07)';
+            var $num = $('<td/>').text(i + 1).css({
+                'color': '#888',
+                'text-align': 'right',
+                'padding': '1px 10px 1px 8px',
+                'user-select': 'none',
+                '-moz-user-select': 'none',
+                '-webkit-user-select': 'none',
+                'white-space': 'nowrap',
+                'vertical-align': 'top',
+                'border-right': '1px solid #555',
+                'background': bg
+            });
+            var $code = $('<td/>').text(lines[i] || '\u00a0').css({
+                'padding': '1px 10px',
+                'white-space': 'pre-wrap',
+                'word-wrap': 'break-word',
+                'background': bg
+            });
+            $table.append($('<tr/>').append($num, $code));
+        }
+        var $copy = $('<button/>').text('Copy').css({
+            'position': 'absolute',
+            'top': '4px',
+            'right': '4px',
+            'background': '#555',
+            'color': '#eee',
+            'border': '1px solid #777',
+            'border-radius': '3px',
+            'padding': '2px 8px',
+            'cursor': 'pointer',
+            'font-size': '12px',
+            'opacity': '0.7'
+        }).hover(
+            function(){ $(this).css('opacity', '1'); },
+            function(){ $(this).css('opacity', '0.7'); }
+        ).click(function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var text = data;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text);
+            } else {
+                var $ta = $('<textarea/>').val(text)
+                    .css({'position':'fixed','left':'-9999px'})
+                    .appendTo('body');
+                $ta[0].select();
+                document.execCommand('copy');
+                $ta.remove();
+            }
+            $(this).text('Copied!');
+            var btn = this;
+            setTimeout(function(){ $(btn).text('Copy'); }, 1500);
+        });
+        var $wrap = $('<div/>').addClass('pastebin-embed').css({
+            'position': 'relative',
+            'max-height': '400px',
+            'overflow': 'auto',
+            'background': '#1e1e1e',
+            'color': '#d4d4d4',
+            'border': '1px solid #555',
+            'border-radius': '3px'
+        }).append($copy, $table);
+        with_dom(function () {
+            $target.css('width', width).append('<br>', $wrap);
+        });
+    }).fail(function() {
+        window.open($target.attr('href'), '_blank');
+    });
     return false;
 });
