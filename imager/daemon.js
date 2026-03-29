@@ -761,9 +761,9 @@ function perceptual_hash(src, image, callback) {
 			'-normalize',
 			'-equalize',
 			'-scale', '16x16',
-			'+dither',
+			'-threshold', '50%',
 			'-depth', '1',
-			'gray:'+tmp);
+			'r:'+tmp);
 	convert(args, src, function(err) {
 		if (err)
 			return callback(Muggle('Hashing error.', err));

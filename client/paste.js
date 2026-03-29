@@ -65,9 +65,13 @@
     function upload_ema() {
         if (this.readyState != 4 || this.status == 202)
             return;
-        var err = this.responseText;
-        if (this.status != 500 || !err || err.length > 100)
-            err = "Couldn't get response.";
+        var err = "Couldn't get response.";
+        if (this.status == 500 && this.responseText) {
+            var m = this.responseText.match(/postMessage\(([^,]+),/);
+            if (m) {
+                try { err = JSON.parse(m[1]); } catch(e) {}
+            }
+        }
         postForm.upload_error(err)
     }
 
