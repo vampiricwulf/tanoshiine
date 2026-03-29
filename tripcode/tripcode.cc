@@ -2,35 +2,24 @@
 #include <errno.h>
 #include <iconv.h>
 #include <unistd.h>
-#include <node.h>
 #include <string.h>
-#include <nan.h>
-
-using namespace v8;
+#include <napi.h>
 
 static char SECURE_SALT[21] = "$5$";
 #define TRIP_MAX 128
 
-static NAN_METHOD(setup_callback) {
+static Napi::Value setup_callback(const Napi::CallbackInfo& info) {
+	Napi::Env env = info.Env();
 
-	if (info.Length() != 1){
-		info.GetReturnValue().Set(false);
-		return;
-	}
-	Nan::Utf8String saltVal(info[0]);
-	if (saltVal.length() < 16){
-		info.GetReturnValue().Set(false);
-		return;
-	}
-	char *salt = *saltVal;
-	if (!salt){
-		info.GetReturnValue().Set(false);
-		return;
-	}
-	memcpy(SECURE_SALT + 3, salt, 16);
+	if (info.Length() != 1 || !info[0].IsString())
+		return Napi::Boolean::New(env, false);
+	std::string saltVal = info[0].As<Napi::String>().Utf8Value();
+	if (saltVal.length() < 16)
+		return Napi::Boolean::New(env, false);
+	memcpy(SECURE_SALT + 3, saltVal.c_str(), 16);
 	SECURE_SALT[19] = '$';
 	SECURE_SALT[20] = 0;
-	info.GetReturnValue().Set(true);
+	return Napi::Boolean::New(env, true);
 }
 
 static void fix_char(char &c) {
@@ -98,15 +87,17 @@ static int setup_conv() {
 
 typedef void (*trip_f)(char *, size_t, char *);
 
-static void with_SJIS(Nan::Utf8String &trip, trip_f func, char *ret) {
-	char *src = *trip;
-	if (!src)
+static void with_SJIS(const std::string& trip, trip_f func, char *ret) {
+	if (trip.empty())
 		return;
-	size_t src_left = trip.length(), dest_left = TRIP_MAX;
-	if (!src_left)
-		return;
+	size_t src_left = trip.length();
 	if (src_left > TRIP_MAX / 2)
 		src_left = TRIP_MAX / 2;
+	char src_buf[TRIP_MAX+1];
+	memcpy(src_buf, trip.c_str(), src_left);
+	src_buf[src_left] = 0;
+	char *src = src_buf;
+	size_t dest_left = TRIP_MAX;
 	char sjis[TRIP_MAX+1];
 	char *dest = sjis;
 	size_t result = iconv(conv_desc, &src, &src_left, &dest, &dest_left);
@@ -121,29 +112,27 @@ static void with_SJIS(Nan::Utf8String &trip, trip_f func, char *ret) {
 	}
 }
 
-NAN_METHOD(hash_callback) {
-	if (info.Length() != 2){
-		info.GetReturnValue().SetNull();
-		return;
-	}
+Napi::Value hash_callback(const Napi::CallbackInfo& info) {
+	Napi::Env env = info.Env();
 
-	Nan::Utf8String trip(info[0]),secure(info[1]);
+	if (info.Length() != 2 || !info[0].IsString() || !info[1].IsString())
+		return env.Null();
+
+	std::string trip = info[0].As<Napi::String>().Utf8Value();
+	std::string secure = info[1].As<Napi::String>().Utf8Value();
 	char digest[24];
 	digest[0] = 0;
 	with_SJIS(trip, &hash_trip, digest);
 	with_SJIS(secure, &hash_secure, digest + strlen(digest));
-	info.GetReturnValue().Set(Nan::New<String>(digest).ToLocalChecked());
+	return Napi::String::New(env, digest);
 }
 
-NAN_MODULE_INIT(init){
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
 	if (!setup_conv())
-		return;
-	Nan::Set(target, 
-		Nan::New<String>("setSalt").ToLocalChecked(),
-		Nan::GetFunction(Nan::New<FunctionTemplate>(setup_callback)).ToLocalChecked());
-	Nan::Set(target, 
-		Nan::New<String>("hash").ToLocalChecked(),
-		Nan::GetFunction(Nan::New<FunctionTemplate>(hash_callback)).ToLocalChecked());
+		return exports;
+	exports.Set("setSalt", Napi::Function::New(env, setup_callback));
+	exports.Set("hash", Napi::Function::New(env, hash_callback));
+	return exports;
 }
 
-NODE_MODULE(tripcode, init)
+NODE_API_MODULE(tripcode, Init)

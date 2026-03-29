@@ -1,21 +1,19 @@
 #ifndef APNGDETECTOR_H
 #define APNGDETECTOR_H
 
-#include <nan.h>
+#include <napi.h>
 #include <string>
-class apngDetector : public Nan::ObjectWrap
+
+class apngDetector : public Napi::ObjectWrap<apngDetector>
 {
 public:
-  static NAN_MODULE_INIT(Init);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  apngDetector(const Napi::CallbackInfo& info);
+
 private:
-  apngDetector();
-  ~apngDetector();
+  Napi::Value Detect(const Napi::CallbackInfo& info);
 
-  static NAN_METHOD(New);
-  static NAN_METHOD(Detect);
-  static Nan::Persistent<v8::Function> constructor;
-
-  int checkChunk(const unsigned char* buffer,uint& offset);
+  int checkChunk(const unsigned char* buffer, unsigned int& offset, unsigned int length);
   int cOffset;
   std::string cBytes;
 };

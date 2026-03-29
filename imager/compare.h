@@ -2,12 +2,11 @@
 #define COMPARE_H_
 
 #include <vector>
+#include <string>
 
-#define TCHAR char    //Not unicode
-#define TEXT(x) x     //Not unicode
-#define DWORD long
-#define BYTE unsigned char
+typedef char TCHAR;
+typedef unsigned char BYTE;
 
 unsigned int countDiff(const std::vector<BYTE>& a, const std::vector<BYTE>& b);
-std::vector<BYTE> base64Decode(const std::basic_string<TCHAR>& input);
+std::vector<BYTE> base64Decode(const std::string& input);
 #endif //COMPARE_H_

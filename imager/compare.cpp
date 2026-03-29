@@ -11,45 +11,42 @@
 #include <cstdlib>
 #include <string>
 #include <bitset>
+#include <cstdint>
+#include <algorithm>
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 
 #include "compare.h"
 
-using namespace v8;
-
-const static TCHAR padCharacter = TEXT('=');
-std::vector<BYTE> base64Decode(const std::basic_string<TCHAR>& input)
+static const TCHAR padCharacter = '=';
+std::vector<BYTE> base64Decode(const std::string& input)
 {
   size_t padding = 0;
-  if (input.length())
-  {
-    if (input[input.length()-1] == padCharacter)
-      padding++;
-    if (input[input.length()-2] == padCharacter)
-      padding++;
-  }
+  if (input.length() >= 1 && input[input.length()-1] == padCharacter)
+    padding++;
+  if (input.length() >= 2 && input[input.length()-2] == padCharacter)
+    padding++;
+
   //Setup a vector to hold the result
   std::vector<BYTE> decodedBytes;
   decodedBytes.reserve(((input.length()/4)*3) - padding);
-  DWORD temp=0; //Holds decoded quanta
-  std::basic_string<TCHAR>::const_iterator cursor = input.begin();
+  uint32_t temp=0; //Holds decoded quanta
+  std::string::const_iterator cursor = input.begin();
   while (cursor < input.end())
   {
     for (size_t quantumPosition = 0; quantumPosition < 4; quantumPosition++)
     {
       temp <<= 6;
       if       (*cursor >= 0x41 && *cursor <= 0x5A) // This area will need tweaking if
-        temp |= *cursor - 0x41;		              // you are using an alternate alphabet
+        temp |= *cursor - 0x41;                     // you are using an alternate alphabet
       else if  (*cursor >= 0x61 && *cursor <= 0x7A)
         temp |= *cursor - 0x47;
       else if  (*cursor >= 0x30 && *cursor <= 0x39)
         temp |= *cursor + 0x04;
-      else if  (*cursor == 0x2B)
-        temp |= 0x3E; //change to 0x2D for URL alphabet
-      else if  (*cursor == 0x2F)
-        temp |= 0x3F; //change to 0x5F for URL alphabet
+      else if  (*cursor == 0x2B || *cursor == 0x2D) // + or -
+        temp |= 0x3E;
+      else if  (*cursor == 0x2F || *cursor == 0x5F) // / or _
+        temp |= 0x3F;
       else if  (*cursor == padCharacter) //pad
       {
         switch( input.end() - cursor )
@@ -78,46 +75,54 @@ std::vector<BYTE> base64Decode(const std::basic_string<TCHAR>& input)
 unsigned int countDiff(const std::vector<BYTE>& a, const std::vector<BYTE>& b)
 {
   unsigned int buf=0;
-	for(unsigned int i=0;i<a.size();i++)
-		buf+=(std::bitset<8>(a[i]^b[i])).count();
-	return buf;
+  unsigned int len = std::min(a.size(), b.size());
+  for(unsigned int i=0;i<len;i++)
+    buf+=(std::bitset<8>(a[i]^b[i])).count();
+  if (a.size() != b.size()) {
+    unsigned int diff = a.size() > b.size() ? a.size() - b.size() : b.size() - a.size();
+    buf += diff * 8;
+  }
+  return buf;
 }
-NAN_METHOD(hashCompareCpp)
+
+Napi::Value hashCompareCpp(const Napi::CallbackInfo& info)
 {
+  Napi::Env env = info.Env();
+
   if(info.Length()<3){
-    Nan::ThrowTypeError("Wrong number of arguments");
-    info.GetReturnValue().Set(-1);
-    return;
+    Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+    return env.Undefined();
   }
-  if(!info[0]->IsNumber() || !info[1]->IsString() || !info[2]->IsArray()){
-    Nan::ThrowTypeError("Wrong arguments");
-    info.GetReturnValue().Set(-1);
-    return;
+  if(!info[0].IsNumber() || !info[1].IsString() || !info[2].IsArray()){
+    Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
+    return env.Undefined();
   }
 
-  unsigned int threshold = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
+  unsigned int threshold = info[0].As<Napi::Number>().Uint32Value();
 
+  std::vector<BYTE> posted = base64Decode(info[1].As<Napi::String>().Utf8Value());
 
-  std::vector<BYTE> posted = base64Decode(*Nan::Utf8String(info[1]));
+  Napi::Array toTest = info[2].As<Napi::Array>();
+  for(uint32_t i=0; i<toTest.Length();i++) {
+    Napi::Value elem = toTest.Get(i);
+    if (!elem.IsString())
+      continue;
+    std::string numHash = elem.As<Napi::String>().Utf8Value();
 
-  Local<Array> toTest = Local<Array>::Cast(info[2]);
-  for(unsigned int i=0; i<toTest->Length();i++) {	//Compare posted with other hashes
-    Local<String> param1 = Nan::To<v8::String>(Nan::Get(toTest,i).ToLocalChecked()).ToLocalChecked(); //change from node string to c++ string
-    std::string numHash = *Nan::Utf8String(param1);
-
-    unsigned int numPos = numHash.find_first_of(':');
-    std::vector<BYTE> tested = base64Decode(numHash.substr(numPos+1,numHash.length()));
+    size_t numPos = numHash.find_first_of(':');
+    if (numPos == std::string::npos || numPos + 1 >= numHash.length())
+      continue;
+    std::vector<BYTE> tested = base64Decode(numHash.substr(numPos+1));
     if(countDiff(posted,tested)<threshold){
-	    info.GetReturnValue().Set(atoi(numHash.substr(0,numPos).c_str()));
-	    return;
+      return Napi::Number::New(env, atoi(numHash.substr(0,numPos).c_str()));
     }
   }
-  info.GetReturnValue().Set(0);
+  return Napi::Number::New(env, 0);
 }
 
-NAN_MODULE_INIT(Init){
-  Nan::Set(target, 
-	   Nan::New("hashCompareCpp").ToLocalChecked(),
-     Nan::GetFunction(Nan::New<FunctionTemplate>(hashCompareCpp)).ToLocalChecked());
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+  exports.Set("hashCompareCpp", Napi::Function::New(env, hashCompareCpp));
+  return exports;
 }
-NODE_MODULE(compare,Init)
+
+NODE_API_MODULE(compare, Init)

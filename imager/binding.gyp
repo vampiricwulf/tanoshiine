@@ -3,16 +3,18 @@
         {
             "target_name": "compare",
             "include_dirs" : [
-                "<!(node -e \"require('nan')\")"
+                "<!@(node -p \"require('node-addon-api').include\")"
             ],
-            "sources": [ "compare.cpp"]
+            "sources": [ "compare.cpp"],
+            "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS" ]
         },
         {
             "target_name": "findapng",
             "include_dirs" : [
-                "<!(node -e \"require('nan')\")"
+                "<!@(node -p \"require('node-addon-api').include\")"
             ],
-            "sources": [ "findapng.cpp","apngDetector.cpp"]
+            "sources": [ "findapng.cpp","apngDetector.cpp"],
+            "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS" ]
         }
     ]
 }
